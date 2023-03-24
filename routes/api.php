@@ -3,6 +3,7 @@
 use App\Website\Auth\Controllers\LoginController;
 use App\Website\Auth\Controllers\LogoutController;
 use App\Website\Auth\Controllers\RegisterController;
+use App\Website\Auth\Controllers\ValidateNewCandidateUniqueInputsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware("guest:api-candidate")->group(function () {
+    Route::post("/pre-register/valid-identifier-input", ValidateNewCandidateUniqueInputsController::class);
     Route::post("/register", RegisterController::class);
     Route::post("/login", LoginController::class);
 });

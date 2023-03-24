@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
             "mobile.country" => ["required",Rule::in(['EG'])],
             "mobile.number"  => [
                 "required","integer", (new Phone())->country(['EG']),
-                Rule::unique(Candidate::class,"mobile_number")->where("mobile_country")],
+                Rule::unique(Candidate::class,"mobile_number")->where("mobile_country",$this->input("mobile.country"))],
             "password"      => ["required",Password::min(8)->letters()->mixedCase()->numbers()->symbols()]
         ];
     }
