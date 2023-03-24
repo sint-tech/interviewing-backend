@@ -40,6 +40,16 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
+
+        'api-candidate'  => [
+            'driver' => 'passport',
+            'provider' => 'candidates'
+        ]
     ],
 
     /*
@@ -62,13 +72,13 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => Domain\Users\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'candidates' => [
+             'driver' => 'eloquent',
+             'model' => Domain\Candidate\Models\Candidate::class,
+         ],
     ],
 
     /*
@@ -97,6 +107,10 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        'candidates'    => [
+            'provider'  => 'candidates',
+        ]
     ],
 
     /*
