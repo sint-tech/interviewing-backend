@@ -6,6 +6,7 @@ use Domain\Candidate\Actions\GenerateCandidateAccessTokenAction;
 use Domain\Candidate\Models\Candidate;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class CandidateAuthenticationTest extends TestCase
@@ -39,6 +40,10 @@ class CandidateAuthenticationTest extends TestCase
                 "last_name"     => "Badawy",
                 "email"         => "foo@gmail.com",
                 "password"      => "u2ArHI&mxLwuh2%k",
+                "mobile"        => [
+                    "country"   => "EG",
+                    "number"    => "1114470249"
+                ]
             ]);
 
         $response->assertSuccessful();
@@ -50,7 +55,11 @@ class CandidateAuthenticationTest extends TestCase
                 "first_name",
                 "last_name",
                 "full_name",
-                "email"
+                "email",
+                "mobile" => [
+                    "country",
+                    "number"
+                ]
             ],
             "meta"  => [
                 "token"
@@ -64,19 +73,17 @@ class CandidateAuthenticationTest extends TestCase
      */
     public function registered_candidate_can_login()
     {
-        $this
-            ->post('/api/register', [
-                "first_name"    => "Ahmed",
-                "last_name"     => "Badawy",
-                "email"         => "foo@gmail.com",
-                "password"      => "u2ArHI&mxLwuh2%k",
-            ]);
+        Candidate::factory()->create([
+            "email"         => "foo@gmail.com",
+            "password"      => Hash::make("u2ArHI&mxLwuh2%k"),
+        ]);
 
         $response = $this
             ->post('/api/login', [
                 "email"         => "foo@gmail.com",
                 "password"      => "u2ArHI&mxLwuh2%k",
             ]);
+
         $response->assertSuccessful();
 
         $meta_array = (array) json_decode($response->content());

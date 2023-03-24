@@ -12,7 +12,11 @@ class CandidateResource extends JsonResource
             "first_name"    => (string) $this->first_name,
             "last_name"     => (string) $this->last_name,
             "full_name"     => (string) $this->full_name,
-            "email"         => (string) $this->email
+            "email"         => (string) $this->email,
+            "mobile"        => [
+                "country"       => (string) $this->mobile_country,
+                "number"        => (string) $this->mobile_number,
+            ]
         ];
     }
 }

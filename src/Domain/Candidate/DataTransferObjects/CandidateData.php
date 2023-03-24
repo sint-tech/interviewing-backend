@@ -12,6 +12,8 @@ class CandidateData extends Data
         public string $last_name,
         public string|Optional $full_name,
         public string $email,
+        public string $mobile_number,
+        public string $mobile_country,
         public string|Optional $password
     )
     {

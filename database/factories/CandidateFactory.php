@@ -25,6 +25,8 @@ class CandidateFactory extends Factory
             "last_name"     => $last_name = $this->faker->lastName,
             "full_name"     => $first_name . $last_name,
             "email"         => $this->faker->unique()->email,
+            "mobile_country"    => "EG",
+            "mobile_number"     => $this->faker->unique()->numberBetween(100_000_000_0,12_999_999_9),
             "password"      => Hash::make("password"),
             "email_verified_at" => $this->faker->dateTimeBetween('-30 days')
         ];

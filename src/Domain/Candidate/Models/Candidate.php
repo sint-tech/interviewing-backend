@@ -15,12 +15,15 @@ class Candidate extends Authenticatable
     use HasFactory,SoftDeletes,HasApiTokens;
 
     protected $guard = "candidate";
-    
+
     protected $fillable = [
         "first_name",
         "last_name",
         "full_name",
         "email",
+        "mobile_country",
+        "mobile_country_code",
+        "mobile_number",
         "password",
     ];
 
