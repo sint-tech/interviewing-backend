@@ -11,7 +11,6 @@ And Support Fully Admin panel to keep tracking the business needs easily.
 - PHP 8.1
 - apache OR Xampp OR Nginx
 - mysql 8
-- 
 ## Installation Guide
 
 ****

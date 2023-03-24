@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Foundation\Http\Kernel;
+use Support\Middlewares\ForceJsonRequest;
 
 class HttpKernel extends Kernel
 {
@@ -42,6 +43,7 @@ class HttpKernel extends Kernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            ForceJsonRequest::class
         ],
     ];
 
@@ -63,5 +65,9 @@ class HttpKernel extends Kernel
         'signed' => \Support\Middlewares\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
+
+    protected $middlewarePriority = [
+        ForceJsonRequest::class
     ];
 }
