@@ -4,6 +4,8 @@ use App\Website\Auth\Controllers\LoginController;
 use App\Website\Auth\Controllers\LogoutController;
 use App\Website\Auth\Controllers\RegisterController;
 use App\Website\Auth\Controllers\ValidateNewCandidateUniqueInputsController;
+use App\Website\JobTitle\Controllers\JobTitleController;
+use App\Website\RegistrationReasons\Controllers\RegistrationReasonsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +29,9 @@ Route::middleware("guest:api-candidate")->group(function () {
 Route::middleware('auth:api-candidate')->group(function () {
     Route::any("/logout", LogoutController::class);
 });
+
+Route::apiResource("job-titles", JobTitleController::class)
+    ->only(["index","show"]);
+
+Route::apiResource("registration-reasons", RegistrationReasonsController::class)
+    ->only(["index","show"]);

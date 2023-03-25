@@ -4,8 +4,6 @@ namespace App\Website\Auth\Factories;
 
 use App\Website\Auth\Requests\RegisterRequest;
 use Domain\Candidate\DataTransferObjects\CandidateData;
-use Illuminate\Http\Request;
-use Propaganistas\LaravelPhone\PhoneNumber;
 
 class CandidateDataFactory
 {

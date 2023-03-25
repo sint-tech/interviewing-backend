@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.8",
         "propaganistas/laravel-phone": "^5.0",
         "spatie/data-transfer-object": "^3.9",
-        "spatie/laravel-data": "^3.2"
+        "spatie/laravel-data": "^3.2",
+        "spatie/laravel-query-builder": "^5.2"
     },
     "require-dev": {
         "akrillia/laravel-beyond": "^6.0",

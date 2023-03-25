@@ -12,7 +12,7 @@ class JobTitleResource extends JsonResource
             "id"            => (int) $this->id,
             "title"         => (string) $this->title,
             "description"   => (string) $this->description,
-            "status"        => $this->availability_status->value
+            "status"        => (string) $this->availability_status->value
         ];
     }
 }
