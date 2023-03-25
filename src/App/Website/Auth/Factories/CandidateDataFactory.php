@@ -19,6 +19,8 @@ class CandidateDataFactory
             "mobile_number" => preg_replace('[^0-9]', '', $request->validated("mobile.number")) ,
             "mobile_country" => $request->validated("mobile.country"),
             "password"     => $request->validated("password"),
+
+            "current_job_title_id"    => $request->validated("current_job_title_id")
         ]);
     }
 }

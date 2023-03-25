@@ -2,6 +2,7 @@
 
 namespace App\Website\Auth\Resources;
 
+use App\Website\JobTitle\Resources\JobTitleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CandidateResource extends JsonResource
@@ -17,7 +18,9 @@ class CandidateResource extends JsonResource
             "mobile"        => [
                 "country"       => (string) $this->mobile_country,
                 "number"        => (string) $this->mobile_number,
-            ]
+            ],
+            'current_job_title' => JobTitleResource::make($this->whenLoaded('currentJobTitle')),
+            'desire_hiring_positions' => JobTitleResource::collection($this->whenLoaded('desireHiringPositions')),
         ];
     }
 }

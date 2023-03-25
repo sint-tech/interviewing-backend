@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Domain\Candidate\Actions\GenerateCandidateAccessTokenAction;
 use Domain\Candidate\Models\Candidate;
+use Domain\JobTitle\Models\JobTitle;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +35,10 @@ class CandidateAuthenticationTest extends TestCase
      */
     public function candidate_should_be_auth_after_register(): void
     {
+        $job_titles = JobTitle::factory(20)->availabilityIsActive()->create();
+
+        $current_job_title = $job_titles->first();
+
         $response = $this
             ->post('/api/register', [
                 "first_name"    => "Ahmed",
@@ -43,7 +48,12 @@ class CandidateAuthenticationTest extends TestCase
                 "mobile"        => [
                     "country"   => "EG",
                     "number"    => "1114470249"
-                ]
+                ],
+                "current_job_title_id"  => $current_job_title->getKey(),
+                "desire_hiring_positions"   => $job_titles
+                    ->where("id","!=",$current_job_title->getKey())
+                    ->unique()
+                    ->pluck("id")->toArray()
             ]);
 
         $response->assertSuccessful();
