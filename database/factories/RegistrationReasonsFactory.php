@@ -4,15 +4,15 @@ namespace Database\Factories;
 
 use Domain\Candidate\Enums\RegistrationReasonsAvailabilityStatusEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Domain\Candidate\Models\RegistrationReasons;
+use Domain\Candidate\Models\RegistrationReason;
 
 /**
- * @extends Factory<RegistrationReasons>
+ * @extends Factory<RegistrationReason>
  */
 class RegistrationReasonsFactory extends Factory
 {
 
-    protected $model = RegistrationReasons::class;
+    protected $model = RegistrationReason::class;
 
     public function definition()
     {

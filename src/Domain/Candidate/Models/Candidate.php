@@ -38,7 +38,14 @@ class Candidate extends Authenticatable
 
     public function desireHiringPositions():BelongsToMany
     {
-        return $this->belongsToMany(JobTitle::class,CandidateHiringPosition::class,"candidate_id");
+        return $this->belongsToMany(JobTitle::class,CandidateHiringPosition::class,"candidate_id")
+            ->withTimestamps();
+    }
+
+    public function registrationReasons():BelongsToMany
+    {
+        return $this->belongsToMany(RegistrationReason::class,CandidateRegistrationReason::class,"candidate_id")
+            ->withTimestamps();
     }
 
     protected static function newFactory()

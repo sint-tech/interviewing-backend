@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Domain\Candidate\Actions\GenerateCandidateAccessTokenAction;
 use Domain\Candidate\Models\Candidate;
+use Domain\Candidate\Models\RegistrationReason;
 use Domain\JobTitle\Models\JobTitle;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Artisan;
@@ -37,6 +38,8 @@ class CandidateAuthenticationTest extends TestCase
     {
         $job_titles = JobTitle::factory(20)->availabilityIsActive()->create();
 
+        $registration_reasons = RegistrationReason::factory(10)->availabilityIsActive()->create();
+
         $current_job_title = $job_titles->first();
 
         $response = $this
@@ -53,7 +56,8 @@ class CandidateAuthenticationTest extends TestCase
                 "desire_hiring_positions"   => $job_titles
                     ->where("id","!=",$current_job_title->getKey())
                     ->unique()
-                    ->pluck("id")->toArray()
+                    ->pluck("id")->toArray(),
+                "registration_reasons" => $registration_reasons->pluck('id')->toArray()
             ]);
 
         $response->assertSuccessful();

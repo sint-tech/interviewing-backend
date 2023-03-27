@@ -2,7 +2,9 @@
 
 namespace App\Website\Auth\Requests;
 
+use Domain\Candidate\Enums\RegistrationReasonsAvailabilityStatusEnum;
 use Domain\Candidate\Models\Candidate;
+use Domain\Candidate\Models\RegistrationReason;
 use Domain\JobTitle\Enums\AvailabilityStatusEnum;
 use Domain\JobTitle\Models\JobTitle;
 use Illuminate\Foundation\Http\FormRequest;
@@ -36,11 +38,16 @@ class RegisterRequest extends FormRequest
                     ->whereNull("deleted_at")
                     ->where("availability_status",AvailabilityStatusEnum::Active->value)
             ],
-            "desire_hiring_positions"   => ["required","array","min:1","max:100"],
+            "desire_hiring_positions"   => ["required","array","min:1","max:100","distinct"],
             "desire_hiring_positions.*"  => ['integer',Rule::exists(JobTitle::class,"id")
                 ->whereNull("deleted_at")
                 ->where("availability_status",AvailabilityStatusEnum::Active->value)
             ],
+            "registration_reasons" => ["required","array","min:1","max:100","distinct"],
+            "registration_reasons.*"  => ["integer",Rule::exists(RegistrationReason::class,"id")
+                ->whereNull("deleted_at")
+                ->where("availability_status",RegistrationReasonsAvailabilityStatusEnum::Active->value)
+            ]
         ];
     }
 }

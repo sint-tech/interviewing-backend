@@ -7,7 +7,7 @@ use Domain\Candidate\Enums\RegistrationReasonsAvailabilityStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RegistrationReasons extends Model
+class RegistrationReason extends Model
 {
     use HasFactory;
 
@@ -15,6 +15,8 @@ class RegistrationReasons extends Model
         "reason",
         "availability_status"
     ];
+
+    protected $table = "registration_reasons";
 
     protected $casts = [
         "availability_status"   => RegistrationReasonsAvailabilityStatusEnum::class

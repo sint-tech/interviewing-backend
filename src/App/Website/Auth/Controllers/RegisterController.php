@@ -6,6 +6,7 @@ use App\Website\Auth\Factories\CandidateDataFactory;
 use App\Website\Auth\Requests\RegisterRequest;
 use App\Website\Auth\Resources\CandidateResource;
 use Domain\Candidate\Actions\AttachDesireJobsToCandidateAction;
+use Domain\Candidate\Actions\AttachRegistrationReasonsToCandidateAction;
 use Domain\Candidate\Actions\CreateCandidateAction;
 use Domain\Candidate\Actions\GenerateCandidateAccessTokenAction;
 use Laravel\Passport\Client;
@@ -24,9 +25,12 @@ class RegisterController extends Controller
 
         (new AttachDesireJobsToCandidateAction($candidate,$request->validated("desire_hiring_positions")))->execute();
 
+        (new AttachRegistrationReasonsToCandidateAction($candidate,$request->validated("registration_reasons")))->execute();
+
         $candidate->load([
             "currentJobTitle",
-            "desireHiringPositions"
+            "desireHiringPositions",
+            "registrationReasons"
         ]);
         //todo create candidate service and add register method
 

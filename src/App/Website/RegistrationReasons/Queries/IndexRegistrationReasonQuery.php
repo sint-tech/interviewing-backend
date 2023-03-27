@@ -2,7 +2,7 @@
 
 namespace App\Website\RegistrationReasons\Queries;
 
-use Domain\Candidate\Models\RegistrationReasons;
+use Domain\Candidate\Models\RegistrationReason;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -12,7 +12,7 @@ class IndexRegistrationReasonQuery extends QueryBuilder
 {
     public function __construct(Request $request)
     {
-        $subject = RegistrationReasons::query();
+        $subject = RegistrationReason::query();
 
         parent::__construct($subject, $request);
 
