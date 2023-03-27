@@ -7,8 +7,10 @@ use Domain\Candidate\Models\Candidate;
 use Domain\Candidate\Models\RegistrationReason;
 use Domain\JobTitle\Models\JobTitle;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class CandidateAuthenticationTest extends TestCase
@@ -36,6 +38,10 @@ class CandidateAuthenticationTest extends TestCase
      */
     public function candidate_should_be_auth_after_register(): void
     {
+        Storage::fake();
+
+        $cv = UploadedFile::fake()->create("my-cv.pdf");
+
         $job_titles = JobTitle::factory(20)->availabilityIsActive()->create();
 
         $registration_reasons = RegistrationReason::factory(10)->availabilityIsActive()->create();
@@ -57,7 +63,8 @@ class CandidateAuthenticationTest extends TestCase
                     ->where("id","!=",$current_job_title->getKey())
                     ->unique()
                     ->pluck("id")->toArray(),
-                "registration_reasons" => $registration_reasons->pluck('id')->toArray()
+                "registration_reasons" => $registration_reasons->pluck('id')->toArray(),
+                "cv"    => $cv
             ]);
 
         $response->assertSuccessful();
@@ -79,6 +86,16 @@ class CandidateAuthenticationTest extends TestCase
                 "token"
             ]
         ]);
+
+        $candidate_cvs = Candidate::query()
+            ->where("email","foo@gmail.com")
+            ->first()->getMedia("cv");
+
+        $this->assertCount(1, $candidate_cvs);
+
+        $this->assertTrue($candidate_cvs->first()->getCustomProperty("used_when_registered"));
+
+        $this->assertFileExists($candidate_cvs->first()->getPath());
     }
 
     /**

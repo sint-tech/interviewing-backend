@@ -11,6 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Propaganistas\LaravelPhone\Rules\Phone;
+use Illuminate\Validation\Rules\File;
 
 class RegisterRequest extends FormRequest
 {
@@ -47,7 +48,8 @@ class RegisterRequest extends FormRequest
             "registration_reasons.*"  => ["integer",Rule::exists(RegistrationReason::class,"id")
                 ->whereNull("deleted_at")
                 ->where("availability_status",RegistrationReasonsAvailabilityStatusEnum::Active->value)
-            ]
+            ],
+            "cv"    => ["required",File::types("pdf")]
         ];
     }
 }

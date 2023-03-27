@@ -17,6 +17,7 @@
         "propaganistas/laravel-phone": "^5.0",
         "spatie/data-transfer-object": "^3.9",
         "spatie/laravel-data": "^3.2",
+        "spatie/laravel-medialibrary": "^10.0.0",
         "spatie/laravel-query-builder": "^5.2"
     },
     "require-dev": {
