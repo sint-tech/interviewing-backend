@@ -26,7 +26,7 @@ And Support Fully Admin panel to keep tracking the business needs easily.
 - ``php artisan key:generate``
 - ``php artisan migrate``
 - ``php artisan:passport install``
-- ``php artisan:client --password --provider=candidates --name=Laravel Password Grant Client FOR CANDIDATE``
+- ``php artisan:client --password --provider=candidates --name="Laravel Password Grant Client FOR CANDIDATE"``
 - and to start the server run
   - ``php artisan serve``
 > #### __*note*__
