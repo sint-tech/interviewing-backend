@@ -21,9 +21,12 @@ And Support Fully Admin panel to keep tracking the business needs easily.
   - DB_DATABASE=DATABASE_NAME 
   - DB_USERNAME=DATABASE_USER_NAME 
   - DB_PASSWORD=DATABASE_PASSWORD
-- run ``composer i``
-- run ``php artisan key:generate``
-- run ``php artisan migrate``
+- then run the next commands
+- ``composer i``
+- ``php artisan key:generate``
+- ``php artisan migrate``
+- ``php artisan:passport install``
+- ``php artisan:client --password --provider=candidates --name=Laravel Password Grant Client FOR CANDIDATE``
 - and to start the server run
   - ``php artisan serve``
 > #### __*note*__
