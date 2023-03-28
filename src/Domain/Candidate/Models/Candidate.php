@@ -4,18 +4,18 @@ namespace Domain\Candidate\Models;
 
 use Database\Factories\CandidateFactory;
 use Domain\JobTitle\Models\JobTitle;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\HasApiTokens;
-use phpDocumentor\Reflection\Types\This;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Candidate extends Authenticatable
+class Candidate extends Authenticatable implements HasMedia
 {
-    use HasFactory,SoftDeletes,HasApiTokens;
+    use HasFactory,SoftDeletes,HasApiTokens,InteractsWithMedia;
 
     protected $guard = "candidate";
 
