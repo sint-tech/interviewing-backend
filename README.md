@@ -27,7 +27,7 @@ DB_PASSWORD=DATABASE_PASSWORD
 
 - then run the next commands
 ```php
-composer i
+composer install
 ```
 ```php
 php artisan key:generate
