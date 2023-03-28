@@ -28,6 +28,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('candidates', function (Blueprint $table) {
+            $table->dropUnique(["mobile_country","mobile_number"]);
+
             $table->dropColumn([
                 "mobile_country",
                 "mobile_number"
