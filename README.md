@@ -27,7 +27,7 @@ DB_PASSWORD=DATABASE_PASSWORD
 
 - then run the next commands
 ```php
-php composer i
+composer i
 ```
 ```php
 php artisan key:generate
@@ -39,7 +39,7 @@ php artisan migrate
 php artisan:passport install
 ```
 ```php 
-artisan:client --password --provider=candidates --name="Laravel Password Grant Client FOR CANDIDATE"
+php artisan:client --password --provider=candidates --name="Laravel Password Grant Client FOR CANDIDATE"
 ```
 ### and to start the server run
 
@@ -47,9 +47,10 @@ artisan:client --password --provider=candidates --name="Laravel Password Grant C
 php artisan serve
 ```
 
+---
 > #### **_NOTE:_**
 > when run the serve command will register the server to the localhost and the port **8000**.\
 > to change it you can pass the **`--port`** option to the command\
 > Example:
 > ``php artisan serve --port=7070``
-
+---
