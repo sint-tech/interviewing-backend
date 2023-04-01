@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Domain\Candidate\Actions\GenerateCandidateAccessTokenAction;
+use Domain\Candidate\Enums\CandidateSocialAppEnum;
 use Domain\Candidate\Models\Candidate;
 use Domain\Candidate\Models\RegistrationReason;
 use Domain\JobTitle\Models\JobTitle;
@@ -11,6 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class CandidateAuthenticationTest extends TestCase
@@ -114,6 +116,30 @@ class CandidateAuthenticationTest extends TestCase
                 "email"         => "foo@gmail.com",
                 "password"      => "u2ArHI&mxLwuh2%k",
             ]);
+
+        $response->assertSuccessful();
+
+        $meta_array = (array) json_decode($response->content());
+
+        $this->assertArrayHasKey("token",$meta_array);
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function candidate_can_login_using_google()
+    {
+        Candidate::factory()->registeredWithSocialApp()->create([
+            "social_driver_id"      => $driver_id = Str::uuid()->toString(),
+            "social_driver_name"    => $driver_name = CandidateSocialAppEnum::Google->value
+        ]);
+
+
+        $response = $this->post("api/social-login",[
+            "driver_name"   => $driver_name,
+            "driver_id"      => $driver_id
+        ]);
 
         $response->assertSuccessful();
 

@@ -3,6 +3,8 @@
 namespace Domain\Candidate\Models;
 
 use Database\Factories\CandidateFactory;
+use Domain\Candidate\Builders\CandidateBuilder;
+use Domain\Candidate\Enums\CandidateSocialAppEnum;
 use Domain\JobTitle\Models\JobTitle;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,8 +30,28 @@ class Candidate extends Authenticatable implements HasMedia
         "mobile_country_code",
         "mobile_number",
         "password",
+        "social_driver_name",
+        "social_driver_id",
         "current_job_title_id"
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+    ];
+
+    protected $casts = [
+        "social_driver_name"    => CandidateSocialAppEnum::class
+    ];
+
+    public function registeredWithSocialApp():bool
+    {
+        return $this->social_driver_name && $this->social_driver_id;
+    }
 
     public function currentJobTitle():BelongsTo
     {
@@ -46,6 +68,11 @@ class Candidate extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(RegistrationReason::class,CandidateRegistrationReason::class,"candidate_id")
             ->withTimestamps();
+    }
+
+    public function newEloquentBuilder($query):CandidateBuilder
+    {
+        return new CandidateBuilder($query);
     }
 
     protected static function newFactory()

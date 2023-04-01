@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Domain\Candidate\Enums\CandidateSocialAppEnum;
 use Domain\Candidate\Models\Candidate;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -28,7 +29,9 @@ class CandidateFactory extends Factory
             "mobile_country"    => "EG",
             "mobile_number"     => $this->faker->unique()->numberBetween(100_000_000_0,12_999_999_9),
             "password"      => Hash::make("password"),
-            "email_verified_at" => $this->faker->dateTimeBetween('-30 days')
+            "email_verified_at" => $this->faker->dateTimeBetween('-30 days'),
+            "social_driver_name"    => null,
+            "social_driver_id"      => null,
         ];
     }
 
@@ -37,6 +40,24 @@ class CandidateFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "email_verified_at" => null
+            ];
+        });
+    }
+
+    /**
+     * @return CandidateFactory
+     */
+    public function registeredWithSocialApp():CandidateFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "social_driver_name"    => $this->faker->randomElement([
+                    CandidateSocialAppEnum::Linkedin->value,
+                    CandidateSocialAppEnum::Google->value
+                ]),
+                "social_driver_id"      => $this->faker->unique()->uuid(),
+                "email_verified_at"     => null,
+                "password"              => null
             ];
         });
     }

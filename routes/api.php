@@ -3,6 +3,7 @@
 use App\Website\Auth\Controllers\LoginController;
 use App\Website\Auth\Controllers\LogoutController;
 use App\Website\Auth\Controllers\RegisterController;
+use App\Website\Auth\Controllers\SocialLoginController;
 use App\Website\Auth\Controllers\ValidateNewCandidateUniqueInputsController;
 use App\Website\JobTitle\Controllers\JobTitleController;
 use App\Website\RegistrationReasons\Controllers\RegistrationReasonsController;
@@ -24,6 +25,7 @@ Route::middleware("guest:api-candidate")->group(function () {
     Route::post("/pre-register/valid-identifier-input", ValidateNewCandidateUniqueInputsController::class);
     Route::post("/register", RegisterController::class);
     Route::post("/login", LoginController::class);
+    Route::post("/social-login", SocialLoginController::class);
 });
 
 Route::middleware('auth:api-candidate')->group(function () {
