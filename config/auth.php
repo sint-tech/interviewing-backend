@@ -46,10 +46,10 @@ return [
             'provider' => 'users',
         ],
 
-        'api-candidate'  => [
+        'api-candidate' => [
             'driver' => 'passport',
-            'provider' => 'candidates'
-        ]
+            'provider' => 'candidates',
+        ],
     ],
 
     /*
@@ -75,10 +75,10 @@ return [
             'model' => Domain\Users\Models\User::class,
         ],
 
-         'candidates' => [
-             'driver' => 'eloquent',
-             'model' => Domain\Candidate\Models\Candidate::class,
-         ],
+        'candidates' => [
+            'driver' => 'eloquent',
+            'model' => Domain\Candidate\Models\Candidate::class,
+        ],
     ],
 
     /*
@@ -108,9 +108,9 @@ return [
             'throttle' => 60,
         ],
 
-        'candidates'    => [
-            'provider'  => 'candidates',
-        ]
+        'candidates' => [
+            'provider' => 'candidates',
+        ],
     ],
 
     /*

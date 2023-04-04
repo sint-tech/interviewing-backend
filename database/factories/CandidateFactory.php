@@ -22,16 +22,16 @@ class CandidateFactory extends Factory
     public function definition(): array
     {
         return [
-            "first_name"    => $first_name = $this->faker->firstName,
-            "last_name"     => $last_name = $this->faker->lastName,
-            "full_name"     => $first_name . $last_name,
-            "email"         => $this->faker->unique()->email,
-            "mobile_country"    => "EG",
-            "mobile_number"     => $this->faker->unique()->numberBetween(100_000_000_0,12_999_999_9),
-            "password"      => Hash::make("password"),
-            "email_verified_at" => $this->faker->dateTimeBetween('-30 days'),
-            "social_driver_name"    => null,
-            "social_driver_id"      => null,
+            'first_name' => $first_name = $this->faker->firstName,
+            'last_name' => $last_name = $this->faker->lastName,
+            'full_name' => $first_name.$last_name,
+            'email' => $this->faker->unique()->email,
+            'mobile_country' => 'EG',
+            'mobile_number' => $this->faker->unique()->numberBetween(100_000_000_0, 12_999_999_9),
+            'password' => Hash::make('password'),
+            'email_verified_at' => $this->faker->dateTimeBetween('-30 days'),
+            'social_driver_name' => null,
+            'social_driver_id' => null,
         ];
     }
 
@@ -39,25 +39,22 @@ class CandidateFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                "email_verified_at" => null
+                'email_verified_at' => null,
             ];
         });
     }
 
-    /**
-     * @return CandidateFactory
-     */
-    public function registeredWithSocialApp():CandidateFactory
+    public function registeredWithSocialApp(): CandidateFactory
     {
         return $this->state(function (array $attributes) {
             return [
-                "social_driver_name"    => $this->faker->randomElement([
+                'social_driver_name' => $this->faker->randomElement([
                     CandidateSocialAppEnum::Linkedin->value,
-                    CandidateSocialAppEnum::Google->value
+                    CandidateSocialAppEnum::Google->value,
                 ]),
-                "social_driver_id"      => $this->faker->unique()->uuid(),
-                "email_verified_at"     => null,
-                "password"              => null
+                'social_driver_id' => $this->faker->unique()->uuid(),
+                'email_verified_at' => null,
+                'password' => null,
             ];
         });
     }

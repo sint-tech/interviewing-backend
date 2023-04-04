@@ -11,16 +11,16 @@ class SocialLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "driver_name"   => ["required","string",Rule::enum(CandidateSocialAppEnum::class)],
-            "driver_id"     => ["required","string"]
+            'driver_name' => ['required', 'string', Rule::enum(CandidateSocialAppEnum::class)],
+            'driver_id' => ['required', 'string'],
         ];
     }
 
-    protected function supportedSocialDrivers():array
+    protected function supportedSocialDrivers(): array
     {
         return [
             CandidateSocialAppEnum::Google->value,
-            CandidateSocialAppEnum::Linkedin->value
+            CandidateSocialAppEnum::Linkedin->value,
         ];
     }
 }

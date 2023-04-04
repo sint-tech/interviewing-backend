@@ -2,9 +2,9 @@
 
 namespace Domain\JobTitle\Enums;
 
-enum AvailabilityStatusEnum:string
+enum AvailabilityStatusEnum: string
 {
-    case Active = "active";
+    case Active = 'active';
 
-    case Inactive = "inactive";
+    case Inactive = 'inactive';
 }

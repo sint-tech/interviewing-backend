@@ -12,17 +12,15 @@ use Support\Controllers\Controller;
 
 class LoginController extends Controller
 {
-    public function __invoke
-    (
+    public function __invoke(
         LoginRequest $request
-    )
-    {
+    ) {
         $candidate = Candidate::query()
-            ->where("email",$request->validated("email"))
-            ->firstOr(fn() => throw new AuthenticationException("email or password wrong!"));
+            ->where('email', $request->validated('email'))
+            ->firstOr(fn () => throw new AuthenticationException('email or password wrong!'));
 
-        if (! Hash::check($request->validated("password"),$candidate->password)) {
-            throw new AuthenticationException("email or password wrong!");
+        if (! Hash::check($request->validated('password'), $candidate->password)) {
+            throw new AuthenticationException('email or password wrong!');
         }
 
         auth()->setUser($candidate);
@@ -30,7 +28,7 @@ class LoginController extends Controller
         $token = (new GenerateCandidateAccessTokenAction($candidate))->execute();
 
         return CandidateResource::make($candidate)->additional([
-            "token" => $token
+            'token' => $token,
         ]);
     }
 }

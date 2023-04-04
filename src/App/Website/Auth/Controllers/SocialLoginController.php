@@ -12,19 +12,17 @@ use Support\Controllers\Controller;
 
 class SocialLoginController extends Controller
 {
-    public function __invoke
-    (
+    public function __invoke(
         SocialLoginRequest $request
-    )
-    {
+    ) {
         $candidate = Candidate::query()
-            ->whereSocialDriverName($request->enum('driver_name',CandidateSocialAppEnum::class))
+            ->whereSocialDriverName($request->enum('driver_name', CandidateSocialAppEnum::class))
             ->whereSocialDriverId($request->validated('driver_id'))
-            ->firstOr(fn() => throw new AuthenticationException());
+            ->firstOr(fn () => throw new AuthenticationException());
 
         $token = (new GenerateCandidateAccessTokenAction($candidate))->execute();
 
         return CandidateResource::make($candidate)
-            ->additional(["token" => $token]);
+            ->additional(['token' => $token]);
     }
 }

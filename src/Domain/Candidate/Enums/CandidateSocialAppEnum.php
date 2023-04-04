@@ -2,9 +2,9 @@
 
 namespace Domain\Candidate\Enums;
 
-enum CandidateSocialAppEnum:string
+enum CandidateSocialAppEnum: string
 {
-    case Linkedin = "linkedin";
+    case Linkedin = 'linkedin';
 
-    case Google = "google";
+    case Google = 'google';
 }

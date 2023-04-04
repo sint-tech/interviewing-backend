@@ -7,12 +7,9 @@ use Spatie\LaravelData\Data;
 
 class CvData extends Data
 {
-    public function __construct
-    (
+    public function __construct(
         public readonly UploadedFile $cv,
         public readonly bool $used_when_registered = false
-    )
-    {
-
+    ) {
     }
 }

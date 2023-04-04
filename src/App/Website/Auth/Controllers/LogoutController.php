@@ -2,7 +2,6 @@
 
 namespace App\Website\Auth\Controllers;
 
-use Illuminate\Support\Facades\Artisan;
 use Support\Controllers\Controller;
 
 class LogoutController extends Controller
@@ -14,7 +13,7 @@ class LogoutController extends Controller
         $candidate->token()->revoke();
 
         return response()->json([
-            "message"   => "logout successfully"
+            'message' => 'logout successfully',
         ]);
     }
 }

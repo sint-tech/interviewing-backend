@@ -7,13 +7,10 @@ use Illuminate\Support\Collection;
 
 class AttachDesireJobsToCandidateAction
 {
-    public function __construct
-    (
+    public function __construct(
         public Candidate $candidate,
         public array|Collection $desire_hiring_positions
-    )
-    {
-
+    ) {
     }
 
     /**
@@ -22,7 +19,7 @@ class AttachDesireJobsToCandidateAction
     public function execute()
     {
         if (empty($this->desire_hiring_positions)) {
-            throw new \LogicException("desire hiring positions should be filled with at least one id");
+            throw new \LogicException('desire hiring positions should be filled with at least one id');
         }
 
         return $this->candidate

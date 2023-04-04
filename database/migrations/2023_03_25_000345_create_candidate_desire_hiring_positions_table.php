@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('candidate_desire_hiring_positions', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId("candidate_id")->nullable()->constrained("candidates")->nullOnDelete();
-            $table->foreignId("job_title_id")->nullable()->constrained("job_titles")->nullOnDelete();
+            $table->foreignId('candidate_id')->nullable()->constrained('candidates')->nullOnDelete();
+            $table->foreignId('job_title_id')->nullable()->constrained('job_titles')->nullOnDelete();
             $table->unique([
-                "candidate_id",
-                "job_title_id"
-            ],"candidate_id_job_title_id_unique");
+                'candidate_id',
+                'job_title_id',
+            ], 'candidate_id_job_title_id_unique');
 
             $table->timestamps();
         });
