@@ -39,7 +39,7 @@ php artisan migrate
 php artisan:passport install
 ```
 ```php 
-php artisan:client --password --provider=candidates --name="Laravel Password Grant Client FOR CANDIDATE"
+php artisan passport:client --password --provider=candidates --name="Laravel Password Grant Client FOR CANDIDATE"
 ```
 ### and to start the server run
 
