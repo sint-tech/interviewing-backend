@@ -11,32 +11,29 @@ use Domain\Candidate\Actions\AttachRegistrationReasonsToCandidateAction;
 use Domain\Candidate\Actions\CreateCandidateAction;
 use Domain\Candidate\Actions\GenerateCandidateAccessTokenAction;
 use Domain\Candidate\Actions\UploadCandidateCvAction;
-use Laravel\Passport\Client;
 use Support\Controllers\Controller;
 
 class RegisterController extends Controller
 {
-    public function __invoke
-    (
+    public function __invoke(
         RegisterRequest $request
-    )
-    {
+    ) {
         $candidate_data = CandidateDataFactory::fromRequest($request);
 
         $cv_data = FirstCvDataFactory::fromRequest($request);
 
         $candidate = (new CreateCandidateAction($candidate_data))->execute();
 
-        (new AttachDesireJobsToCandidateAction($candidate,$request->validated("desire_hiring_positions")))->execute();
+        (new AttachDesireJobsToCandidateAction($candidate, $request->validated('desire_hiring_positions')))->execute();
 
-        (new AttachRegistrationReasonsToCandidateAction($candidate,$request->validated("registration_reasons")))->execute();
+        (new AttachRegistrationReasonsToCandidateAction($candidate, $request->validated('registration_reasons')))->execute();
 
-        (new UploadCandidateCvAction($candidate,$cv_data))->execute();
+        (new UploadCandidateCvAction($candidate, $cv_data))->execute();
 
         $candidate->load([
-            "currentJobTitle",
-            "desireHiringPositions",
-            "registrationReasons"
+            'currentJobTitle',
+            'desireHiringPositions',
+            'registrationReasons',
         ]);
         //todo create candidate service and add register method
 
@@ -44,8 +41,8 @@ class RegisterController extends Controller
 
         return (new CandidateResource($candidate))->additional([
             'meta' => [
-                "token" => $token
-            ]
+                'token' => $token,
+            ],
         ]);
     }
 }

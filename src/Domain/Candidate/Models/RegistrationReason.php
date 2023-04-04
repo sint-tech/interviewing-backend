@@ -12,14 +12,14 @@ class RegistrationReason extends Model
     use HasFactory;
 
     protected $fillable = [
-        "reason",
-        "availability_status"
+        'reason',
+        'availability_status',
     ];
 
-    protected $table = "registration_reasons";
+    protected $table = 'registration_reasons';
 
     protected $casts = [
-        "availability_status"   => RegistrationReasonsAvailabilityStatusEnum::class
+        'availability_status' => RegistrationReasonsAvailabilityStatusEnum::class,
     ];
 
     protected static function newFactory()

@@ -12,17 +12,17 @@ class JobTitle extends Model
     use HasFactory;
 
     protected $fillable = [
-        "title",
-        "description",
-        "availability_status"
+        'title',
+        'description',
+        'availability_status',
     ];
 
     protected $casts = [
-        "availability_status" => AvailabilityStatusEnum::class
+        'availability_status' => AvailabilityStatusEnum::class,
     ];
 
-    protected static function newFactory():JobTitleFactory
+    protected static function newFactory(): JobTitleFactory
     {
-        return (new JobTitleFactory());
+        return new JobTitleFactory();
     }
 }

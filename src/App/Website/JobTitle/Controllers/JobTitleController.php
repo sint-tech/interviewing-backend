@@ -10,22 +10,14 @@ use Support\Controllers\Controller;
 
 class JobTitleController extends Controller
 {
-    /**
-     * @param JobTitleIndexQuery $indexQuery
-     * @return AnonymousResourceCollection
-     */
-    public function index(JobTitleIndexQuery $indexQuery):AnonymousResourceCollection
+    public function index(JobTitleIndexQuery $indexQuery): AnonymousResourceCollection
     {
-        $jobTitles = $indexQuery->paginate(request()->input("per_page",25));
+        $jobTitles = $indexQuery->paginate(request()->input('per_page', 25));
 
         return JobTitleResource::collection($jobTitles);
     }
 
-    /**
-     * @param int $jobTitleId
-     * @return JobTitleResource
-     */
-    public function show(int $jobTitleId):JobTitleResource
+    public function show(int $jobTitleId): JobTitleResource
     {
         $jobTitle = JobTitle::query()->findOrFail($jobTitleId);
 

@@ -3,7 +3,6 @@
 namespace App\Website\JobTitle\Queries;
 
 use Domain\JobTitle\Models\JobTitle;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -21,13 +20,12 @@ class JobTitleIndexQuery extends QueryBuilder
         );
     }
 
-
-    protected function getAllowedFilters():array
+    protected function getAllowedFilters(): array
     {
         return [
-            AllowedFilter::exact("availability_status"),
-            AllowedFilter::exact("id"),
-            AllowedFilter::partial("title")
+            AllowedFilter::exact('availability_status'),
+            AllowedFilter::exact('id'),
+            AllowedFilter::partial('title'),
         ];
     }
 }

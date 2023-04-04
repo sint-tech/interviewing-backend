@@ -10,7 +10,7 @@ class CandidateRegistrationReason extends Model
     use HasFactory;
 
     protected $fillable = [
-        "candidate_id",
-        "registration_reason_id"
+        'candidate_id',
+        'registration_reason_id',
     ];
 }

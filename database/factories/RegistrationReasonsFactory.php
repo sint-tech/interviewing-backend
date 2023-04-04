@@ -3,25 +3,24 @@
 namespace Database\Factories;
 
 use Domain\Candidate\Enums\RegistrationReasonsAvailabilityStatusEnum;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Domain\Candidate\Models\RegistrationReason;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<RegistrationReason>
  */
 class RegistrationReasonsFactory extends Factory
 {
-
     protected $model = RegistrationReason::class;
 
     public function definition()
     {
         return [
-            "title"         => $this->faker->unique()->jobTitle,
-            "availability_status"   => $this->faker->randomElement([
+            'title' => $this->faker->unique()->jobTitle,
+            'availability_status' => $this->faker->randomElement([
                 RegistrationReasonsAvailabilityStatusEnum::Active->value,
-                RegistrationReasonsAvailabilityStatusEnum::Inactive->value
-            ])
+                RegistrationReasonsAvailabilityStatusEnum::Inactive->value,
+            ]),
         ];
     }
 
@@ -29,7 +28,7 @@ class RegistrationReasonsFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                "availability_status"    => RegistrationReasonsAvailabilityStatusEnum::Active->value
+                'availability_status' => RegistrationReasonsAvailabilityStatusEnum::Active->value,
             ];
         });
     }

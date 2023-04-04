@@ -13,10 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('candidates', function (Blueprint $table) {
-            $table->foreignId("current_job_title_id")
+            $table->foreignId('current_job_title_id')
                 ->nullable()
-                ->after("password")
-                ->constrained("candidates")
+                ->after('password')
+                ->constrained('candidates')
                 ->nullOnDelete();
         });
     }
@@ -27,11 +27,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('candidates', function (Blueprint $table) {
-            if (DB::getDriverName() == "sqlite") {
-                $table->dropColumn(["current_job_title_id"]);
-            }
-            else {
-                $table->dropConstrainedForeignId("current_job_title_id");
+            if (DB::getDriverName() == 'sqlite') {
+                $table->dropColumn(['current_job_title_id']);
+            } else {
+                $table->dropConstrainedForeignId('current_job_title_id');
             }
         });
     }

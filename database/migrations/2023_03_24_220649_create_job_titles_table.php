@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('job_titles', function (Blueprint $table) {
             $table->id();
 
-            $table->string("title")->unique();
-            $table->longText("description");
+            $table->string('title')->unique();
+            $table->longText('description');
 
-            $table->enum("availability_status",["active",'inactive'])->default("inactive");
+            $table->enum('availability_status', ['active', 'inactive'])->default('inactive');
 
             $table->timestamps();
             $table->softDeletes();

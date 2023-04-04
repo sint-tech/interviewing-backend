@@ -8,11 +8,9 @@ use Support\Controllers\Controller;
 
 class ValidateNewCandidateUniqueInputsController extends Controller
 {
-    public function __invoke
-    (
+    public function __invoke(
         ValidateNewCandidateUniqueInputsRequest $request
-    )
-    {
-        return response()->json(["message" => "passed"],Response::HTTP_OK);
+    ) {
+        return response()->json(['message' => 'passed'], Response::HTTP_OK);
     }
 }

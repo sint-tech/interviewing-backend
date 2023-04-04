@@ -17,9 +17,6 @@ class CandidateData extends Data
         public readonly  string|Optional $password,
 
         public readonly  int|Optional $current_job_title_id
-    )
-    {
-
+    ) {
     }
-
 }

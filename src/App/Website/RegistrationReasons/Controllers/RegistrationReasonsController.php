@@ -11,7 +11,7 @@ class RegistrationReasonsController extends Controller
 {
     public function index(IndexRegistrationReasonQuery $query)
     {
-        $data = $query->paginate(request('per_page',25));
+        $data = $query->paginate(request('per_page', 25));
 
         return RegistrationReasonResource::collection($data);
     }

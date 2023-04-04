@@ -2,9 +2,9 @@
 
 namespace Domain\Candidate\Enums;
 
-enum RegistrationReasonsAvailabilityStatusEnum:string
+enum RegistrationReasonsAvailabilityStatusEnum: string
 {
-    case Active = "active";
+    case Active = 'active';
 
-    case Inactive = "inactive";
+    case Inactive = 'inactive';
 }

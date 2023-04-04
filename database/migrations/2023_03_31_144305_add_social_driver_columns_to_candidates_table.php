@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('candidates', function (Blueprint $table) {
-            $table->enum("social_driver_name",["google","linkedin"])->nullable()->after("password");
-            $table->string("social_driver_id")->nullable()->after("social_driver_name");
+            $table->enum('social_driver_name', ['google', 'linkedin'])->nullable()->after('password');
+            $table->string('social_driver_id')->nullable()->after('social_driver_name');
 
             $table->unique([
-                "social_driver_name",
-                "social_driver_id"
+                'social_driver_name',
+                'social_driver_id',
             ]);
         });
     }
@@ -29,13 +29,13 @@ return new class extends Migration
     {
         Schema::table('candidates', function (Blueprint $table) {
             $table->dropUnique([
-                "social_driver_name",
-                "social_driver_id"
+                'social_driver_name',
+                'social_driver_id',
             ]);
 
             $table->dropColumn([
-                "social_driver_name",
-                "social_driver_id"
+                'social_driver_name',
+                'social_driver_id',
             ]);
         });
     }
