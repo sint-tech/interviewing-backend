@@ -6,7 +6,7 @@ use Domain\Candidate\Models\Candidate;
 
 class GenerateCandidateAccessTokenAction
 {
-    const TOKEN_NAME = 'Laravel Password Grant Client FOR CANDIDATE';
+    public const TOKEN_NAME = 'Laravel Password Grant Client FOR CANDIDATE';
 
     public function __construct(
         public readonly Candidate $candidate

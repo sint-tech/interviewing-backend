@@ -15,7 +15,6 @@ class CandidateData extends Data
         public readonly  string $mobile_number,
         public readonly  string $mobile_country,
         public readonly  string|Optional $password,
-
         public readonly  int|Optional $current_job_title_id
     ) {
     }
