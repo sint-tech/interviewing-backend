@@ -22,7 +22,8 @@ class JobTitleFactory extends Factory
                 [
                     AvailabilityStatusEnum::Active->value,
                     AvailabilityStatusEnum::Inactive->value,
-                ]),
+                ]
+            ),
         ];
     }
 

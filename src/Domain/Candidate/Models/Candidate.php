@@ -17,7 +17,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Candidate extends Authenticatable implements HasMedia
 {
-    use HasFactory,SoftDeletes,HasApiTokens,InteractsWithMedia;
+    use HasFactory;
+    use SoftDeletes;
+    use HasApiTokens;
+    use InteractsWithMedia;
 
     protected $guard = 'candidate';
 
