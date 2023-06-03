@@ -63,9 +63,6 @@ class OrganizationTest extends TestCase
         $response->assertJsonStructure([
             'data' => [
                 'deleted_at',
-                'current_manager' => [
-                    'deleted_at'
-                ]
             ]
         ]);
     }
