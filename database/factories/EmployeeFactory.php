@@ -19,12 +19,12 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         return [
-            'first_name'    => $this->faker->firstName,
-            'last_name'    => $this->faker->lastName,
-            'email'         => $this->faker->unique()->email,
-            'password'      => Hash::make('password'),
-            'is_organization_manager'   => $this->faker->boolean(90),
-            'organization_id'           => Organization::factory()->create()->getKey(),
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'email' => $this->faker->unique()->email,
+            'password' => Hash::make('password'),
+            'is_organization_manager' => $this->faker->boolean(90),
+            'organization_id' => Organization::factory()->create()->getKey(),
         ];
     }
 }

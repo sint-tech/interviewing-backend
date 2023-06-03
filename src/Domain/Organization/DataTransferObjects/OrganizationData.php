@@ -6,11 +6,9 @@ use Spatie\LaravelData\Data;
 
 class OrganizationData extends Data
 {
-    public function __construct
-    (
+    public function __construct(
         public readonly string $name,
-    )
-    {
+    ) {
 
     }
 }

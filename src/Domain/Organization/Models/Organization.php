@@ -19,19 +19,18 @@ class Organization extends Model
 
     public function employees(): HasMany
     {
-        return $this->hasMany(Employee::class,'organization_id');
+        return $this->hasMany(Employee::class, 'organization_id');
     }
 
     public function oldestManager(): HasOne
     {
-        return $this->hasOne(Employee::class,'organization_id')
-            ->where('is_organization_manager',true)
+        return $this->hasOne(Employee::class, 'organization_id')
+            ->where('is_organization_manager', true)
             ->oldestOfMany();
     }
 
-
     protected static function newFactory()
     {
-        return (new OrganizationFactory());
+        return new OrganizationFactory();
     }
 }

@@ -10,7 +10,7 @@ class OrganizationDataFactory
     public static function fromRequest(CreateOrganizationRequest $request)
     {
         return OrganizationData::from([
-            'name'  => $request->validated('name'),
+            'name' => $request->validated('name'),
         ]);
     }
 }

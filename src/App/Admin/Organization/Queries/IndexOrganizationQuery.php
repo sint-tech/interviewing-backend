@@ -3,7 +3,6 @@
 namespace App\Admin\Organization\Queries;
 
 use Domain\Organization\Models\Organization;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedInclude;
@@ -26,7 +25,6 @@ class IndexOrganizationQuery extends QueryBuilder
         );
     }
 
-
     protected function getAllowedFilters(): array
     {
         return [
@@ -38,8 +36,8 @@ class IndexOrganizationQuery extends QueryBuilder
     protected function getAllowedIncludes(): array
     {
         return [
-            AllowedInclude::relationship('currentManager','oldestManager'),
-            AllowedInclude::relationship('employees')
+            AllowedInclude::relationship('currentManager', 'oldestManager'),
+            AllowedInclude::relationship('employees'),
         ];
     }
 }

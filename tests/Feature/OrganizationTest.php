@@ -29,14 +29,14 @@ class OrganizationTest extends TestCase
 
     public function testItShouldCreateNewOrganization(): void
     {
-        $response = $this->post('/admin-api/organizations',[
-            'name'  => 'new organization',
+        $response = $this->post('/admin-api/organizations', [
+            'name' => 'new organization',
             'manager' => [
-                'first_name'    => 'foo',
-                'last_name'    => 'baa',
-                'email'         => 'foo@gmail.com',
-                'password'      => 'its@strongPass0word',
-            ]
+                'first_name' => 'foo',
+                'last_name' => 'baa',
+                'email' => 'foo@gmail.com',
+                'password' => 'its@strongPass0word',
+            ],
         ]);
 
         $response->assertSuccessful();
@@ -48,7 +48,7 @@ class OrganizationTest extends TestCase
             ->has(
                 Employee::factory(2)
                     ->sequence([
-                        'is_organization_manager' => true
+                        'is_organization_manager' => true,
                     ],
                         ['is_organization_manager' => false]
                     ))
@@ -56,14 +56,14 @@ class OrganizationTest extends TestCase
 
         Employee::factory()->for($organization)->create();
 
-        $response = $this->delete('/admin-api/organizations/' . $organization->getKey());
+        $response = $this->delete('/admin-api/organizations/'.$organization->getKey());
 
         $response->assertSuccessful();
 
         $response->assertJsonStructure([
             'data' => [
                 'deleted_at',
-            ]
+            ],
         ]);
     }
 }

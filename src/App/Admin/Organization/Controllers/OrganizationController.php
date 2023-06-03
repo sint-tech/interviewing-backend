@@ -16,7 +16,7 @@ class OrganizationController extends Controller
 {
     public function index(IndexOrganizationQuery $query)
     {
-        return OrganizationResource::collection($query->paginate((int) request()->input('per_page',25)));
+        return OrganizationResource::collection($query->paginate((int) request()->input('per_page', 25)));
     }
 
     public function show(int $organization): OrganizationResource

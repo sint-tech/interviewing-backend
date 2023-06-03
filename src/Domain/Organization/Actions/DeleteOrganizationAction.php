@@ -7,18 +7,16 @@ use Domain\Organization\Models\Organization;
 
 class DeleteOrganizationAction
 {
-    public function __construct
-    (
+    public function __construct(
         public int $organizationId
-    )
-    {
+    ) {
     }
 
     public function execute(): Organization
     {
         $deletedOrganization = Organization::query()->findOrFail($this->organizationId);
 
-        $deletedOrganization->employees()->each(fn(Employee $employee) => $employee->delete());
+        $deletedOrganization->employees()->each(fn (Employee $employee) => $employee->delete());
 
         $deletedOrganization->delete();
 

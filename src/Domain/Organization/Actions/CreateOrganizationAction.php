@@ -12,12 +12,11 @@ class CreateOrganizationAction
     public function __construct(
         public OrganizationData $organizationData,
         public EmployeeData $employeeData
-    )
-    {
+    ) {
 
     }
 
-    public function execute():Organization
+    public function execute(): Organization
     {
         $organization = (new Organization());
 
@@ -29,11 +28,10 @@ class CreateOrganizationAction
 
         $employeeData = array_merge($employeeData,
             [
-                'password'      => Hash::make($employeeData['password']),
+                'password' => Hash::make($employeeData['password']),
                 'is_organization_manager' => true,
-                'organization_id' => $organization->getKey()
+                'organization_id' => $organization->getKey(),
             ]);
-
 
         $organization->oldestManager()->create($employeeData);
 

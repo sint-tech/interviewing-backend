@@ -8,7 +8,6 @@ use Illuminate\Support\ServiceProvider;
 
 class MorphRelationProvider extends ServiceProvider
 {
-
     protected array $morphMap = [
         'candidate' => Candidate::class,
     ];
