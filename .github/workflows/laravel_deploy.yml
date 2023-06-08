@@ -18,4 +18,4 @@ jobs:
     - name: Deploy to Server
       if: ${{ success() }}
       run: |
-        ssh -o "StrictHostKeyChecking=no" -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@13.49.102.181 "cd /var/www/html/interviewing-backend && git pull composer i && php artisan migrate --force"
+        ssh -o "StrictHostKeyChecking=no" -v -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@13.49.102.181 "cd /var/www/html/interviewing-backend && git pull composer i && php artisan migrate --force"
