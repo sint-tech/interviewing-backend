@@ -26,9 +26,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script_stop: true
         script: |
-          cd apps/laravel-example
+          cd /var/www/html/interviewing-backend
           git pull
-          npm ci
-          npm run prod
           composer i
           php artisan migrate --force
