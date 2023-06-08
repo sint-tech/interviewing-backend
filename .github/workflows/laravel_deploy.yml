@@ -1,0 +1,30 @@
+name: laravel_deploy
+
+on:
+  push:
+    branches: [ "development" ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - uses: actions/checkout@v2
+      
+    steps:
+    - name: Deploy to Server
+        if: ${{ success() }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script_stop: true
+          script: |
+            cd apps
+            cd laravel-example
+            git pull
+            npm ci
+            npm run prod
+            composer i
+            php artisan migrate --force
