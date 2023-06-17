@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
+use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
@@ -11,6 +12,8 @@ use Tests\TestCase;
 class OrganizationTest extends TestCase
 {
     use DatabaseMigrations;
+
+    protected User $superAdmin;
 
     protected function setUp(): void
     {
@@ -25,11 +28,19 @@ class OrganizationTest extends TestCase
             '--name' => 'Laravel Password Grant Client FOR CANDIDATE',
             '--provider' => 'candidates',
         ]);
+
+        Artisan::call("db:seed",[
+            '--class'   => 'SintAdminsSeeder'
+        ]);
+
+        $this->superAdmin = User::query()->first();
     }
 
     public function testItShouldCreateNewOrganization(): void
     {
-        $response = $this->post('/admin-api/organizations', [
+        $response = $this
+            ->actingAs($this->superAdmin,'api')
+            ->post('/admin-api/organizations', [
             'name' => 'new organization',
             'manager' => [
                 'first_name' => 'foo',
@@ -56,7 +67,7 @@ class OrganizationTest extends TestCase
 
         Employee::factory()->for($organization)->create();
 
-        $response = $this->delete('/admin-api/organizations/'.$organization->getKey());
+        $response = $this->actingAs($this->superAdmin,'api')->delete('/admin-api/organizations/'.$organization->getKey());
 
         $response->assertSuccessful();
 
