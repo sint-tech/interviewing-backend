@@ -36,7 +36,7 @@ php artisan key:generate
 php artisan migrate
 ```
 ```php
-php artisan:passport install
+php artisan passport:install
 ```
 ```php 
 php artisan passport:client --password --provider=candidates --name="Laravel Password Grant Client FOR CANDIDATE"
