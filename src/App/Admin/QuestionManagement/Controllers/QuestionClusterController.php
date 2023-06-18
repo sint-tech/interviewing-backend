@@ -7,6 +7,7 @@ use App\Admin\QuestionManagement\Queries\QuestionClusterIndexQuery;
 use App\Admin\QuestionManagement\Requests\QuestionClusterStoreRequest;
 use App\Admin\QuestionManagement\Resources\QuestionClusterResource;
 use Domain\QuestionManagement\Actions\CreateQuestionClusterAction;
+use Domain\QuestionManagement\Actions\DeleteQuestionClusterAction;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Support\Controllers\Controller;
 
@@ -37,8 +38,8 @@ class QuestionClusterController extends Controller
         //
     }
 
-    public function destroy()
+    public function destroy(int $questionCluster): QuestionClusterResource
     {
-        //
+        return QuestionClusterResource::make((new DeleteQuestionClusterAction($questionCluster))->execute());
     }
 }

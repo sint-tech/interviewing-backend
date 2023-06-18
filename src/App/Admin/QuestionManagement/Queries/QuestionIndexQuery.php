@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Admin\QuestionManagement\Queries;
+
+use Domain\QuestionManagement\Models\Question;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+class QuestionIndexQuery extends QueryBuilder
+{
+    public function __construct(Request $request)
+    {
+        $subject = Question::query();
+
+        parent::__construct($subject, $request);
+
+        $this->allowedFilters(
+            $this->getAllowedFilters()
+        );
+    }
+
+    public function getAllowedFilters(): array
+    {
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::exact('cluster_id','question_cluster_id'),
+            AllowedFilter::exact('question_type','question_type'),
+            AllowedFilter::partial('title'),
+            AllowedFilter::partial('description'),
+            AllowedFilter::exact('min_reading_time','min_reading_duration_in_seconds'),
+            AllowedFilter::exact('min_reading_time','max_reading_duration_in_seconds'),
+            AllowedFilter::exact('difficult_level'),
+        ];
+    }
+}
