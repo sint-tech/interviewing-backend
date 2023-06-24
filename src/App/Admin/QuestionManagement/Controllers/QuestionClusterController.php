@@ -18,7 +18,7 @@ class QuestionClusterController extends Controller
         return QuestionClusterResource::collection( $query->paginate( request()->integer('per_page',25)));
     }
 
-    public function show(int $questionCluster)
+    public function show(int $questionCluster): QuestionClusterResource
     {
         return QuestionClusterResource::make(QuestionCluster::query()->findOrFail($questionCluster));
     }
