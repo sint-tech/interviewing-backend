@@ -5,6 +5,7 @@ use App\Admin\Auth\Controllers\LogoutController;
 use App\Admin\Organization\Controllers\OrganizationController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterController;
 use App\Admin\QuestionManagement\Controllers\QuestionController;
+use App\Admin\QuestionManagement\Controllers\QuestionVariantController;
 use App\Admin\Skill\Controllers\SkillController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,5 @@ Route::apiResource('skills', SkillController::class);
 Route::apiResource('question-clusters', QuestionClusterController::class);
 
 Route::apiResource('questions', QuestionController::class);
+
+Route::apiResource('question-variants', QuestionVariantController::class);
