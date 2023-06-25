@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('interviews', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('interview_id')
+            $table->foreignId('interview_template_id')
                 ->nullable()
-                ->constrained('interviews', 'id')
+                ->constrained('interview_templates', 'id')
                 ->nullOnDelete();
 
             $table->foreignId('candidate_id')
