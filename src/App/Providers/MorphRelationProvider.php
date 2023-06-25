@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Domain\Candidate\Models\Candidate;
+use Domain\Organization\Models\Employee;
 use Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
@@ -11,7 +12,8 @@ class MorphRelationProvider extends ServiceProvider
 {
     protected array $morphMap = [
         'candidate' => Candidate::class,
-        'admin'   =>  User::class,
+        'admin' => User::class,
+        'employee' => Employee::class,
     ];
 
     /**

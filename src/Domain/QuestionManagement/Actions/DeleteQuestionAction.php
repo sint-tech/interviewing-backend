@@ -6,11 +6,9 @@ use Domain\QuestionManagement\Models\Question;
 
 class DeleteQuestionAction
 {
-    public function __construct
-    (
+    public function __construct(
         public readonly int $question_id
-    )
-    {
+    ) {
     }
 
     public function execute(): Question

@@ -20,10 +20,10 @@ return new class extends Migration
             $table->text('title');
             $table->text('description')->nullable();
 
-            $table->enum('question_type',[
+            $table->enum('question_type', [
                 'written',
                 'boolean',
-                'mcq'
+                'mcq',
             ])->default('written');
 
             $table->tinyInteger('difficult_level');

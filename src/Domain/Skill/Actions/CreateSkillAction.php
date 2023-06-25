@@ -7,15 +7,13 @@ use Domain\Skill\Models\Skill;
 
 class CreateSkillAction
 {
-    public function __construct
-    (
+    public function __construct(
         protected readonly SkillData $skillData
-    )
-    {
+    ) {
 
     }
 
-    public function execute():Skill
+    public function execute(): Skill
     {
         return Skill::query()->create($this->skillData->toArray());
     }

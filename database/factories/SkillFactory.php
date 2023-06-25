@@ -20,8 +20,8 @@ class SkillFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'  => $this->faker->firstName,
-            'description'   => $this->faker->text(300),
+            'name' => $this->faker->firstName,
+            'description' => $this->faker->text(300),
         ];
     }
 }

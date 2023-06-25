@@ -10,7 +10,7 @@ class DeleteQuestionVariantAction
     {
     }
 
-    public function execute():QuestionVariant
+    public function execute(): QuestionVariant
     {
         $question_variant = QuestionVariant::query()->findOrFail($this->questionVariant);
 

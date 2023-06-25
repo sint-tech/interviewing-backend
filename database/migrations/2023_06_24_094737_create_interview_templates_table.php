@@ -8,17 +8,16 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('question_variants', function (Blueprint $table) {
+        Schema::create('interview_templates', function (Blueprint $table) {
             $table->id();
-            $table->text('text');
+            $table->string('name');
             $table->text('description')->nullable();
-            $table->integer('reading_time_in_seconds');
-            $table->integer('answering_time_in_seconds');
-
-            $table->foreignId('question_id')->nullable()->constrained('questions', 'id')->nullOnDelete();
+            $table->enum('availability_status', ['pending', 'available', 'unavailable', 'paused']);
 
             $table->morphs('creator');
             $table->morphs('owner');
+
+            $table->boolean('reusable')->default(false);
 
             $table->timestamps();
             $table->softDeletes();
@@ -27,6 +26,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('question_variants');
+        Schema::dropIfExists('interview_templates');
     }
 };

@@ -2,7 +2,7 @@
 
 namespace Domain\QuestionManagement\Enums;
 
-enum QuestionTypeEnum:string
+enum QuestionTypeEnum: string
 {
     case Written = 'written';
 

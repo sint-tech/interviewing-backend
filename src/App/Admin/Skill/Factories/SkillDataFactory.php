@@ -7,7 +7,7 @@ use Domain\Skill\DataTransferObjects\SkillData;
 
 class SkillDataFactory
 {
-    public static function fromRequest(SkillStoreRequest $request):SkillData
+    public static function fromRequest(SkillStoreRequest $request): SkillData
     {
         return SkillData::from($request->validated());
     }

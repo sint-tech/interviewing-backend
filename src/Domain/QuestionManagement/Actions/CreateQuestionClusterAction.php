@@ -7,11 +7,9 @@ use Domain\QuestionManagement\Models\QuestionCluster;
 
 class CreateQuestionClusterAction
 {
-    public function __construct
-    (
+    public function __construct(
         public QuestionClusterDto $questionClusterDto
-    )
-    {
+    ) {
 
     }
 
@@ -19,8 +17,8 @@ class CreateQuestionClusterAction
     {
         $question_cluster_data = array_merge(
             [
-                'creator_id'    => $this->questionClusterDto->creator->getKey(),
-                'creator_type'  => $this->questionClusterDto->creator::class
+                'creator_id' => $this->questionClusterDto->creator->getKey(),
+                'creator_type' => $this->questionClusterDto->creator::class,
             ],
             $this->questionClusterDto->toArray()
         );
@@ -30,9 +28,9 @@ class CreateQuestionClusterAction
         $question_cluster->save();
 
         if (! empty($this->questionClusterDto->skills)) {
-            $question_cluster->skills()->syncWithPivotValues($this->questionClusterDto->skills,[
-                'assigner_id'   => $this->questionClusterDto->creator->getKey(),
-                'assigner_type'   => $this->questionClusterDto->creator::class,
+            $question_cluster->skills()->syncWithPivotValues($this->questionClusterDto->skills, [
+                'assigner_id' => $this->questionClusterDto->creator->getKey(),
+                'assigner_type' => $this->questionClusterDto->creator::class,
             ]);
         }
 

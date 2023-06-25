@@ -29,8 +29,8 @@ class OrganizationTest extends TestCase
             '--provider' => 'candidates',
         ]);
 
-        Artisan::call("db:seed",[
-            '--class'   => 'SintAdminsSeeder'
+        Artisan::call('db:seed', [
+            '--class' => 'SintAdminsSeeder',
         ]);
 
         $this->superAdmin = User::query()->first();
@@ -39,16 +39,16 @@ class OrganizationTest extends TestCase
     public function testItShouldCreateNewOrganization(): void
     {
         $response = $this
-            ->actingAs($this->superAdmin,'api')
+            ->actingAs($this->superAdmin, 'api')
             ->post('/admin-api/organizations', [
-            'name' => 'new organization',
-            'manager' => [
-                'first_name' => 'foo',
-                'last_name' => 'baa',
-                'email' => 'foo@gmail.com',
-                'password' => 'its@strongPass0word',
-            ],
-        ]);
+                'name' => 'new organization',
+                'manager' => [
+                    'first_name' => 'foo',
+                    'last_name' => 'baa',
+                    'email' => 'foo@gmail.com',
+                    'password' => 'its@strongPass0word',
+                ],
+            ]);
 
         $response->assertSuccessful();
     }
@@ -67,7 +67,7 @@ class OrganizationTest extends TestCase
 
         Employee::factory()->for($organization)->create();
 
-        $response = $this->actingAs($this->superAdmin,'api')->delete('/admin-api/organizations/'.$organization->getKey());
+        $response = $this->actingAs($this->superAdmin, 'api')->delete('/admin-api/organizations/'.$organization->getKey());
 
         $response->assertSuccessful();
 

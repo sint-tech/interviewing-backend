@@ -13,26 +13,19 @@ use Support\Controllers\Controller;
 
 class SkillController extends Controller
 {
-
     public function index(IndexSkillQuery $query)
     {
         return SkillResource::collection($query->paginate((int) request()->input('per_page', 25)));
     }
 
-    /**
-     * @param int $skill
-     * @return SkillResource
-     */
     public function show(int $skill): SkillResource
     {
-        return  SkillResource::make(Skill::query()->findOrFail($skill));
+        return SkillResource::make(Skill::query()->findOrFail($skill));
     }
 
-    public function store
-    (
+    public function store(
         SkillStoreRequest $request
-    )
-    {
+    ) {
         $skill = (new CreateSkillAction(
             SkillDataFactory::fromRequest($request)
         ))->execute();

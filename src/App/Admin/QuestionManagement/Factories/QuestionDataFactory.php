@@ -4,7 +4,6 @@ namespace App\Admin\QuestionManagement\Factories;
 
 use App\Admin\QuestionManagement\Requests\QuestionStoreRequest;
 use Domain\QuestionManagement\DataTransferObjects\QuestionData;
-use Illuminate\Http\Request;
 
 class QuestionDataFactory
 {
@@ -14,7 +13,7 @@ class QuestionDataFactory
             array_merge(
                 $request->validated(),
                 [
-                    'creator'   => auth()->user(),
+                    'creator' => auth()->user(),
                 ]
             )
         );

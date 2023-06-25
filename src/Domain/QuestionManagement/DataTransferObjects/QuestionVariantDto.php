@@ -18,13 +18,12 @@ class QuestionVariantDto extends Data
         public readonly int $question_id,
         public readonly Authorizable $creator,
         public readonly Organization|User $owner,
-    )
-    {
+    ) {
         $this->additional([
-            'creator_type'  => $this->creator::class,
-            'creator_id'  => $this->creator->getKey(),
-            'owner_type'  => $this->owner::class,
-            'owner_id'  => $this->owner->getKey(),
+            'creator_type' => $this->creator::class,
+            'creator_id' => $this->creator->getKey(),
+            'owner_type' => $this->owner::class,
+            'owner_id' => $this->owner->getKey(),
         ]);
 
     }

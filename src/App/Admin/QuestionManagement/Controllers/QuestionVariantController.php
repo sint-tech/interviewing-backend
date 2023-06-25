@@ -2,7 +2,6 @@
 
 namespace App\Admin\QuestionManagement\Controllers;
 
-use App\Admin\QuestionManagement\Factories\QuestionDataFactory;
 use App\Admin\QuestionManagement\Factories\QuestionVariantDataFactory;
 use App\Admin\QuestionManagement\Queries\QuestionVariantIndexQuery;
 use App\Admin\QuestionManagement\Requests\QuestionVariantStoreRequest;
@@ -19,7 +18,7 @@ class QuestionVariantController extends Controller
     {
         return QuestionVariantResource::collection(
             $query->paginate(
-                request()->integer('per_page')
+                request()->integer('per_page', 25)
             )
         );
     }
@@ -43,7 +42,7 @@ class QuestionVariantController extends Controller
         //
     }
 
-    public function destroy(int $question_variant)
+    public function destroy(int $question_variant): QuestionVariantResource
     {
         return QuestionVariantResource::make(
             (new DeleteQuestionVariantAction($question_variant))->execute()

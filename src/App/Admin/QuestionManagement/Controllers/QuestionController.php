@@ -15,7 +15,7 @@ class QuestionController extends Controller
 {
     public function index(QuestionIndexQuery $query)
     {
-        return QuestionResource::collection($query->paginate(request()->integer('per_page',25)));
+        return QuestionResource::collection($query->paginate(request()->integer('per_page', 25)));
     }
 
     public function show(int $question): QuestionResource

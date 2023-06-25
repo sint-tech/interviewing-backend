@@ -7,11 +7,9 @@ use Domain\QuestionManagement\Models\QuestionCluster;
 
 class DeleteQuestionClusterAction
 {
-    public function __construct
-    (
+    public function __construct(
         public int $questionCluster
-    )
-    {
+    ) {
 
     }
 
@@ -19,9 +17,7 @@ class DeleteQuestionClusterAction
     {
         $questionCluster = QuestionCluster::query()->findOrFail($this->questionCluster);
 
-
         $questionCluster->load('questions');
-
 
         $this->deleteClusterQuestions($questionCluster);
 
@@ -32,6 +28,6 @@ class DeleteQuestionClusterAction
 
     protected function deleteClusterQuestions(QuestionCluster $cluster)
     {
-        $cluster->questions->each(fn(Question $question) => (new DeleteQuestionAction($question->getKey()))->execute());
+        $cluster->questions->each(fn (Question $question) => (new DeleteQuestionAction($question->getKey()))->execute());
     }
 }

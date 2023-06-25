@@ -7,11 +7,11 @@ use Domain\QuestionManagement\DataTransferObjects\QuestionVariantDto;
 
 class QuestionVariantDataFactory
 {
-    public static function fromRequest(QuestionVariantStoreRequest $request):QuestionVariantDto
+    public static function fromRequest(QuestionVariantStoreRequest $request): QuestionVariantDto
     {
-        $data = array_merge($request->validated(),[
-            'creator'   => auth()->user(),
-            'owner'     => $request->getOwnerInstance()
+        $data = array_merge($request->validated(), [
+            'creator' => auth()->user(),
+            'owner' => $request->getOwnerInstance(),
         ]);
 
         return QuestionVariantDto::from($data);

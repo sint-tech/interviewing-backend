@@ -15,7 +15,7 @@ class QuestionClusterController extends Controller
 {
     public function index(QuestionClusterIndexQuery $query)
     {
-        return QuestionClusterResource::collection( $query->paginate( request()->integer('per_page',25)));
+        return QuestionClusterResource::collection($query->paginate(request()->integer('per_page', 25)));
     }
 
     public function show(int $questionCluster): QuestionClusterResource
@@ -23,12 +23,11 @@ class QuestionClusterController extends Controller
         return QuestionClusterResource::make(QuestionCluster::query()->findOrFail($questionCluster));
     }
 
-
     public function store(QuestionClusterStoreRequest $request)
     {
         $dto = QuestionClusterDataFactory::fromRequest($request);
 
-        $questionCluster =  (new CreateQuestionClusterAction($dto))->execute();
+        $questionCluster = (new CreateQuestionClusterAction($dto))->execute();
 
         return QuestionClusterResource::make($questionCluster);
     }

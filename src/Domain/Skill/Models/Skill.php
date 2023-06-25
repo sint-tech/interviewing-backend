@@ -12,12 +12,11 @@ class Skill extends Model
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
     ];
-
 
     protected static function newFactory()
     {
-        return (new SkillFactory());
+        return new SkillFactory();
     }
 }

@@ -51,7 +51,7 @@ class HttpKernel extends Kernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             ForceJsonRequest::class,
-        ]
+        ],
 
     ];
 

@@ -2,6 +2,7 @@
 
 namespace Domain\QuestionManagement\Models;
 
+use Database\Factories\QuestionVariantFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,18 +27,23 @@ class QuestionVariant extends Model
         'owner_type',
     ];
 
-    public function question():BelongsTo
+    public function question(): BelongsTo
     {
-        return $this->belongsTo(Question::class,'question_id');
+        return $this->belongsTo(Question::class, 'question_id');
     }
 
-    public function creator():MorphTo
+    public function creator(): MorphTo
     {
         return $this->morphTo('creator');
     }
 
-    public function owner():MorphTo
+    public function owner(): MorphTo
     {
         return $this->morphTo('owner');
+    }
+
+    protected static function newFactory()
+    {
+        return new QuestionVariantFactory;
     }
 }

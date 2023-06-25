@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('question_cluster_id')->constrained('question_clusters')->cascadeOnDelete();
             $table->foreignId('skill_id')->constrained('skills')->cascadeOnDelete();
 
-            $table->unique(['question_cluster_id','skill_id']);
+            $table->unique(['question_cluster_id', 'skill_id']);
 
             $table->nullableMorphs('assigner');
 

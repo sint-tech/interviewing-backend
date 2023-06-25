@@ -2,16 +2,18 @@
 
 namespace Domain\QuestionManagement\Models;
 
+use Database\Factories\QuestionClusterFactory;
 use Domain\Skill\Models\Skill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class QuestionCluster extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -27,7 +29,7 @@ class QuestionCluster extends Model
 
     public function questions(): HasMany
     {
-        return $this->hasMany(Question::class,'question_cluster_id');
+        return $this->hasMany(Question::class, 'question_cluster_id');
     }
 
     public function skills(): BelongsToMany
@@ -38,5 +40,10 @@ class QuestionCluster extends Model
             'question_cluster_id',
             'skill_id',
         )->withTimestamps();
+    }
+
+    protected static function newFactory()
+    {
+        return new QuestionClusterFactory();
     }
 }

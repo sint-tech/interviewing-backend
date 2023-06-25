@@ -4,7 +4,6 @@ namespace App\Admin\QuestionManagement\Factories;
 
 use App\Admin\QuestionManagement\Requests\QuestionClusterStoreRequest;
 use Domain\QuestionManagement\DataTransferObjects\QuestionClusterDto;
-use Illuminate\Http\Request;
 
 class QuestionClusterDataFactory
 {

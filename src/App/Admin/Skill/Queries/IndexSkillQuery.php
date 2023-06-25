@@ -20,7 +20,6 @@ class IndexSkillQuery extends QueryBuilder
         );
     }
 
-
     protected function getAllowedFilters(): array
     {
         return [

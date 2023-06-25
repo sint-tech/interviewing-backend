@@ -8,14 +8,12 @@ use Spatie\LaravelData\Optional;
 
 class QuestionClusterDto extends Data
 {
-    public function __construct
-    (
-        public  readonly string $name,
+    public function __construct(
+        public readonly string $name,
         public Authenticatable $creator,
-        public  readonly string|Optional $description,
+        public readonly string|Optional $description,
         public readonly array|Optional $skills,
-    )
-    {
+    ) {
 
     }
 }

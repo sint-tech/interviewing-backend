@@ -7,20 +7,18 @@ use Domain\QuestionManagement\Models\Question;
 
 class CreateQuestionAction
 {
-    public function __construct
-    (
+    public function __construct(
         public readonly QuestionData $questionData
-    )
-    {
+    ) {
 
     }
 
-    public function execute():Question
+    public function execute(): Question
     {
         $data = array_merge(
             [
-                'creator_id'        => $this->questionData->creator->getKey(),
-                'creator_type'      => $this->questionData->creator::class,
+                'creator_id' => $this->questionData->creator->getKey(),
+                'creator_type' => $this->questionData->creator::class,
             ], $this->questionData->toArray()
         );
 
@@ -28,6 +26,6 @@ class CreateQuestionAction
 
         $question->save();
 
-        return $question->load(['creator','questionCluster']);
+        return $question->load(['creator', 'questionCluster']);
     }
 }
