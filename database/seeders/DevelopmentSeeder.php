@@ -31,6 +31,7 @@ class DevelopmentSeeder extends Seeder
 
 
         JobTitle::factory(10)->create(['availability_status' => 'active']);
+
         RegistrationReason::factory(10)->create(['availability_status' => 'active']);
 
         Skill::factory(10)->create();

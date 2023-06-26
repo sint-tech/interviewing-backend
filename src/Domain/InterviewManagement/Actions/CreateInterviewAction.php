@@ -22,7 +22,7 @@ class CreateInterviewAction
 
         $interview->save();
 
-        $interview->refresh()->load('questionClusters','questionVariants');
+        $interview->refresh()->load('questionClusters','questionVariants.question');
 
         $interview->questionClusters->each(fn(QuestionCluster $cluster) => $cluster
             ->setRelation('questionVariants',$interview->questionVariants
