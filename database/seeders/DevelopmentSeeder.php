@@ -30,13 +30,8 @@ class DevelopmentSeeder extends Seeder
         ]);
 
 
-        if (JobTitle::query()->count() < 10) {
-            JobTitle::factory(10)->create(['availability_status' => 'active']);
-        }
-
-        if (RegistrationReason::query()->count() < 10) {
-            RegistrationReason::factory(10)->create(['availability_status' => 'active']);
-        }
+        JobTitle::factory(10)->create(['availability_status' => 'active']);
+        RegistrationReason::factory(10)->create(['availability_status' => 'active']);
 
         Skill::factory(10)->create();
 
