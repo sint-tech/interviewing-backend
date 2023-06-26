@@ -6,12 +6,15 @@ use Database\Factories\QuestionVariantFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class QuestionVariant extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes,HasRelationships;
 
     protected $table = 'question_variants';
 
@@ -30,6 +33,14 @@ class QuestionVariant extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class, 'question_id');
+    }
+
+    /**
+     * @return \Staudenmeir\EloquentHasManyDeep\HasOneDeep
+     */
+    public function questionCluster():HasOneDeep
+    {
+        return $this->hasOneDeepFromRelations($this->question(),(new Question())->questionCluster());
     }
 
     public function creator(): MorphTo

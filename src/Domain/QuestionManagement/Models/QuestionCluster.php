@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class QuestionCluster extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes,HasRelationships;
 
     protected $fillable = [
         'name',
@@ -30,6 +32,11 @@ class QuestionCluster extends Model
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class, 'question_cluster_id');
+    }
+
+    public function questionVariants():HasManyDeep
+    {
+        return $this->hasManyDeepFromRelations($this->questions(),(new Question())->questionVariants());
     }
 
     public function skills(): BelongsToMany

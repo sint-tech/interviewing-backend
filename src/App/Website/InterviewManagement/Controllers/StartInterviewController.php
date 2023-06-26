@@ -6,6 +6,7 @@ use App\Website\InterviewManagement\Factories\InterviewDataFactory;
 use App\Website\InterviewManagement\Resources\StartedInterviewResource;
 use Domain\InterviewManagement\Actions\CreateInterviewAction;
 use Domain\InterviewManagement\DataTransferObjects\InterviewDto;
+use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Illuminate\Support\Carbon;
 use Support\Controllers\Controller;
@@ -20,7 +21,7 @@ class StartInterviewController extends Controller
                 'interview_template_id' => InterviewTemplate::query()->findOrFail($interview_template)->getKey(),
                 'started_at'            => Carbon::now(),
             ])
-        ))->execute()->load(['questionVariants.question']);
+        ))->execute();
 
         return StartedInterviewResource::make($interview);
     }
