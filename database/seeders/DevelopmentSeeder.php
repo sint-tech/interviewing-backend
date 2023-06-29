@@ -86,11 +86,11 @@ class DevelopmentSeeder extends Seeder
                 $template->questionVariants()->attach($question_variant,['question_cluster_id' => $question_variant->question->questionCluster->getKey()]);
             });
 
-        Answer::factory()->count(1)
+        Answer::factory()->count(100)
             ->create();
 
         AnswerVariant::factory()
-            ->count(1)
+            ->count(1000)
             ->for(
                 User::query()->first(),
                 'creator'
