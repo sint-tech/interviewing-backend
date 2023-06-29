@@ -27,6 +27,7 @@ class AnswerVariantIndexQuery extends QueryBuilder
     {
         return $this->allowedFilters(
             AllowedFilter::exact('id'),
+            AllowedFilter::exact('answer_id','answer_id'),
             AllowedFilter::exact('interviews','interviews.id'),
         );
     }
