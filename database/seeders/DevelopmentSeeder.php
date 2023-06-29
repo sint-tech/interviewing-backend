@@ -54,19 +54,8 @@ class DevelopmentSeeder extends Seeder
                     ->has(
                         QuestionVariant::factory(10)
                             ->has(
-                                Answer::factory(1)
-                                    ->has(
-                                        AnswerVariant::factory(3)
-                                            ->for(
-                                                User::query()->first(),
-                                                'creator'
-                                            )
-                                            ->for(
-                                                User::query()->first(),
-                                                'owner'
-                                            )
-                                    ),
-                                'answerVariants'
+                                Answer::factory()
+                                    ->count(1)
                             )
                             ->for(
                                 User::query()->first(),
@@ -80,6 +69,17 @@ class DevelopmentSeeder extends Seeder
                     ),
                 'questions'
         )->create();
+
+        AnswerVariant::factory()
+            ->count(1000)
+            ->for(
+                User::query()->first(),
+                'creator'
+            )
+            ->for(
+                User::query()->first(),
+                'owner'
+            )->create();
 
         InterviewTemplate::factory(30)
             ->for(

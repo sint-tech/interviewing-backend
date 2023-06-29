@@ -21,6 +21,7 @@ class AnswerVariantFactory extends Factory
             'text'  => $this->faker->text(1000_00),
             'description' => $this->faker->text(1000),
             'score'     => $this->faker->numberBetween(1,10),
+            'answer_id' => AnswerVariant::query()->whereHas('questionVariant')->inRandomOrder()->first()->getKey()
         ];
     }
 }

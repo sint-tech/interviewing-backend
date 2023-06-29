@@ -21,6 +21,8 @@ class AnswerVariant extends Model
 {
     use HasFactory,SoftDeletes,HasRelationships;
 
+    protected $table = 'answer_variants';
+
     protected $fillable = [
         'text',
         'description',
