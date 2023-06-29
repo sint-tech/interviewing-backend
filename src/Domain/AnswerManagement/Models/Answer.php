@@ -7,6 +7,7 @@ use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Answer extends Model
 {
@@ -19,9 +20,9 @@ class Answer extends Model
         'question_variant_id'
     ];
 
-    public function answerVariants():BelongsTo
+    public function answerVariants():HasMany
     {
-        return $this->belongsTo(AnswerVariant::class,'answer_variant_id');
+        return $this->hasMany(AnswerVariant::class,'answer_id');
     }
 
     public function questionVariant():BelongsTo
