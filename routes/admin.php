@@ -1,5 +1,6 @@
 <?php
 
+use App\Admin\AnswerManagement\Controllers\AnswerVariantController;
 use App\Admin\Auth\Controllers\LoginController;
 use App\Admin\Auth\Controllers\LogoutController;
 use App\Admin\Organization\Controllers\OrganizationController;
@@ -24,3 +25,5 @@ Route::apiResource('question-clusters', QuestionClusterController::class);
 Route::apiResource('questions', QuestionController::class);
 
 Route::apiResource('question-variants', QuestionVariantController::class);
+
+Route::apiResource('answer-variants', AnswerVariantController::class);
