@@ -65,7 +65,8 @@ class DevelopmentSeeder extends Seeder
                                                 User::query()->first(),
                                                 'owner'
                                             )
-                                    )
+                                    ),
+                                'answerVariants'
                             )
                             ->for(
                                 User::query()->first(),
