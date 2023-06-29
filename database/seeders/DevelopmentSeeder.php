@@ -53,10 +53,6 @@ class DevelopmentSeeder extends Seeder
                     )
                     ->has(
                         QuestionVariant::factory(10)
-                            ->has(
-                                Answer::factory()
-                                    ->count(1)
-                            )
                             ->for(
                                 User::query()->first(),
                         'creator'
@@ -69,17 +65,6 @@ class DevelopmentSeeder extends Seeder
                     ),
                 'questions'
         )->create();
-
-        AnswerVariant::factory()
-            ->count(1000)
-            ->for(
-                User::query()->first(),
-                'creator'
-            )
-            ->for(
-                User::query()->first(),
-                'owner'
-            )->create();
 
         InterviewTemplate::factory(30)
             ->for(
@@ -100,5 +85,19 @@ class DevelopmentSeeder extends Seeder
 
                 $template->questionVariants()->attach($question_variant,['question_cluster_id' => $question_variant->question->questionCluster->getKey()]);
             });
+
+        Answer::factory()->count(1)
+            ->create();
+
+        AnswerVariant::factory()
+            ->count(1)
+            ->for(
+                User::query()->first(),
+                'creator'
+            )
+            ->for(
+                User::query()->first(),
+                'owner'
+            )->create();
     }
 }

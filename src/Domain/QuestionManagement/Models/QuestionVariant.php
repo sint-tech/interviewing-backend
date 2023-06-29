@@ -5,9 +5,11 @@ namespace Domain\QuestionManagement\Models;
 use Database\Factories\QuestionVariantFactory;
 use Domain\AnswerManagement\Models\Answer;
 use Domain\AnswerManagement\Models\AnswerVariant;
+use Domain\InterviewManagement\Models\InterviewTemplate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -60,6 +62,16 @@ class QuestionVariant extends Model
             'answer_variant_id',
             'id',
             'id'
+        );
+    }
+
+    public function interviewTemplates(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            InterviewTemplate::class,
+            'interview_template_questions',
+            'question_variant_id',
+            'interview_template_id',
         );
     }
 
