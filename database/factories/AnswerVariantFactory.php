@@ -19,10 +19,10 @@ class AnswerVariantFactory extends Factory
     public function definition(): array
     {
         return [
-            'text'  => $this->faker->text(1000_00),
+            'text'  => $this->faker->text(1000),
             'description' => $this->faker->text(1000),
             'score'     => $this->faker->numberBetween(1,10),
-            'answer_id' => Answer::query()->whereHas('questionVariant')->inRandomOrder()->first()->getKey()
+            'answer_id' => Answer::query()->limit(1)->has('questionVariant')->inRandomOrder()->first()->getKey()
         ];
     }
 }

@@ -66,7 +66,7 @@ class DevelopmentSeeder extends Seeder
                 'questions'
         )->create();
 
-        InterviewTemplate::factory(30)
+        InterviewTemplate::factory(5)
             ->for(
                 User::query()->first(),
                 'creator'
@@ -86,11 +86,11 @@ class DevelopmentSeeder extends Seeder
                 $template->questionVariants()->attach($question_variant,['question_cluster_id' => $question_variant->question->questionCluster->getKey()]);
             });
 
-        Answer::factory()->count(30)
+        Answer::factory()->count(10)
             ->create();
 
         AnswerVariant::factory()
-            ->count(100)
+            ->count(10)
             ->for(
                 User::query()->first(),
                 'creator'
