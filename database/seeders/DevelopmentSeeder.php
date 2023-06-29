@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use Domain\AnswerManagement\Models\Answer;
+use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\RegistrationReason;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\JobTitle\Models\JobTitle;
+use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -30,10 +33,13 @@ class DevelopmentSeeder extends Seeder
         ]);
 
 
-        JobTitle::factory(10)->create(['availability_status' => 'active']);
+        if (JobTitle::query()->doesntExist()) {
+            JobTitle::factory(10)->create(['availability_status' => 'active']);
+        }
 
-        RegistrationReason::factory(10)->create(['availability_status' => 'active']);
-
+        if (RegistrationReason::query()->doesntExist()) {
+            RegistrationReason::factory(10)->create(['availability_status' => 'active']);
+        }
         Skill::factory(10)->create();
 
         QuestionCluster::factory(100)->for(
@@ -47,6 +53,20 @@ class DevelopmentSeeder extends Seeder
                     )
                     ->has(
                         QuestionVariant::factory(10)
+                            ->has(
+                                Answer::factory(1)
+                                    ->has(
+                                        AnswerVariant::factory(3)
+                                            ->for(
+                                                User::query()->first(),
+                                                'creator'
+                                            )
+                                            ->for(
+                                                User::query()->first(),
+                                                'owner'
+                                            )
+                                    )
+                            )
                             ->for(
                                 User::query()->first(),
                         'creator'

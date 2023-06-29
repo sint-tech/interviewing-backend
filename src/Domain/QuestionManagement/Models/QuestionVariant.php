@@ -3,10 +3,13 @@
 namespace Domain\QuestionManagement\Models;
 
 use Database\Factories\QuestionVariantFactory;
+use Domain\AnswerManagement\Models\Answer;
+use Domain\AnswerManagement\Models\AnswerVariant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
@@ -41,6 +44,23 @@ class QuestionVariant extends Model
     public function questionCluster():HasOneDeep
     {
         return $this->hasOneDeepFromRelations($this->question(),(new Question())->questionCluster());
+    }
+
+    public function answers(): HasMany
+    {
+        return $this->hasMany(Answer::class,'question_variant_id');
+    }
+
+    public function answerVariants(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            AnswerVariant::class,
+            Answer::class,
+            'question_variant_id',
+            'answer_variant_id',
+            'id',
+            'id'
+        );
     }
 
     public function creator(): MorphTo

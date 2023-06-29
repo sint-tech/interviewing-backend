@@ -5,10 +5,12 @@ namespace Domain\Candidate\Models;
 use Database\Factories\CandidateFactory;
 use Domain\Candidate\Builders\CandidateBuilder;
 use Domain\Candidate\Enums\CandidateSocialAppEnum;
+use Domain\InterviewManagement\Models\Interview;
 use Domain\JobTitle\Models\JobTitle;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
@@ -59,6 +61,11 @@ class Candidate extends Authenticatable implements HasMedia
     public function currentJobTitle(): BelongsTo
     {
         return $this->belongsTo(JobTitle::class, 'current_job_title_id');
+    }
+
+    public function interviews():HasMany
+    {
+        return $this->hasMany(Interview::class,'candidate_id');
     }
 
     public function desireHiringPositions(): BelongsToMany

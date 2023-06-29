@@ -5,7 +5,9 @@ use App\Website\Auth\Controllers\LogoutController;
 use App\Website\Auth\Controllers\RegisterController;
 use App\Website\Auth\Controllers\SocialLoginController;
 use App\Website\Auth\Controllers\ValidateNewCandidateUniqueInputsController;
+use App\Website\InterviewManagement\Controllers\MyInterviewsController;
 use App\Website\InterviewManagement\Controllers\StartInterviewController;
+use App\Website\InterviewManagement\Controllers\SubmitInterviewQuestionAnswerController;
 use App\Website\JobTitle\Controllers\JobTitleController;
 use App\Website\RegistrationReasons\Controllers\RegistrationReasonsController;
 use Illuminate\Support\Facades\Route;
@@ -28,10 +30,18 @@ Route::middleware('guest:api-candidate')->group(function () {
     Route::post('/social-login', SocialLoginController::class);
 });
 
+/*
+ * group all APIs
+ */
 Route::middleware('auth:api-candidate')->group(function () {
     Route::any('/logout', LogoutController::class);
-    Route::any('/{interview_template}/start-interview', StartInterviewController::class);
-//    Route::get('/my-interviews',);
+
+    Route::prefix('interviews')
+        ->group(function () {
+            Route::get('', MyInterviewsController::class);
+            Route::any('/{interview_template}/start-interview', StartInterviewController::class);
+            Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class);
+        });
 });
 
 Route::apiResource('job-titles', JobTitleController::class)

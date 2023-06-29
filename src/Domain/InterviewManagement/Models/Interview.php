@@ -2,6 +2,7 @@
 
 namespace Domain\InterviewManagement\Models;
 
+use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\Candidate;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -11,7 +12,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * @property Collection<QuestionCluster> $questionClusters
+ * @property Collection<QuestionVariant> $questionVariants
+ */
 class Interview extends Model
 {
     use HasFactory,SoftDeletes;
@@ -60,6 +67,31 @@ class Interview extends Model
         ->using(InterviewTemplateQuestion::class)
         ->withPivot('question_cluster_id')
         ->withTimestamps();
+    }
+
+    public function answers():HasMany
+    {
+        return $this->hasMany(
+            Answer::class,
+            'interview_id',
+            'id'
+        );
+    }
+
+    public function answerVariants():BelongsToMany
+    {
+        $pivot_columns = Schema::getColumnListing('interview_answers');
+
+        return $this->belongsToMany(
+            AnswerVariant::class,
+            'interview_answers',
+            'interview_id',
+            'answer_variant_id',
+            'id'
+        )
+            ->using(Answer::class)
+            ->withPivot($pivot_columns)
+            ->withTimestamps();
     }
 
     public function questionClusters():BelongsToMany
