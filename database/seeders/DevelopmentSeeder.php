@@ -42,7 +42,7 @@ class DevelopmentSeeder extends Seeder
         }
         Skill::factory(10)->create();
 
-        QuestionCluster::factory(100)->for(
+        QuestionCluster::factory(10)->for(
             User::query()->first(), 'creator'
         )
             ->has(
