@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
@@ -83,6 +84,26 @@ class QuestionVariant extends Model
     public function owner(): MorphTo
     {
         return $this->morphTo('owner');
+    }
+
+    public function aiPromptMessages(): HasMany
+    {
+        return $this->hasMany(
+            AiPromptMessage::class,
+            'question_variant_id',
+            'id'
+        );
+    }
+
+    public function defaultAiPromptMessage(): HasOne
+    {
+        return $this->hasOne(
+            AiPromptMessage::class,
+            'question_variant_id',
+            'id'
+        )
+            ->where('is_default',true)
+            ->ofMany();
     }
 
     protected static function newFactory()
