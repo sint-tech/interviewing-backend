@@ -28,23 +28,23 @@ class Answer extends Pivot
         'question_variant_id',
         'ml_video_semantics',
         'ml_audio_semantics',
-        'ml_text_semantics'
+        'ml_text_semantics',
     ];
 
     protected $casts = [
         'question_occurrence_reason' => QuestionOccurrenceReasonEnum::class,
-        'ml_video_semantics'         => 'json',
-        'ml_audio_semantics'         => 'json',
-        'ml_text_semantics'         => 'json',
+        'ml_video_semantics' => 'json',
+        'ml_audio_semantics' => 'json',
+        'ml_text_semantics' => 'json',
     ];
 
     public function questionVariant(): BelongsTo
     {
-        return $this->belongsTo(QuestionVariant::class,'question_variant_id');
+        return $this->belongsTo(QuestionVariant::class, 'question_variant_id');
     }
 
-    public function interview():BelongsTo
+    public function interview(): BelongsTo
     {
-        return $this->belongsTo(Interview::class,'interview_id');
+        return $this->belongsTo(Interview::class, 'interview_id');
     }
 }

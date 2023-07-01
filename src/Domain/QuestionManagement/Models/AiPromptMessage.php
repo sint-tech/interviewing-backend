@@ -16,11 +16,11 @@ class AiPromptMessage extends Model
         'prompt_text',
         'ai_model',
         'question_variant_id',
-        'is_default'
+        'is_default',
     ];
 
     protected $casts = [
-        'ai_model'  => AiModelEnum::class,
+        'ai_model' => AiModelEnum::class,
     ];
 
     public function questionVariant(): BelongsTo

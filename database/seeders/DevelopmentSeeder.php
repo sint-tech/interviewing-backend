@@ -7,7 +7,6 @@ use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\RegistrationReason;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\JobTitle\Models\JobTitle;
-use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -32,7 +31,6 @@ class DevelopmentSeeder extends Seeder
             SintAdminsSeeder::class,
         ]);
 
-
         if (JobTitle::query()->doesntExist()) {
             JobTitle::factory(10)->create(['availability_status' => 'active']);
         }
@@ -55,7 +53,7 @@ class DevelopmentSeeder extends Seeder
                         QuestionVariant::factory(10)
                             ->for(
                                 User::query()->first(),
-                        'creator'
+                                'creator'
                             )
                             ->for(
                                 User::query()->first(),
@@ -64,7 +62,7 @@ class DevelopmentSeeder extends Seeder
                         'questionVariants'
                     ),
                 'questions'
-        )->create();
+            )->create();
 
         InterviewTemplate::factory(5)
             ->for(
@@ -78,12 +76,12 @@ class DevelopmentSeeder extends Seeder
             ->create()
             ->each(function (InterviewTemplate $template) {
                 $question_variant = QuestionVariant::query()
-                    ->whereHas('question',fn($q) => $q->has('questionCluster'))
+                    ->whereHas('question', fn ($q) => $q->has('questionCluster'))
                     ->with('question.questionCluster')
                     ->inRandomOrder()
                     ->first();
 
-                $template->questionVariants()->attach($question_variant,['question_cluster_id' => $question_variant->question->questionCluster->getKey()]);
+                $template->questionVariants()->attach($question_variant, ['question_cluster_id' => $question_variant->question->questionCluster->getKey()]);
             });
 
         Answer::factory()->count(10)

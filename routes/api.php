@@ -1,15 +1,15 @@
 <?php
 
-use App\Website\Auth\Controllers\LoginController;
-use App\Website\Auth\Controllers\LogoutController;
-use App\Website\Auth\Controllers\RegisterController;
-use App\Website\Auth\Controllers\SocialLoginController;
-use App\Website\Auth\Controllers\ValidateNewCandidateUniqueInputsController;
-use App\Website\InterviewManagement\Controllers\MyInterviewsController;
-use App\Website\InterviewManagement\Controllers\StartInterviewController;
-use App\Website\InterviewManagement\Controllers\SubmitInterviewQuestionAnswerController;
-use App\Website\JobTitle\Controllers\JobTitleController;
-use App\Website\RegistrationReasons\Controllers\RegistrationReasonsController;
+use App\Candidate\Auth\Controllers\LoginController;
+use App\Candidate\Auth\Controllers\LogoutController;
+use App\Candidate\Auth\Controllers\RegisterController;
+use App\Candidate\Auth\Controllers\SocialLoginController;
+use App\Candidate\Auth\Controllers\ValidateNewCandidateUniqueInputsController;
+use App\Candidate\InterviewManagement\Controllers\MyInterviewsController;
+use App\Candidate\InterviewManagement\Controllers\StartInterviewController;
+use App\Candidate\InterviewManagement\Controllers\SubmitInterviewQuestionAnswerController;
+use App\Candidate\JobTitle\Controllers\JobTitleController;
+use App\Candidate\RegistrationReasons\Controllers\RegistrationReasonsController;
 use Illuminate\Support\Facades\Route;
 
 /*

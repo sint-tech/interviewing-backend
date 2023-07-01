@@ -20,7 +20,7 @@ class QuestionFactory extends Factory
      */
     public function definition(): array
     {
-        $min_reading_duration_in_seconds = $this->faker->numberBetween(15,360);
+        $min_reading_duration_in_seconds = $this->faker->numberBetween(15, 360);
 
         return [
             'title' => $this->faker->text(100),
@@ -30,9 +30,9 @@ class QuestionFactory extends Factory
                 QuestionTypeEnum::Mcq->value,
                 QuestionTypeEnum::Boolean->value,
             ]),
-            'difficult_level'   => $this->faker->numberBetween(1,10),
-            'min_reading_duration_in_seconds'   => $min_reading_duration_in_seconds,
-            'max_reading_duration_in_seconds'   => $min_reading_duration_in_seconds + $this->faker->numberBetween(10,60),
+            'difficult_level' => $this->faker->numberBetween(1, 10),
+            'min_reading_duration_in_seconds' => $min_reading_duration_in_seconds,
+            'max_reading_duration_in_seconds' => $min_reading_duration_in_seconds + $this->faker->numberBetween(10, 60),
         ];
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
                 [
                     'template_question',
                     'additional',
-                    'recommended'
+                    'recommended',
                 ]
             )
                 ->default('template_question');

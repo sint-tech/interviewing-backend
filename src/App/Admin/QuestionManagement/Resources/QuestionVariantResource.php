@@ -14,7 +14,7 @@ class QuestionVariantResource extends JsonResource
             'text' => (string) $this->text,
             'description' => $this->when(! is_null($this->description), (string) $this->description),
             'question' => QuestionResource::make($this->whenLoaded('question')),
-            'question_cluster_id'   => $this->relationLoaded('question') ? $this->question->question_cluster_id : new MissingValue(),
+            'question_cluster_id' => $this->relationLoaded('question') ? $this->question->question_cluster_id : new MissingValue(),
             'reading_time_in_seconds' => (int) $this->reading_time_in_seconds,
             'answering_time_in_seconds' => (int) $this->answering_time_in_seconds,
             //todo::badawy create QuestionVariantCreatorResource

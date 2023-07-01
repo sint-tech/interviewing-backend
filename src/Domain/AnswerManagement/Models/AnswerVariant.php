@@ -3,19 +3,17 @@
 namespace Domain\AnswerManagement\Models;
 
 use Database\Factories\AnswerVariantFactory;
+use Domain\InterviewManagement\Models\Answer as InterviewAnswer;
 use Domain\InterviewManagement\Models\Interview;
-use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
-use Domain\InterviewManagement\Models\Answer as InterviewAnswer;
 
 class AnswerVariant extends Model
 {
@@ -34,25 +32,25 @@ class AnswerVariant extends Model
         'creator_type',
     ];
 
-    public function creator():MorphTo
+    public function creator(): MorphTo
     {
         return $this->morphTo('creator');
     }
 
-    public function owner():MorphTo
+    public function owner(): MorphTo
     {
         return $this->morphTo('owner');
     }
 
-    public function answer():BelongsTo
+    public function answer(): BelongsTo
     {
-        return $this->belongsTo(Answer::class,'answer_id');
+        return $this->belongsTo(Answer::class, 'answer_id');
     }
 
-    public function questionVariant():HasOneDeep
+    public function questionVariant(): HasOneDeep
     {
         return $this->hasOneDeepFromRelations(
-            $this->answer(),(new Answer())->questionVariant()
+            $this->answer(), (new Answer())->questionVariant()
         );
     }
 

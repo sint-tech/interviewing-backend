@@ -22,26 +22,26 @@ class InterviewTemplateQuestion extends Pivot
 
     protected $with = [
         'questionVariant',
-        'questionCluster'
+        'questionCluster',
     ];
 
-    public function interview():BelongsTo
+    public function interview(): BelongsTo
     {
-        return $this->belongsTo(Interview::class,'interview_template_id','interview_template_id');
+        return $this->belongsTo(Interview::class, 'interview_template_id', 'interview_template_id');
     }
 
-    public function interviewTemplate():BelongsTo
+    public function interviewTemplate(): BelongsTo
     {
-        return $this->belongsTo(InterviewTemplate::class,'interview_template_id');
+        return $this->belongsTo(InterviewTemplate::class, 'interview_template_id');
     }
 
-    public function questionVariant():BelongsTo
+    public function questionVariant(): BelongsTo
     {
-        return $this->belongsTo(Question::class,'question_variant_id');
+        return $this->belongsTo(Question::class, 'question_variant_id');
     }
 
-    public function questionCluster():BelongsTo
+    public function questionCluster(): BelongsTo
     {
-        return $this->belongsTo(QuestionCluster::class,'question_cluster_id');
+        return $this->belongsTo(QuestionCluster::class, 'question_cluster_id');
     }
 }

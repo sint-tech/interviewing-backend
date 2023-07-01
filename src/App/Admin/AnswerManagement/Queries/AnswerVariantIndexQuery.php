@@ -20,15 +20,12 @@ class AnswerVariantIndexQuery extends QueryBuilder
         $this->defaultSort('-id');
     }
 
-    /**
-     * @return AnswerVariantIndexQuery
-     */
     protected function setAllowedFilters(): self
     {
         return $this->allowedFilters(
             AllowedFilter::exact('id'),
-            AllowedFilter::exact('answer_id','answer_id'),
-            AllowedFilter::exact('interviews','interviews.id'),
+            AllowedFilter::exact('answer_id', 'answer_id'),
+            AllowedFilter::exact('interviews', 'interviews.id'),
         );
     }
 }

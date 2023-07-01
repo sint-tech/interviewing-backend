@@ -40,9 +40,9 @@ class Question extends Model
         return $this->morphTo('creator');
     }
 
-    public function questionVariants():HasMany
+    public function questionVariants(): HasMany
     {
-        return $this->hasMany(QuestionVariant::class,'question_id');
+        return $this->hasMany(QuestionVariant::class, 'question_id');
     }
 
     protected static function newFactory()

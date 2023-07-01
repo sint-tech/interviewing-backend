@@ -20,10 +20,10 @@ class QuestionVariantFactory extends Factory
     public function definition(): array
     {
         return [
-            'text'  => $this->faker->text(1000),
-            'description'  => $this->faker->text(1000),
-            'reading_time_in_seconds'  => $this->faker->numberBetween(12,360),
-            'answering_time_in_seconds'  => $this->faker->numberBetween(12,360),
+            'text' => $this->faker->text(1000),
+            'description' => $this->faker->text(1000),
+            'reading_time_in_seconds' => $this->faker->numberBetween(12, 360),
+            'answering_time_in_seconds' => $this->faker->numberBetween(12, 360),
         ];
     }
 }

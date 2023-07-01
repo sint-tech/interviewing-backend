@@ -6,7 +6,6 @@ use Domain\AnswerManagement\Models\Answer;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
 class AnswerFactory extends Factory
 {
     protected $model = Answer::class;
@@ -19,10 +18,10 @@ class AnswerFactory extends Factory
     public function definition(): array
     {
         return [
-            'text'  => $this->faker->text(1000),
+            'text' => $this->faker->text(1000),
             'min_score' => 1,
             'max_score' => 10,
-            'question_variant_id'   => QuestionVariant::query()->whereHas('interviewTemplates')->inRandomOrder()->first()?->getKey()
+            'question_variant_id' => QuestionVariant::query()->whereHas('interviewTemplates')->inRandomOrder()->first()?->getKey(),
         ];
     }
 }

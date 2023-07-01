@@ -34,9 +34,9 @@ class QuestionCluster extends Model
         return $this->hasMany(Question::class, 'question_cluster_id');
     }
 
-    public function questionVariants():HasManyDeep
+    public function questionVariants(): HasManyDeep
     {
-        return $this->hasManyDeepFromRelations($this->questions(),(new Question())->questionVariants());
+        return $this->hasManyDeepFromRelations($this->questions(), (new Question())->questionVariants());
     }
 
     public function skills(): BelongsToMany

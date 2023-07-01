@@ -45,7 +45,7 @@ class Interview extends Model
         return $this->belongsTo(Candidate::class, 'candidate_id');
     }
 
-    public function interviewTemplateQuestions():HasMany
+    public function interviewTemplateQuestions(): HasMany
     {
         return $this->hasMany(
             InterviewTemplateQuestion::class,
@@ -54,7 +54,7 @@ class Interview extends Model
         );
     }
 
-    public function questionVariants():BelongsToMany
+    public function questionVariants(): BelongsToMany
     {
         return $this->belongsToMany(
             QuestionVariant::class,
@@ -64,12 +64,12 @@ class Interview extends Model
             'interview_template_id'
 
         )
-        ->using(InterviewTemplateQuestion::class)
-        ->withPivot('question_cluster_id')
-        ->withTimestamps();
+            ->using(InterviewTemplateQuestion::class)
+            ->withPivot('question_cluster_id')
+            ->withTimestamps();
     }
 
-    public function answers():HasMany
+    public function answers(): HasMany
     {
         return $this->hasMany(
             Answer::class,
@@ -78,7 +78,7 @@ class Interview extends Model
         );
     }
 
-    public function answerVariants():BelongsToMany
+    public function answerVariants(): BelongsToMany
     {
         $pivot_columns = Schema::getColumnListing('interview_answers');
 
@@ -94,7 +94,7 @@ class Interview extends Model
             ->withTimestamps();
     }
 
-    public function questionClusters():BelongsToMany
+    public function questionClusters(): BelongsToMany
     {
         return $this->belongsToMany(
             QuestionCluster::class,
@@ -104,8 +104,8 @@ class Interview extends Model
             'interview_template_id'
 
         )
-        ->using(InterviewTemplateQuestion::class)
-        ->withPivot('question_variant_id')
-        ->withTimestamps();
+            ->using(InterviewTemplateQuestion::class)
+            ->withPivot('question_variant_id')
+            ->withTimestamps();
     }
 }

@@ -63,9 +63,9 @@ class Candidate extends Authenticatable implements HasMedia
         return $this->belongsTo(JobTitle::class, 'current_job_title_id');
     }
 
-    public function interviews():HasMany
+    public function interviews(): HasMany
     {
-        return $this->hasMany(Interview::class,'candidate_id');
+        return $this->hasMany(Interview::class, 'candidate_id');
     }
 
     public function desireHiringPositions(): BelongsToMany

@@ -17,17 +17,17 @@ class Answer extends Model
         'text',
         'min_score',
         'max_score',
-        'question_variant_id'
+        'question_variant_id',
     ];
 
-    public function answerVariants():HasMany
+    public function answerVariants(): HasMany
     {
-        return $this->hasMany(AnswerVariant::class,'answer_id');
+        return $this->hasMany(AnswerVariant::class, 'answer_id');
     }
 
-    public function questionVariant():BelongsTo
+    public function questionVariant(): BelongsTo
     {
-        return $this->belongsTo(QuestionVariant::class,'question_variant_id');
+        return $this->belongsTo(QuestionVariant::class, 'question_variant_id');
     }
 
     protected static function newFactory(): AnswerFactory

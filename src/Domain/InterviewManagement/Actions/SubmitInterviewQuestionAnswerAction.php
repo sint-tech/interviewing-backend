@@ -7,14 +7,12 @@ use Domain\InterviewManagement\Models\Answer;
 
 class SubmitInterviewQuestionAnswerAction
 {
-    public function __construct
-    (
+    public function __construct(
         public readonly AnswerDto $answerDto
-    )
-    {
+    ) {
     }
 
-    public function execute():Answer
+    public function execute(): Answer
     {
         $answer = new Answer($this->answerDto->toArray());
 

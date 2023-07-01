@@ -7,8 +7,7 @@ use Spatie\LaravelData\Data;
 
 class AnswerDto extends Data
 {
-    public function __construct
-    (
+    public function __construct(
         public readonly int $interview_id,
         public readonly int $answer_variant_id,
         public readonly int $question_variant_id,
@@ -18,7 +17,6 @@ class AnswerDto extends Data
         public readonly string $ml_video_semantics,
         public readonly string $ml_audio_semantics,
         public readonly string $ml_text_semantics
-    )
-    {
+    ) {
     }
 }

@@ -41,17 +41,14 @@ class QuestionVariant extends Model
         return $this->belongsTo(Question::class, 'question_id');
     }
 
-    /**
-     * @return \Staudenmeir\EloquentHasManyDeep\HasOneDeep
-     */
-    public function questionCluster():HasOneDeep
+    public function questionCluster(): HasOneDeep
     {
-        return $this->hasOneDeepFromRelations($this->question(),(new Question())->questionCluster());
+        return $this->hasOneDeepFromRelations($this->question(), (new Question())->questionCluster());
     }
 
     public function answers(): HasMany
     {
-        return $this->hasMany(Answer::class,'question_variant_id');
+        return $this->hasMany(Answer::class, 'question_variant_id');
     }
 
     public function answerVariants(): HasManyThrough
@@ -102,7 +99,7 @@ class QuestionVariant extends Model
             'question_variant_id',
             'id'
         )
-            ->where('is_default',true)
+            ->where('is_default', true)
             ->ofMany();
     }
 
