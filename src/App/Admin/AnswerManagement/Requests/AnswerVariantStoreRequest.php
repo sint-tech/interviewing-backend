@@ -3,6 +3,7 @@
 namespace App\Admin\AnswerManagement\Requests;
 
 use Domain\AnswerManagement\Enums\AnswerVariantOwnerEnum;
+use Domain\AnswerManagement\Models\Answer;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
@@ -17,10 +18,13 @@ class AnswerVariantStoreRequest extends FormRequest
             'answer_id' => ['required',Rule::exists('answers','id')->withoutTrashed()],
             'text'      => ['required','string','min:3','max:100000'],
             'description'   => ['nullable','string','min:3','max:1000'],
-            'score'         => ['required','between:1,10'],
+            'score'         => ['required','between:' . implode(',',$this->scoreAllowedRange())],
             'owner'         => ['required','array',
-                (new MorphExistRule(AnswerVariantOwnerEnum::class,$this->input('owner.type') == 'admin' ? 'users' : null))
-                ->configMorphNames('id','type')
+                (new MorphExistRule(
+                    AnswerVariantOwnerEnum::class,
+                    $this->input('owner.type') == 'admin' ? 'users' : null
+                ))
+                    ->configMorphNames('id','type')
             ],
         ];
     }
@@ -33,5 +37,15 @@ class AnswerVariantStoreRequest extends FormRequest
         };
 
         return $query->find($this->validated('owner.id'));
+    }
+
+    protected function scoreAllowedRange():array
+    {
+        $answer = Answer::query()->find($this->input('answer_id'));
+
+        $min = $answer?->min_score ?: 1;
+        $max = $answer?->max_score ?: 10;
+
+        return [$min,$max];
     }
 }
