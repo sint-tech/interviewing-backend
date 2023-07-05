@@ -40,7 +40,10 @@
             "Database\\Seeders\\": "database/seeders/",
             "Domain\\": "src/Domain/",
             "Support\\": "src/Support/"
-        }
+        },
+        "files": [
+            "src/Support/Helpers/common.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
