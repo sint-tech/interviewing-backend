@@ -39,7 +39,7 @@ class AnswerVariantStoreRequest extends FormRequest
         return $query->find($this->validated('owner.id'));
     }
 
-    protected function scoreAllowedRange():array
+    protected function allowedScoreRange():array
     {
         $answer = Answer::query()->find($this->input('answer_id'));
 
