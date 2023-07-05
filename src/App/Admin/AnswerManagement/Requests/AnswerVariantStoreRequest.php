@@ -18,7 +18,7 @@ class AnswerVariantStoreRequest extends FormRequest
             'answer_id' => ['required',Rule::exists('answers','id')->withoutTrashed()],
             'text'      => ['required','string','min:3','max:100000'],
             'description'   => ['nullable','string','min:3','max:1000'],
-            'score'         => ['required','between:' . implode(',',$this->scoreAllowedRange())],
+            'score'         => ['required','numeric','between:' . implode(',',$this->allowedScoreRange())],
             'owner'         => ['required','array',
                 (new MorphExistRule(
                     AnswerVariantOwnerEnum::class,

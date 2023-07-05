@@ -37,7 +37,6 @@ class MorphExistRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! is_array($value)) {
-            $fail("the :attribute field must be an array");
             return ;
         }
 
@@ -62,11 +61,6 @@ class MorphExistRule implements ValidationRule
               $this->allowedModelNames::tryFrom($value[$this->modelKeyInput])->value
         );
 
-        if (! Schema::hasTable($table_name)) {
-            $fail("the :attribute.{$this->modelKeyInput} is not supported");
-            return ;
-        }
-
         if (DB::table($table_name)->where($this->primaryKeyColumn,$value[$this->primaryKeyInput])->whereNull('deleted_at')->doesntExist()) {
             $fail("the :attribute is not valid");
         }
@@ -79,7 +73,6 @@ class MorphExistRule implements ValidationRule
         }
 
         return Str::of($value)
-            ->ucfirst()
             ->snake()
             ->plural()
             ->toString();
