@@ -8,7 +8,7 @@ use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Support\Rules\MorphExistRule;
+use Support\Rules\MorphRelationExistRule;
 
 class AnswerVariantStoreRequest extends FormRequest
 {
@@ -20,11 +20,11 @@ class AnswerVariantStoreRequest extends FormRequest
             'description'   => ['nullable','string','min:3','max:1000'],
             'score'         => ['required','numeric','between:' . implode(',',$this->allowedScoreRange())],
             'owner'         => ['required','array',
-                (new MorphExistRule(
+                (new MorphRelationExistRule(
                     AnswerVariantOwnerEnum::class,
                     $this->input('owner.type') == 'admin' ? 'users' : null
                 ))
-                    ->configMorphNames('id','type')
+                    ->configMorphInputNames('id','type')
             ],
         ];
     }

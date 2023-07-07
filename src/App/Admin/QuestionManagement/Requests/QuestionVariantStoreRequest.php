@@ -2,14 +2,12 @@
 
 namespace App\Admin\QuestionManagement\Requests;
 
-use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Enums\QuestionVariantOwnerEnum;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
-use Support\Rules\MorphExistRule;
+use Support\Rules\MorphRelationExistRule;
 
 class QuestionVariantStoreRequest extends FormRequest
 {
@@ -23,7 +21,7 @@ class QuestionVariantStoreRequest extends FormRequest
             'answering_time_in_seconds' => ['required', 'integer', 'min:1'],
             'owner'     => ['required',
                 'array',
-                (new MorphExistRule(
+                (new MorphRelationExistRule(
                     QuestionVariantOwnerEnum::class,
                     $this->input('owner.model_type') == 'admin' ? 'users' : null)
                 )
