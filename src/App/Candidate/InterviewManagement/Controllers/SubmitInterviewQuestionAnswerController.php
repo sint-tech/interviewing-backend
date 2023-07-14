@@ -23,7 +23,10 @@ class SubmitInterviewQuestionAnswerController extends Controller
                     'interview_id' => $interview->getKey(),
                     'ml_text_semantics' =>
                         (new PromptAnswerAnalyticsAction(
-                            $request->questionVariant()->defaultAiPromptMessage,
+                            $request->questionVariant()->defaultAiPromptMessage()
+                                ->firstOr(fn() => AiPromptMessage::query()->create([
+                                    'question_variant_id'   => $request->validated('question_variant_id')
+                                ])),
                             $request->validated('answer_text')
                         ))->execute()
                 ]
