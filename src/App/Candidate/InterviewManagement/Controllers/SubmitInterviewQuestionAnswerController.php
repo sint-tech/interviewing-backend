@@ -25,6 +25,7 @@ class SubmitInterviewQuestionAnswerController extends Controller
                         (new PromptAnswerAnalyticsAction(
                             $request->questionVariant()->defaultAiPromptMessage()
                                 ->firstOr(fn() => AiPromptMessage::query()->create([
+                                    'prompt_text' => 'temp prompt message',
                                     'question_variant_id'   => $request->validated('question_variant_id')
                                 ])),
                             $request->validated('answer_text')
