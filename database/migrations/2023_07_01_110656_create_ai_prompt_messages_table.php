@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ai_prompt_messages', function (Blueprint $table) {
             $table->id();
-            $table->enum('ai_model', ['gpt-3.5']);
+            $table->enum('ai_model', ['gpt-3.5-turbo']);
             $table->longText('prompt_text');
 
             $table->foreignId('question_variant_id')

@@ -3,6 +3,7 @@
 namespace Domain\QuestionManagement\Models;
 
 use Database\Factories\QuestionVariantFactory;
+use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
 use Domain\AnswerManagement\Models\Answer;
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\InterviewManagement\Models\InterviewTemplate;
@@ -18,6 +19,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
+/**
+ * @property AiPromptMessage $defaultAiPromptMessage
+ */
 class QuestionVariant extends Model
 {
     use HasFactory,SoftDeletes,HasRelationships;

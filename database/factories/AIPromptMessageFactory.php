@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use Domain\QuestionManagement\Models\AiPromptMessage;
+use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
