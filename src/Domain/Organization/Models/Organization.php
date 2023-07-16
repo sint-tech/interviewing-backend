@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Support\Interfaces\OwnerInterface;
 
-class Organization extends Model
+class Organization extends Model implements OwnerInterface
 {
     use HasFactory,SoftDeletes;
 
@@ -32,5 +33,10 @@ class Organization extends Model
     protected static function newFactory()
     {
         return new OrganizationFactory();
+    }
+
+    public function organizationName(): string
+    {
+        return $this->name;
     }
 }

@@ -6,9 +6,11 @@ namespace Domain\Users\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
+use Support\Interfaces\OwnerInterface;
 
-class User extends Authenticatable
+class User extends Authenticatable implements OwnerInterface
 {
     use HasApiTokens;
     use HasFactory;
@@ -43,4 +45,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function organizationName(): string
+    {
+        return Str::of(
+            config('app.name','SINT')
+        )->lower()->ucfirst();
+    }
 }

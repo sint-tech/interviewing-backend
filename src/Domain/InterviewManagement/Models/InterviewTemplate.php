@@ -3,6 +3,7 @@
 namespace Domain\InterviewManagement\Models;
 
 use Database\Factories\InterviewTemplateFactory;
+use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,10 +21,14 @@ class InterviewTemplate extends Model
         'description',
         'availability_status',
         'owner_id',
-        'owner_template',
+        'owner_type',
         'creator_id',
-        'creator_template',
+        'creator_type',
         'reusable',
+    ];
+
+    protected $casts = [
+        'availability_status'   => InterviewTemplateAvailabilityStatusEnum::class
     ];
 
     public function interviews(): HasMany

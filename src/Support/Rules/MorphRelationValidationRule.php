@@ -8,6 +8,10 @@ use Illuminate\Support\Str;
 
 abstract class MorphRelationValidationRule implements ValidationRule
 {
+    const EnumModels = 'enum';
+
+    const ArrayModels = 'array';
+
     protected string $primaryKeyInput = 'model_id';
 
     protected string $modelKeyInput = 'model_type';
@@ -19,7 +23,7 @@ abstract class MorphRelationValidationRule implements ValidationRule
         protected string $primaryKeyColumn = 'id'
     )
     {
-
+        $this->allowedModelsType();
     }
 
     public function configMorphInputNames(string $primaryKeyInput = 'id',string $modelKeyInput = 'model'): self
@@ -54,16 +58,38 @@ abstract class MorphRelationValidationRule implements ValidationRule
             return false;
         }
 
-        if (is_array($this->allowedModelNames) && ! in_array($value[$this->modelKeyInput],$this->allowedModelNames)) {
+        if ($this->modelsAreArray() && ! in_array($value[$this->modelKeyInput],$this->allowedModelNames)) {
             $fail("the :attribute.$this->allowedModelNames is not valid");
             return false;
         }
 
-        if (is_string($this->allowedModelNames) && enum_exists($this->allowedModelNames) && is_null($this->allowedModelNames::tryFrom($value[$this->modelKeyInput]))) {
+        if ($this->modelsAreEnum() && enum_exists($this->allowedModelNames) && is_null($this->allowedModelNames::tryFrom($value[$this->modelKeyInput]))) {
             $fail("the :attribute.{$this->modelKeyInput} is not supported");
             return false;
         }
 
         return true;
+    }
+
+    protected function allowedModelsType():string
+    {
+        if (enum_exists($this->allowedModelNames)) {
+            return self::EnumModels;
+        }
+        else if(is_array($this->allowedModelNames)) {
+            return self::ArrayModels;
+        }
+
+        throw new \LogicException('$allowedModelNames must be enum class path or array of strings');
+    }
+
+    protected function modelsAreEnum():bool
+    {
+        return $this->allowedModelsType() == self::EnumModels;
+    }
+
+    protected function modelsAreArray():bool
+    {
+        return $this->allowedModelsType() == self::ArrayModels;
     }
 }

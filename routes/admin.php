@@ -3,6 +3,7 @@
 use App\Admin\AnswerManagement\Controllers\AnswerVariantController;
 use App\Admin\Auth\Controllers\LoginController;
 use App\Admin\Auth\Controllers\LogoutController;
+use App\Admin\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Admin\Organization\Controllers\OrganizationController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterController;
 use App\Admin\QuestionManagement\Controllers\QuestionController;
@@ -27,3 +28,5 @@ Route::apiResource('questions', QuestionController::class);
 Route::apiResource('question-variants', QuestionVariantController::class);
 
 Route::apiResource('answer-variants', AnswerVariantController::class);
+
+Route::apiResource('interview-templates', InterviewTemplateController::class)->except('update');
