@@ -23,6 +23,6 @@ class CreateInterviewTemplateAction
 
         $interviewTemplate->save();
 
-        return $interviewTemplate;
+        return $interviewTemplate->refresh();
     }
 }
