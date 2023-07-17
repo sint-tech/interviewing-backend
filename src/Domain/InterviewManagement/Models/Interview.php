@@ -108,4 +108,15 @@ class Interview extends Model
             ->withPivot('question_variant_id')
             ->withTimestamps();
     }
+
+    public function allQuestionsAnswered():bool
+    {
+        return $this->questionVariants()->count() ==
+            $this->answers()
+                ->whereIn('question_variant_id',
+                    $this->questionVariants()
+                    ->select('question_variants.id')
+                )
+                ->count();
+    }
 }

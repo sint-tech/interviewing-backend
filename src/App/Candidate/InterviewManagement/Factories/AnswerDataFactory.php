@@ -32,12 +32,14 @@ class AnswerDataFactory
      */
     private function getMlTextSemantics(SubmitInterviewQuestionAnswerRequest $request):string
     {
+        $promptAiModel = $request->questionVariant()->defaultAiPromptMessage()
+            ->firstOr(fn() => AiPromptMessage::query()->create([
+                'prompt_text' => 'temp prompt message',
+                'question_variant_id'   => $request->validated('question_variant_id')
+            ])->refresh());
+
         return (new PromptAnswerAnalyticsAction(
-            $request->questionVariant()->defaultAiPromptMessage()
-                ->firstOr(fn() => AiPromptMessage::query()->create([
-                    'prompt_text' => 'temp prompt message',
-                    'question_variant_id'   => $request->validated('question_variant_id')
-                ])),
+            $promptAiModel,
             $request->validated('answer_text')
         ))->execute();
     }

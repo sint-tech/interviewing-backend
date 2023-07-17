@@ -8,9 +8,7 @@ use App\Candidate\InterviewManagement\Resources\AnswerResource;
 use Domain\AiPromptMessageManagement\Actions\PromptAnswerAnalyticsAction;
 use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
 use Domain\InterviewManagement\Actions\SubmitInterviewQuestionAnswerAction;
-use Domain\InterviewManagement\DataTransferObjects\AnswerDto;
 use Domain\InterviewManagement\Models\Interview;
-use Domain\QuestionManagement\Models\QuestionVariant;
 use Support\Controllers\Controller;
 
 class SubmitInterviewQuestionAnswerController extends Controller
