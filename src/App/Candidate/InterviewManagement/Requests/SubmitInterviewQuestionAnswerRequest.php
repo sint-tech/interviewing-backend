@@ -32,12 +32,8 @@ class SubmitInterviewQuestionAnswerRequest extends FormRequest
                     ->where('interview_template_id', $this->interview->interview_template_id)
                     ->withoutTrashed(),
             ],
-            'answer_variant_id' => ['nullable',
-                Rule::exists('answer_variants', 'id'),
-                new AnswerVariantBelongsToQuestionVariantRule($this->input('question_variant_id')),
-            ],
-            'answer_text' => ['required', 'string'],
-            'score' => ['required', 'numeric', 'between:1,10' /*todo set min and max in interview answer config*/],
+            'answer_text' => ['required', 'string','min:3','max:1000'],
+//            'score' => ['required', 'numeric', 'between:1,10' /*todo set min and max in interview answer config*/],
         ];
     }
 

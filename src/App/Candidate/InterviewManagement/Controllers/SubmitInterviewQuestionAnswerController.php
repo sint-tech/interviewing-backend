@@ -2,6 +2,7 @@
 
 namespace App\Candidate\InterviewManagement\Controllers;
 
+use App\Candidate\InterviewManagement\Factories\AnswerDataFactory;
 use App\Candidate\InterviewManagement\Requests\SubmitInterviewQuestionAnswerRequest;
 use App\Candidate\InterviewManagement\Resources\AnswerResource;
 use Domain\AiPromptMessageManagement\Actions\PromptAnswerAnalyticsAction;
@@ -16,23 +17,7 @@ class SubmitInterviewQuestionAnswerController extends Controller
 {
     public function __invoke(SubmitInterviewQuestionAnswerRequest $request, Interview $interview)
     {
-        $answer_dto = AnswerDto::from(
-            array_merge(
-                $request->validated(),
-                [
-                    'interview_id' => $interview->getKey(),
-                    'ml_text_semantics' =>
-                        (new PromptAnswerAnalyticsAction(
-                            $request->questionVariant()->defaultAiPromptMessage()
-                                ->firstOr(fn() => AiPromptMessage::query()->create([
-                                    'prompt_text' => 'temp prompt message',
-                                    'question_variant_id'   => $request->validated('question_variant_id')
-                                ])),
-                            $request->validated('answer_text')
-                        ))->execute()
-                ]
-            )
-        );
+        $answer_dto = AnswerDataFactory::fromRequest($request);
 
         return AnswerResource::make(
             (new SubmitInterviewQuestionAnswerAction($answer_dto))->execute()
