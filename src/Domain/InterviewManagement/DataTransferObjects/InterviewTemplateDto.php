@@ -3,7 +3,10 @@
 namespace Domain\InterviewManagement\DataTransferObjects;
 
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
+use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Spatie\LaravelData\Attributes\Validation\Min;
+use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 use Support\Interfaces\OwnerInterface as Owner;
@@ -17,7 +20,9 @@ class InterviewTemplateDto extends Data
         public readonly  InterviewTemplateAvailabilityStatusEnum $availability_status = InterviewTemplateAvailabilityStatusEnum::Pending,
         public readonly  Owner $owner,
         public readonly  Authenticatable $creator,
-        public bool $reusable = false,
+        public readonly bool $reusable = false,
+        #[Required,Min(1)]
+        public readonly iterable $question_variants
     )
     {
         $this->additional([
@@ -26,5 +31,12 @@ class InterviewTemplateDto extends Data
             'owner_id'      => $this->owner->getKey(),
             'owner_type'    => $this->owner::class
         ]);
+
+        foreach ($this->question_variants as $question_variant) {
+            if($question_variant instanceof QuestionVariant) {
+                continue;
+            }
+            throw new \InvalidArgumentException('array values must be of type QuestionVariant');
+        }
     }
 }

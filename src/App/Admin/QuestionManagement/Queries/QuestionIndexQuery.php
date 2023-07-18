@@ -18,6 +18,8 @@ class QuestionIndexQuery extends QueryBuilder
         $this->allowedFilters(
             $this->getAllowedFilters()
         );
+
+        $this->defaultSort('-updated_at');
     }
 
     public function getAllowedFilters(): array

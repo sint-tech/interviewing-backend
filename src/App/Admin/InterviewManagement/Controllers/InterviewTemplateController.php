@@ -35,6 +35,7 @@ class InterviewTemplateController extends Controller
                 array_merge($request->validated(),[
                     'creator' => auth()->user(),
                     'owner' => $request->getOwnerInstance(),
+                    'question_variants' => $request->questionVariants()
                 ])
             )
         ))->execute();
