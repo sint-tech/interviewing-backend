@@ -16,6 +16,10 @@ class QuestionVariantIndexQuery extends QueryBuilder
         parent::__construct($subject, $request);
 
         $this->allowedFilters($this->getAllowedFilters());
+
+        $this->allowedSorts('id','created_at','updated_at');
+
+        $this->defaultSort('-updated_at');
     }
 
     protected function getAllowedFilters(): array
