@@ -20,6 +20,11 @@ class QuestionVariantIndexQuery extends QueryBuilder
         $this->allowedSorts('id','created_at','updated_at');
 
         $this->defaultSort('-updated_at');
+
+        $this->allowedIncludes(
+            'question.questionCluster',
+            'questionCluster'
+        );
     }
 
     protected function getAllowedFilters(): array
