@@ -38,7 +38,7 @@ class InterviewTemplateController extends Controller
                     'question_variants' => $request->questionVariants()
                 ])
             )
-        ))->execute();
+        ))->execute()->load('questionVariants');
 
         return InterviewTemplateResource::make($interviewTemplate);
     }
