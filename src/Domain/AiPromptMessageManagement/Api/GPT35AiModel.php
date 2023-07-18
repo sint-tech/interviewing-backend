@@ -33,7 +33,7 @@ class GPT35AiModel extends  AiModelClientInterface
 
     protected function questionMessage(string $answerText):string
     {
-        $messageContent = 'interviewer: {{INTERVIEWER_QUESTION}}. interviewee: {{INTERVIEWEE_ANSWER}}';
+        $messageContent = 'interviewer: {{INTERVIEWER_QUESTION}}.\\n interviewee: {{INTERVIEWEE_ANSWER}}.';
 
         $this->replaceKeyWithValue($messageContent,'{{INTERVIEWER_QUESTION}}',$this->promptMessage->questionVariant->text);
 
