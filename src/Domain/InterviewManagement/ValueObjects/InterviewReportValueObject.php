@@ -3,6 +3,7 @@
 namespace Domain\InterviewManagement\ValueObjects;
 
 use Domain\Candidate\Models\Candidate;
+use Domain\InterviewManagement\Exceptions\InterviewNotFinishedException;
 use Domain\InterviewManagement\Models\Answer;
 use Domain\InterviewManagement\Models\Interview;
 use Illuminate\Contracts\Support\Arrayable;
@@ -24,7 +25,7 @@ class InterviewReportValueObject
     )
     {
         if ($this->interviewStillRunning()) {
-            throw new \LogicException('The interview should be end to generate the report');
+            throw new InterviewNotFinishedException();
         }
 
         $this->candidate = $this->interview->candidate;
