@@ -14,6 +14,7 @@ class InterviewResource extends JsonResource
             'started_at' => (string) $this->started_at?->format('Y-m-d H:i'),
             'ended_at' => (string) $this->ended_at?->format('Y-m-d H:i'),
             'is_ended' => ! is_null($this->ended_at),
+            'candidate' => CandidateResource::make($this->whenLoaded('candidate')),
             'interview_answers' => AnswerResource::collection($this->whenLoaded('answers')),
         ];
     }

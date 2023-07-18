@@ -33,7 +33,6 @@ class SubmitInterviewQuestionAnswerRequest extends FormRequest
                     ->withoutTrashed(),
             ],
             'answer_text' => ['required', 'string','min:3','max:1000'],
-//            'score' => ['required', 'numeric', 'between:1,10' /*todo set min and max in interview answer config*/],
         ];
     }
 

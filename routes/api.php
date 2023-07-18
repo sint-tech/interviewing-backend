@@ -5,6 +5,7 @@ use App\Candidate\Auth\Controllers\LogoutController;
 use App\Candidate\Auth\Controllers\RegisterController;
 use App\Candidate\Auth\Controllers\SocialLoginController;
 use App\Candidate\Auth\Controllers\ValidateNewCandidateUniqueInputsController;
+use App\Candidate\InterviewManagement\Controllers\InterviewReportController;
 use App\Candidate\InterviewManagement\Controllers\MyInterviewsController;
 use App\Candidate\InterviewManagement\Controllers\StartInterviewController;
 use App\Candidate\InterviewManagement\Controllers\SubmitInterviewQuestionAnswerController;
@@ -41,6 +42,7 @@ Route::middleware('auth:api-candidate')->group(function () {
             Route::get('', MyInterviewsController::class);
             Route::any('/{interview_template}/start-interview', StartInterviewController::class);
             Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class);
+            Route::get('/{interview}/report', InterviewReportController::class);
         });
 });
 

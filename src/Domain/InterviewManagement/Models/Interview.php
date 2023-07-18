@@ -5,6 +5,7 @@ namespace Domain\InterviewManagement\Models;
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\Candidate;
 use Domain\QuestionManagement\Models\QuestionCluster;
+use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * @property Collection<QuestionCluster> $questionClusters
  * @property Collection<QuestionVariant> $questionVariants
+ * @property Collection<Answer> $answers
  */
 class Interview extends Model
 {
@@ -71,11 +73,26 @@ class Interview extends Model
 
     public function answers(): HasMany
     {
+        $base_recommendation_query = QuestionClusterRecommendation::query()
+            ->limit(1)
+            ->select('statement')
+            ->whereColumn('interview_answers.score','>=','question_cluster_recommendations.min_score')
+            ->whereColumn('interview_answers.score','<=','question_cluster_recommendations.max_score')
+            ->whereColumn('question_cluster_recommendations.question_cluster_id','interview_answers.question_cluster_id');
+
         return $this->hasMany(
             Answer::class,
             'interview_id',
             'id'
-        );
+        )
+            ->addSelect([
+                'advice_statement' => (clone $base_recommendation_query)->whereTypeIsAdvice(),
+                'impact_statement'  => (clone $base_recommendation_query)->whereTypeIsImpact()
+            ])
+            ->withCasts([
+                'advice_statement'  => 'string',
+                'impact_statement'  => 'string',
+            ]);
     }
 
     public function answerVariants(): BelongsToMany

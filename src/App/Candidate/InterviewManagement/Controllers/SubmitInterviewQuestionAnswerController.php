@@ -13,7 +13,7 @@ use Support\Controllers\Controller;
 
 class SubmitInterviewQuestionAnswerController extends Controller
 {
-    public function __invoke(SubmitInterviewQuestionAnswerRequest $request, Interview $interview)
+    public function __invoke(SubmitInterviewQuestionAnswerRequest $request, Interview $interview):AnswerResource
     {
         $answer_dto = AnswerDataFactory::fromRequest($request);
 

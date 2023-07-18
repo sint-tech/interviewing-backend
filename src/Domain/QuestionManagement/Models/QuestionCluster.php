@@ -3,6 +3,7 @@
 namespace Domain\QuestionManagement\Models;
 
 use Database\Factories\QuestionClusterFactory;
+use Domain\QuestionManagement\Enums\QuestionClusterRecommendationEnum;
 use Domain\Skill\Models\Skill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -47,6 +48,25 @@ class QuestionCluster extends Model
             'question_cluster_id',
             'skill_id',
         )->withTimestamps();
+    }
+
+    public function recommendations():HasMany
+    {
+        return $this->hasMany(QuestionClusterRecommendation::class,'question_cluster_id');
+    }
+
+    public function advices():HasMany
+    {
+        return $this
+            ->recommendations()
+            ->where('type',QuestionClusterRecommendationEnum::Advice);
+    }
+
+    public function impacts():HasMany
+    {
+        return $this
+            ->recommendations()
+            ->where('type',QuestionClusterRecommendationEnum::Impact);
     }
 
     protected static function newFactory()
