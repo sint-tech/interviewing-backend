@@ -18,6 +18,13 @@ class QuestionClusterIndexQuery extends QueryBuilder
         $this->allowedFilters(
             $this->getAllowedFilters()
         );
+
+        $this->allowedSorts(
+            'id',
+            'created_at'
+        );
+
+        $this->defaultSort('-created_at');
     }
 
     protected function getAllowedFilters(): array
