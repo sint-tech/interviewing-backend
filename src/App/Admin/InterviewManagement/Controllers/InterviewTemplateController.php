@@ -16,7 +16,7 @@ class InterviewTemplateController extends Controller
     {
         return InterviewTemplateResource::collection(
             InterviewTemplate::query()->latest()->paginate(
-                request()->integer('per_page',25)
+                request()->integer('per_page',30)
             )
         );
     }
