@@ -15,7 +15,7 @@ class InterviewTemplateController extends Controller
     public function index()
     {
         return InterviewTemplateResource::collection(
-            InterviewTemplate::query()->paginate(
+            InterviewTemplate::query()->latest()->paginate(
                 request()->integer('per_page',25)
             )
         );
@@ -38,7 +38,7 @@ class InterviewTemplateController extends Controller
                     'question_variants' => $request->questionVariants()
                 ])
             )
-        ))->execute();
+        ))->execute()->load('questionVariants');
 
         return InterviewTemplateResource::make($interviewTemplate);
     }
