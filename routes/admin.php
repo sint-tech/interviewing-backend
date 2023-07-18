@@ -6,6 +6,7 @@ use App\Admin\Auth\Controllers\LogoutController;
 use App\Admin\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Admin\Organization\Controllers\OrganizationController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterController;
+use App\Admin\QuestionManagement\Controllers\QuestionClusterRecommendationController;
 use App\Admin\QuestionManagement\Controllers\QuestionController;
 use App\Admin\QuestionManagement\Controllers\QuestionVariantController;
 use App\Admin\Skill\Controllers\SkillController;
@@ -22,6 +23,8 @@ Route::apiResource('organizations', OrganizationController::class);
 Route::apiResource('skills', SkillController::class);
 
 Route::apiResource('question-clusters', QuestionClusterController::class);
+
+Route::apiResource('question-clusters/recommendations', QuestionClusterRecommendationController::class)->only('create');
 
 Route::apiResource('questions', QuestionController::class);
 

@@ -18,7 +18,7 @@ class InterviewReportValueObject
 
     public readonly array $impacts;
 
-    protected array $questionClusters;
+    protected readonly array $questionClusters;
 
     public function __construct(
         public readonly Interview $interview
@@ -33,6 +33,8 @@ class InterviewReportValueObject
         $this->avgScore = $this->interview->answers->avg(fn($answer) => $answer->score /$answer->max_score) * 100;
 
         $this->setRecommendations();
+
+        $this->questionClustersStats();
     }
 
     public function interviewStillRunning():bool
@@ -47,25 +49,27 @@ class InterviewReportValueObject
         $this->impacts = $this->interview->answers->map(fn(Answer $answer) => $answer->impact_statement)->filter()->toArray();
     }
 
-    public function getQuestionClusters():array
+    public function questionClustersStats():void
     {
+        $clustersStats = [];
+
         foreach ($this->interview->answers as $answer) {
             if (is_null($answer->questionCluster)) {
                 continue;
             }
 
-            $this->questionClusters[$answer->question_cluster_id] = [
+            $clustersStats[$answer->question_cluster_id] = [
                 'total_scores' => + ($answer->score / $answer->max_score),
                 'name'  => $answer->questionCluster->name,
                 'description'  => $answer->questionCluster->description,
             ];
         }
 
-        array_walk($this->questionClusters,function (&$question_cluster) {
+        array_walk($clustersStats,function (&$question_cluster) {
             $question_cluster['avgScore'] = $question_cluster['total_scores'] * 100;
             unset($question_cluster['total_scores']);
         });
 
-        return $this->questionClusters;
+        $this->questionClusters = $clustersStats;
     }
 }

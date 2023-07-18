@@ -16,7 +16,7 @@ class InterviewReportResource extends JsonResource
             'average_score' => (float) $this->avgScore,
             'advices'   => (array) $this->advices,
             'impacts'   => (array) $this->impacts,
-            'question_clusters_scores'  => $this->getQuestionClusters(),
+            'question_clusters_scores'  => $this->questionClustersStats,
         ];
     }
 }
