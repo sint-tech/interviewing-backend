@@ -24,7 +24,7 @@ Route::apiResource('skills', SkillController::class);
 
 Route::apiResource('question-clusters', QuestionClusterController::class);
 
-Route::apiResource('question-clusters/recommendations', QuestionClusterRecommendationController::class)->only('create');
+Route::apiResource('question-clusters/recommendations', QuestionClusterRecommendationController::class)->only('store');
 
 Route::apiResource('questions', QuestionController::class);
 
