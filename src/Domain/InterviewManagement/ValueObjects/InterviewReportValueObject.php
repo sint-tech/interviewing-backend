@@ -7,6 +7,8 @@ use Domain\InterviewManagement\Exceptions\InterviewNotFinishedException;
 use Domain\InterviewManagement\Models\Answer;
 use Domain\InterviewManagement\Models\Interview;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
+use OpenAI\Laravel\Facades\OpenAI;
 
 class InterviewReportValueObject
 {
@@ -32,9 +34,9 @@ class InterviewReportValueObject
 
         $this->avgScore = $this->interview->answers->avg(fn($answer) => $answer->score /$answer->max_score) * 100;
 
-        $this->setRecommendations();
-
         $this->questionClustersStats();
+
+        $this->setRecommendations();
     }
 
     public function interviewStillRunning():bool
@@ -46,7 +48,7 @@ class InterviewReportValueObject
     {
         $this->advices = $this->interview->answers->map(fn(Answer $answer) => $answer->advice_statement)->filter()->toArray();
 
-        $this->impacts = $this->interview->answers->map(fn(Answer $answer) => $answer->impact_statement)->filter()->toArray();
+        $this->impacts = Arr::wrap($this->setImpacts());
     }
 
     public function questionClustersStats():void
@@ -71,5 +73,32 @@ class InterviewReportValueObject
         });
 
         $this->questionClustersStats = $clustersStats;
+    }
+
+    private function setImpacts():string
+    {
+        $userContent = 'I got \\n';
+
+        foreach ($this->questionClustersStats as $questionClustersStat) {
+            $userContent .= "{$questionClustersStat['avg_score']} In {$questionClustersStat['name']} \\n";
+        }
+
+        $userContent .= "please demonstrate the impact of these scores on my career and professional life in 4 lines, without mentioning my the scores";
+
+        $response = OpenAI::chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages'   => [
+                [
+                    'role'  => 'system',
+                    'content'   => "I'm in an interview, and I was asked the about some questions about my behavior, then I was rated from 1 to 100 percent, in multiple fields based on my answers",
+                ],
+                [
+                    'role' => 'user',
+                    'content' => $userContent
+                ]
+            ]
+        ]);
+
+        return (string) ($response->choices[0])->message->content;
     }
 }
