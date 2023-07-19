@@ -18,7 +18,7 @@ class InterviewReportValueObject
 
     public readonly array $impacts;
 
-    protected readonly array $questionClusters;
+    public readonly array $questionClustersStats;
 
     public function __construct(
         public readonly Interview $interview
@@ -66,10 +66,10 @@ class InterviewReportValueObject
         }
 
         array_walk($clustersStats,function (&$question_cluster) {
-            $question_cluster['avgScore'] = $question_cluster['total_scores'] * 100;
+            $question_cluster['avg_score'] = $question_cluster['total_scores'] * 100;
             unset($question_cluster['total_scores']);
         });
 
-        $this->questionClusters = $clustersStats;
+        $this->questionClustersStats = $clustersStats;
     }
 }
