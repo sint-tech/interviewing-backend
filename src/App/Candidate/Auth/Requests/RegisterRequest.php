@@ -49,7 +49,7 @@ class RegisterRequest extends FormRequest
                 ->whereNull('deleted_at')
                 ->where('availability_status', RegistrationReasonsAvailabilityStatusEnum::Active->value),
             ],
-            'cv' => ['required', File::types('pdf')->max(20000)],
+            'cv' => ['required',],
         ];
     }
 }
