@@ -77,9 +77,9 @@ class Interview extends Model
         $base_recommendation_query = QuestionClusterRecommendation::query()
             ->limit(1)
             ->select('statement')
-            ->whereColumn('interview_answers.score','>=','question_cluster_recommendations.min_score')
-            ->whereColumn('interview_answers.score','<=','question_cluster_recommendations.max_score')
-            ->whereColumn('question_cluster_recommendations.question_cluster_id','interview_answers.question_cluster_id');
+            ->whereColumn('interview_answers.score', '>=', 'question_cluster_recommendations.min_score')
+            ->whereColumn('interview_answers.score', '<=', 'question_cluster_recommendations.max_score')
+            ->whereColumn('question_cluster_recommendations.question_cluster_id', 'interview_answers.question_cluster_id');
 
         return $this->hasMany(
             Answer::class,
@@ -88,11 +88,11 @@ class Interview extends Model
         )
             ->addSelect([
                 'advice_statement' => (clone $base_recommendation_query)->whereTypeIsAdvice(),
-                'impact_statement'  => (clone $base_recommendation_query)->whereTypeIsImpact()
+                'impact_statement' => (clone $base_recommendation_query)->whereTypeIsImpact(),
             ])
             ->withCasts([
-                'advice_statement'  => 'string',
-                'impact_statement'  => 'string',
+                'advice_statement' => 'string',
+                'impact_statement' => 'string',
             ]);
     }
 
@@ -127,13 +127,13 @@ class Interview extends Model
             ->withTimestamps();
     }
 
-    public function allQuestionsAnswered():bool
+    public function allQuestionsAnswered(): bool
     {
         return $this->questionVariants()->count() ==
             $this->answers()
                 ->whereIn('question_variant_id',
                     $this->questionVariants()
-                    ->select('question_variants.id')
+                        ->select('question_variants.id')
                 )
                 ->count();
     }

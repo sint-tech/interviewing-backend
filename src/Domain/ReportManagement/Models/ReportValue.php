@@ -10,5 +10,4 @@ class ReportValue extends Model
     use HasFactory;
 
     protected $fillable = [];
-
 }

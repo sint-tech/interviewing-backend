@@ -17,19 +17,19 @@ class QuestionClusterRecommendation extends Model
         'type',
         'statement',
         'min_score',
-        'max_score'
+        'max_score',
     ];
 
     protected $casts = [
-        'type'  => QuestionClusterRecommendationEnum::class
+        'type' => QuestionClusterRecommendationEnum::class,
     ];
 
-    public function questionCluster():BelongsTo
+    public function questionCluster(): BelongsTo
     {
-        return $this->belongsTo(QuestionCluster::class,'question_cluster_id');
+        return $this->belongsTo(QuestionCluster::class, 'question_cluster_id');
     }
 
-    public function newEloquentBuilder($query):QuestionClusterRecommendationBuilder
+    public function newEloquentBuilder($query): QuestionClusterRecommendationBuilder
     {
         return new QuestionClusterRecommendationBuilder($query);
     }

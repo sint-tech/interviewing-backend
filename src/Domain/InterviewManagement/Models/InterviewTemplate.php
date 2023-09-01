@@ -28,7 +28,7 @@ class InterviewTemplate extends Model
     ];
 
     protected $casts = [
-        'availability_status'   => InterviewTemplateAvailabilityStatusEnum::class
+        'availability_status' => InterviewTemplateAvailabilityStatusEnum::class,
     ];
 
     public function interviews(): HasMany

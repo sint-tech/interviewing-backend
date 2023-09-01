@@ -26,7 +26,7 @@ class QuestionVariantDto extends Data
             ]);
         }
 
-        if(! $this->owner instanceof Optional) {
+        if (! $this->owner instanceof Optional) {
             $this->additional([
                 'owner_type' => $this->owner::class,
                 'owner_id' => $this->owner->getKey(),

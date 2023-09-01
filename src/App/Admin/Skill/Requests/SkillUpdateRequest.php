@@ -9,8 +9,8 @@ class SkillUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'          => ['filled', 'string', 'min:3', 'max:1000'],
-            'description'   => ['nullable', 'string', 'min:3'],
+            'name' => ['filled', 'string', 'min:3', 'max:1000'],
+            'description' => ['nullable', 'string', 'min:3'],
         ];
     }
 }

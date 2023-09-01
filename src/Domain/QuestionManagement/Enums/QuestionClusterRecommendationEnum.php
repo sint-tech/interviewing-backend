@@ -2,9 +2,9 @@
 
 namespace Domain\QuestionManagement\Enums;
 
-enum QuestionClusterRecommendationEnum:string
+enum QuestionClusterRecommendationEnum: string
 {
-    Case Advice = 'advice';
+    case Advice = 'advice';
 
-    Case Impact = 'impact';
+    case Impact = 'impact';
 }

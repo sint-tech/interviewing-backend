@@ -20,12 +20,12 @@ class QuestionVariantUpdateRequest extends FormRequest
             'question_id' => ['filled', Rule::exists('questions', 'id')->withoutTrashed()],
             'reading_time_in_seconds' => ['filled', 'integer', 'min:1'],
             'answering_time_in_seconds' => ['filled', 'integer', 'min:1'],
-            'owner'     => ['filled',
+            'owner' => ['filled',
                 'array',
                 (new MorphRelationExistRule(
                     QuestionVariantOwnerEnum::class,
                     $this->input('owner.model_type') == 'admin' ? 'users' : null)
-                )
+                ),
             ],
         ];
     }

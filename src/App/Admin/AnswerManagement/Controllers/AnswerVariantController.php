@@ -28,7 +28,7 @@ class AnswerVariantController extends Controller
         );
     }
 
-    public function store(AnswerVariantStoreRequest $request):AnswerVariantResource
+    public function store(AnswerVariantStoreRequest $request): AnswerVariantResource
     {
         $answer_variant_dto = AnswerVariantDataFactory::fromStoreRequest($request);
 

@@ -27,20 +27,20 @@ class QuestionTest extends TestCase
         $this->superAdmin = User::query()->first();
     }
 
-    public function testItShouldUpdateQuestion():void
+    public function testItShouldUpdateQuestion(): void
     {
-        $question = Question::factory()->for($this->superAdmin,'creator')->create();
+        $question = Question::factory()->for($this->superAdmin, 'creator')->create();
 
-        $response = $this->actingAs($this->superAdmin,'api')
-            ->post("admin-api/questions/{$question->getKey()}?_method=PUT",[
-               'title'=> 'update question'
+        $response = $this->actingAs($this->superAdmin, 'api')
+            ->post("admin-api/questions/{$question->getKey()}?_method=PUT", [
+                'title' => 'update question',
             ]);
 
         $question = $question->refresh();
 
-        $this->assertEquals($this->superAdmin,$question->creator);
+        $this->assertEquals($this->superAdmin, $question->creator);
 
-        $this->assertEquals('update question',$question->title);
+        $this->assertEquals('update question', $question->title);
 
         $response->assertOk();
     }

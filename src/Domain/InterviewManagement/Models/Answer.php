@@ -6,11 +6,9 @@ use Domain\InterviewManagement\Enums\QuestionOccurrenceReasonEnum;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
 use Domain\QuestionManagement\Models\QuestionVariant;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -57,7 +55,7 @@ class Answer extends Pivot
         return $this->belongsTo(QuestionCluster::class, 'question_cluster_id');
     }
 
-    public function recommendations():HasMany
+    public function recommendations(): HasMany
     {
         return $this->hasMany(
             QuestionClusterRecommendation::class,

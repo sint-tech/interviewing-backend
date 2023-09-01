@@ -21,14 +21,14 @@ class QuestionDataFactory
         );
     }
 
-    public static function fromUpdateRequest(QuestionUpdateRequest $request):QuestionData
+    public static function fromUpdateRequest(QuestionUpdateRequest $request): QuestionData
     {
         return QuestionData::from(
             array_merge(
                 $request->validated(),
                 [
-                    'min_reading_duration_in_seconds'   => $request->input('min_reading_duration_in_seconds',Optional::create()),
-                    'max_reading_duration_in_seconds'   => $request->input('max_reading_duration_in_seconds',Optional::create()),
+                    'min_reading_duration_in_seconds' => $request->input('min_reading_duration_in_seconds', Optional::create()),
+                    'max_reading_duration_in_seconds' => $request->input('max_reading_duration_in_seconds', Optional::create()),
                 ]
             )
         );

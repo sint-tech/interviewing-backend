@@ -34,10 +34,10 @@ class QuestionController extends Controller
         );
     }
 
-    public function update(Question $question,QuestionUpdateRequest $request)
+    public function update(Question $question, QuestionUpdateRequest $request)
     {
         return QuestionResource::make(
-          (new UpdateQuestionAction($question,QuestionDataFactory::fromUpdateRequest($request)))->execute()
+            (new UpdateQuestionAction($question, QuestionDataFactory::fromUpdateRequest($request)))->execute()
         );
     }
 

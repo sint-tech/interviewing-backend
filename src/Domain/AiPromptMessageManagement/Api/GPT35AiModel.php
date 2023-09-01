@@ -1,48 +1,47 @@
 <?php
 
 namespace Domain\AiPromptMessageManagement\Api;
+
 use OpenAI\Laravel\Facades\OpenAI;
-use function PHPUnit\Framework\assertDirectoryDoesNotExist;
 
-class GPT35AiModel extends  AiModelClientInterface
+class GPT35AiModel extends AiModelClientInterface
 {
-
     public function ask(string $answerText)
     {
-        $response =  OpenAI::chat()->create([
+        $response = OpenAI::chat()->create([
             'model' => $this->promptMessage->ai_model->value,
-            'messages'   => [
+            'messages' => [
                 [
-                    'role'  => 'system',
-                    'content'   => $this->systemMessage(),
+                    'role' => 'system',
+                    'content' => $this->systemMessage(),
                 ],
                 [
                     'role' => 'user',
-                    'content' => $this->questionMessage($answerText)
-                ]
-            ]
+                    'content' => $this->questionMessage($answerText),
+                ],
+            ],
         ]);
 
-        return ($response->choices[0])->message->content;
+        return $response->choices[0]->message->content;
     }
 
-    protected function replaceKeyWithValue(string &$content,string $key,string $value):string
+    protected function replaceKeyWithValue(string &$content, string $key, string $value): string
     {
-        return $content = str_replace($key,$value,$content);
+        return $content = str_replace($key, $value, $content);
     }
 
-    protected function questionMessage(string $answerText):string
+    protected function questionMessage(string $answerText): string
     {
         $messageContent = 'interviewer: {{INTERVIEWER_QUESTION}}.\\n interviewee: {{INTERVIEWEE_ANSWER}}.';
 
-        $this->replaceKeyWithValue($messageContent,'{{INTERVIEWER_QUESTION}}',$this->promptMessage->questionVariant->text);
+        $this->replaceKeyWithValue($messageContent, '{{INTERVIEWER_QUESTION}}', $this->promptMessage->questionVariant->text);
 
-        $this->replaceKeyWithValue($messageContent,'{{INTERVIEWEE_ANSWER}}',$answerText);
+        $this->replaceKeyWithValue($messageContent, '{{INTERVIEWEE_ANSWER}}', $answerText);
 
         return $messageContent;
     }
 
-    private function systemMessage():string
+    private function systemMessage(): string
     {
         return "I'm conducting an interview, and I asked the interviewee some questions about the interviewee behaviors
         Please provide your maximum precise evaluation as an HR expert about this answer regarding 4 points is it logical or illogical.

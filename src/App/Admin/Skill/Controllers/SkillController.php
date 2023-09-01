@@ -35,10 +35,10 @@ class SkillController extends Controller
         return SkillResource::make($skill);
     }
 
-    public function update(Skill $skill,SkillUpdateRequest $request)
+    public function update(Skill $skill, SkillUpdateRequest $request)
     {
         return SkillResource::make(
-            (new UpdateSkillAction($skill,SkillDataFactory::fromRequest($request)))->execute()
+            (new UpdateSkillAction($skill, SkillDataFactory::fromRequest($request)))->execute()
         );
     }
 

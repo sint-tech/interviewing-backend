@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Artisan;
 
 trait AuthenticationInstallation
 {
-
     protected function installPassport()
     {
 

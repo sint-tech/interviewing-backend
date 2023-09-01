@@ -50,23 +50,23 @@ class QuestionCluster extends Model
         )->withTimestamps();
     }
 
-    public function recommendations():HasMany
+    public function recommendations(): HasMany
     {
-        return $this->hasMany(QuestionClusterRecommendation::class,'question_cluster_id');
+        return $this->hasMany(QuestionClusterRecommendation::class, 'question_cluster_id');
     }
 
-    public function advices():HasMany
+    public function advices(): HasMany
     {
         return $this
             ->recommendations()
-            ->where('type',QuestionClusterRecommendationEnum::Advice);
+            ->where('type', QuestionClusterRecommendationEnum::Advice);
     }
 
-    public function impacts():HasMany
+    public function impacts(): HasMany
     {
         return $this
             ->recommendations()
-            ->where('type',QuestionClusterRecommendationEnum::Impact);
+            ->where('type', QuestionClusterRecommendationEnum::Impact);
     }
 
     protected static function newFactory()

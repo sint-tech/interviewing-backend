@@ -39,7 +39,7 @@ class QuestionVariantController extends Controller
         );
     }
 
-    public function update(QuestionVariant $questionVariant,QuestionVariantUpdateRequest $request)
+    public function update(QuestionVariant $questionVariant, QuestionVariantUpdateRequest $request)
     {
         return QuestionVariantResource::make(
             (new UpdateQuestionVariantAction($questionVariant, QuestionVariantDataFactory::fromUpdateRequest($request)))->execute()

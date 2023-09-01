@@ -3,7 +3,6 @@
 namespace App\Admin\QuestionManagement\Requests;
 
 use App\Admin\QuestionManagement\Requests\Traits\QuestionVariantOwnerTrait;
-use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Enums\QuestionVariantOwnerEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -21,12 +20,12 @@ class QuestionVariantStoreRequest extends FormRequest
             'question_id' => ['required', Rule::exists('questions', 'id')->withoutTrashed()],
             'reading_time_in_seconds' => ['required', 'integer', 'min:1'],
             'answering_time_in_seconds' => ['required', 'integer', 'min:1'],
-            'owner'     => ['required',
+            'owner' => ['required',
                 'array',
                 (new MorphRelationExistRule(
                     QuestionVariantOwnerEnum::class,
                     $this->input('owner.model_type') == 'admin' ? 'users' : null)
-                )
+                ),
             ],
         ];
     }

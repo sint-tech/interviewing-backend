@@ -18,12 +18,12 @@ class QuestionVariantDataFactory
         return QuestionVariantDto::from($data);
     }
 
-    public static function fromUpdateRequest(QuestionVariantUpdateRequest $request):QuestionVariantDto
+    public static function fromUpdateRequest(QuestionVariantUpdateRequest $request): QuestionVariantDto
     {
         $data = $request->validated();
 
-        if($request->filled('owner')) {
-            $data['owner']  = $request->getOwnerInstance();
+        if ($request->filled('owner')) {
+            $data['owner'] = $request->getOwnerInstance();
         }
 
         return QuestionVariantDto::from($data);

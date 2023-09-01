@@ -6,12 +6,11 @@ use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
 
 class PromptAnswerAnalyticsAction
 {
-    public function __construct
-    (
+    public function __construct(
         public readonly AiPromptMessage $aiPromptMessage,
         public readonly string $answerText
-    )
-    {}
+    ) {
+    }
 
     public function execute()
     {

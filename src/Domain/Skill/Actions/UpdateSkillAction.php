@@ -10,10 +10,10 @@ class UpdateSkillAction
     public function __construct(
         public Skill $skill,
         public readonly SkillData $skillData,
-    )
-    {}
+    ) {
+    }
 
-    public function execute():Skill
+    public function execute(): Skill
     {
         $this->skill->update($this->skillData->toArray());
 

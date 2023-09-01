@@ -2,7 +2,6 @@
 
 namespace App\Candidate\InterviewManagement\Requests;
 
-use App\Candidate\InterviewManagement\Rules\AnswerVariantBelongsToQuestionVariantRule;
 use Domain\InterviewManagement\Enums\QuestionOccurrenceReasonEnum;
 use Domain\InterviewManagement\Models\Answer;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -32,7 +31,7 @@ class SubmitInterviewQuestionAnswerRequest extends FormRequest
                     ->where('interview_template_id', $this->interview->interview_template_id)
                     ->withoutTrashed(),
             ],
-            'answer_text' => ['required', 'string','min:3','max:1000'],
+            'answer_text' => ['required', 'string', 'min:3', 'max:1000'],
         ];
     }
 
@@ -45,7 +44,7 @@ class SubmitInterviewQuestionAnswerRequest extends FormRequest
             ->exists();
     }
 
-    public function questionVariant():QuestionVariant
+    public function questionVariant(): QuestionVariant
     {
         return QuestionVariant::query()->find($this->validated('question_variant_id'));
     }

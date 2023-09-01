@@ -36,25 +36,25 @@ class SkillTest extends TestCase
 
     }
 
-    public function testItShouldCreateSkill():void
+    public function testItShouldCreateSkill(): void
     {
-        $response = $this->actingAs($this->superAdmin,'api')
-            ->post("admin/api/skills",[
-                'name'  => 'confidence'
+        $response = $this->actingAs($this->superAdmin, 'api')
+            ->post('admin/api/skills', [
+                'name' => 'confidence',
             ]);
 
         $response->assertSuccessful();
 
-        $this->assertEquals('confidence',Skill::query()->latest()->first());
+        $this->assertEquals('confidence', Skill::query()->latest()->first());
     }
 
-    public function testItShouldUpdateSkill():void
+    public function testItShouldUpdateSkill(): void
     {
         $skill = Skill::factory()->create();
 
-        $response = $this->actingAs($this->superAdmin,'api')
-            ->post("admin-api/skills/{$skill->getKey()}?_method=PUT",[
-                'name'  => 'updated skill name'
+        $response = $this->actingAs($this->superAdmin, 'api')
+            ->post("admin-api/skills/{$skill->getKey()}?_method=PUT", [
+                'name' => 'updated skill name',
             ]);
 
         $this->assertEquals('updated skill name', Skill::query()->find($skill->getKey())->name);

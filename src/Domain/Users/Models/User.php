@@ -49,7 +49,7 @@ class User extends Authenticatable implements OwnerInterface
     public function organizationName(): string
     {
         return Str::of(
-            config('app.name','SINT')
+            config('app.name', 'SINT')
         )->lower()->ucfirst();
     }
 }

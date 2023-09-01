@@ -19,5 +19,6 @@ class QuestionData extends Data
         public readonly int|Optional $difficult_level,
         public readonly int|Optional $min_reading_duration_in_seconds = Question::DEFAULT_MIN_READING_DURATION_IN_SECONDS,
         public readonly int|Optional $max_reading_duration_in_seconds = Question::DEFAULT_MAX_READING_DURATION_IN_SECONDS,
-    ) {}
+    ) {
+    }
 }

@@ -35,4 +35,4 @@ Route::apiResource('answer-variants', AnswerVariantController::class);
 
 Route::apiResource('interview-templates', InterviewTemplateController::class)->except('update');
 
-Route::apiResource('candidates', CandidateController::class)->only(['index','show']);
+Route::apiResource('candidates', CandidateController::class)->only(['index', 'show']);

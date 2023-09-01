@@ -9,20 +9,20 @@ class UpdateQuestionClusterAction
 {
     public function __construct(
         public QuestionCluster $questionCluster,
-        public  readonly QuestionClusterDto $questionClusterDto,
-    )
-    {}
+        public readonly QuestionClusterDto $questionClusterDto,
+    ) {
+    }
 
-    public function execute():QuestionCluster
+    public function execute(): QuestionCluster
     {
         $this->questionCluster->append([
-            'creator_id'    =>  $this->questionClusterDto->creator->getKey(),
-            'creator_type'  => $this->questionClusterDto->creator::class
+            'creator_id' => $this->questionClusterDto->creator->getKey(),
+            'creator_type' => $this->questionClusterDto->creator::class,
         ]);
 
         $this->questionCluster->update($this->questionClusterDto->except('skills')->toArray());
 
-        if(! empty($this->questionClusterDto->skills)) {
+        if (! empty($this->questionClusterDto->skills)) {
             $this->questionCluster->skills()->syncWithPivotValues($this->questionClusterDto->skills, [
                 'assigner_id' => $this->questionClusterDto->creator->getKey(),
                 'assigner_type' => $this->questionClusterDto->creator::class,
@@ -30,7 +30,7 @@ class UpdateQuestionClusterAction
         }
 
         return $this->questionCluster->refresh()->load([
-            'skills'
+            'skills',
         ]);
     }
 }

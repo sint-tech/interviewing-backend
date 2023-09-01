@@ -22,13 +22,13 @@ class Report extends Model
         'reportable_type',
     ];
 
-    public function reportable():MorphTo
+    public function reportable(): MorphTo
     {
         return $this->morphTo('reportable');
     }
-    
-    public function values():HasMany
+
+    public function values(): HasMany
     {
-        return $this->hasMany(ReportValue::class,'report_id');
+        return $this->hasMany(ReportValue::class, 'report_id');
     }
 }

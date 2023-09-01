@@ -12,7 +12,7 @@ class CreateAnswerVariantAction
 
     }
 
-    public function execute():AnswerVariant
+    public function execute(): AnswerVariant
     {
         $answer_variant = new AnswerVariant($this->answerVariantDto->toArray());
 

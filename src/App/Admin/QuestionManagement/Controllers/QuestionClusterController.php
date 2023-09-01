@@ -34,9 +34,9 @@ class QuestionClusterController extends Controller
         return QuestionClusterResource::make($questionCluster);
     }
 
-    public function update(QuestionCluster $questionCluster,QuestionClusterUpdateRequest $request)
+    public function update(QuestionCluster $questionCluster, QuestionClusterUpdateRequest $request)
     {
-        $question_cluster = (new UpdateQuestionClusterAction($questionCluster,QuestionClusterDataFactory::fromRequest($request)))->execute();
+        $question_cluster = (new UpdateQuestionClusterAction($questionCluster, QuestionClusterDataFactory::fromRequest($request)))->execute();
 
         return QuestionClusterResource::make($question_cluster);
     }

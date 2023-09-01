@@ -4,7 +4,6 @@ namespace App\Candidate\InterviewManagement\Controllers;
 
 use App\Candidate\InterviewManagement\Exceptions\InterviewNotFinishedException;
 use App\Candidate\InterviewManagement\Resources\InterviewReportResource;
-use Domain\InterviewManagement\Actions\GenerateInterviewReport;
 use Domain\InterviewManagement\Exceptions\InterviewNotFinishedException as InternalInterviewNotFinishedException;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
@@ -20,8 +19,7 @@ class GetInterviewReportController extends Controller
             );
         } catch (InternalInterviewNotFinishedException $exception) {
             throw new InterviewNotFinishedException();
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             throw $exception;
         }
     }

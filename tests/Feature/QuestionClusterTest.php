@@ -56,24 +56,24 @@ class QuestionClusterTest extends TestCase
         $response->assertSuccessful();
     }
 
-    public function testItShouldUpdateQuestionCluster():void
+    public function testItShouldUpdateQuestionCluster(): void
     {
-        $questionCluster = QuestionCluster::factory()->for($this->superAdmin,'creator')->create();
+        $questionCluster = QuestionCluster::factory()->for($this->superAdmin, 'creator')->create();
 
         $body = [
-            'name'   => 'question cluster 1',
-            'description'    => null,
-            'skills'    => $this->skills->take(5)->pluck('id')->toArray()
+            'name' => 'question cluster 1',
+            'description' => null,
+            'skills' => $this->skills->take(5)->pluck('id')->toArray(),
         ];
 
-        $response = $this->actingAs($this->superAdmin,'api')
+        $response = $this->actingAs($this->superAdmin, 'api')
             ->post("admin-api/question-clusters/{$questionCluster->getKey()}?_method=PUT", $body);
 
         $questionCluster = $questionCluster->refresh();
 
         $this->assertEquals($body['name'], $questionCluster->name);
 
-        $this->assertCount(5,$questionCluster->skills);
+        $this->assertCount(5, $questionCluster->skills);
 
         $response->assertSuccessful();
     }

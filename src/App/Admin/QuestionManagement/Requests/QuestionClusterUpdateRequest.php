@@ -10,10 +10,10 @@ class QuestionClusterUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'          => ['filled', 'string', 'min:3', 'max:255'],
-            'description'   => ['nullable', 'string', 'min:2', 'max:10000'],
-            'skills'        => ['filled', 'array', 'min:1'],
-            'skills.*'      => [Rule::exists('skills', 'id')->withoutTrashed()],
+            'name' => ['filled', 'string', 'min:3', 'max:255'],
+            'description' => ['nullable', 'string', 'min:2', 'max:10000'],
+            'skills' => ['filled', 'array', 'min:1'],
+            'skills.*' => [Rule::exists('skills', 'id')->withoutTrashed()],
         ];
     }
 }

@@ -3,24 +3,23 @@
 namespace Domain\ReportManagement\Traits;
 
 use Domain\ReportManagement\Models\Report;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait HasReport
 {
-    public function reports():MorphMany
+    public function reports(): MorphMany
     {
-        return $this->morphMany(Report::class,'reportable');
+        return $this->morphMany(Report::class, 'reportable');
     }
 
-    public function latestReport():MorphOne
+    public function latestReport(): MorphOne
     {
-        return $this->morphOne(Report::class,'reportable')->latest();
+        return $this->morphOne(Report::class, 'reportable')->latest();
     }
 
-    public function oldestReport():MorphOne
+    public function oldestReport(): MorphOne
     {
-        return $this->morphOne(Report::class,'reportable')->oldest();
+        return $this->morphOne(Report::class, 'reportable')->oldest();
     }
 }
