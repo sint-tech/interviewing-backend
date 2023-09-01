@@ -1,55 +1,34 @@
-name: Laravel
-
-on:
-  push:
-    branches: [ "development" ]
-  pull_request:
-    branches: [ "development" ]
-
+on: push
+name: CI
 jobs:
-
-  laravel-tests:
+  phpunit:
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:7.3
 
     services:
       mysql:
-        image: mysql:latest
+        image: mysql:5.7
         env:
-          DB_USERNAME: root
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: interviewing_backend_testing
+          MYSQL_DATABASE: test
         ports:
-          - 3306/tcp
+          - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-    runs-on: ubuntu-latest
-    env:
-      DB_DATABASE: interviewing_backend_testing
-      DB_USERNAME: root
-      DB_PASSWORD: password
-
     steps:
-    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
-      with:
-        php-version: '8.1'
-    - uses: mirromutth/mysql-action@v1.1
-      with:
-        collation server: 'utf8_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
-        mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
-        mysql database: 'password123' # Optional, default value is "test". The specified database which will be create
-        mysql root password: ${{ secrets.RootPassword }} # Required if "mysql user" is empty, default is empty. The root superuser password
-        mysql user: 'root' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-    - uses: actions/checkout@v3
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    - name: Generate key
-      run: php artisan key:generate
-    - name: Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache
-    - name: Restart MySQL Service
-      run: sudo service mysql restart
-    - name: Execute tests (Unit and Feature tests) via PHPUnit
-      env:
-        DB_PORT: ${{ job.services.mysql.ports['3306'] }}
-      run: vendor/bin/phpunit
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.ci .env
+          php artisan key:generate
+
+      - name: Run Testsuite
+        run: vendor/bin/phpunit tests/
