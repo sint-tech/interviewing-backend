@@ -43,6 +43,6 @@ jobs:
     - name: Restart MySQL Service
       run: sudo service mysql restart
     - name: Check MySQL User Privileges
-      run: mysql -u root -ppassword -e "SHOW GRANTS FOR 'root'@'localhost';"
+      run: mysql -u root --password=password -e "SHOW GRANTS FOR 'root'@'localhost';"
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: vendor/bin/phpunit
