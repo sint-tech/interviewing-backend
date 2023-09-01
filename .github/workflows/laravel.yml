@@ -42,5 +42,7 @@ jobs:
       run: chmod -R 777 storage bootstrap/cache
     - name: Restart MySQL Service
       run: sudo service mysql restart
+    - name: Check MySQL User Privileges
+      run: mysql -u root -p password -e "SHOW GRANTS FOR 'root'@'localhost';"
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: vendor/bin/phpunit
