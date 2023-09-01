@@ -9,7 +9,7 @@ use Domain\InterviewManagement\DataTransferObjects\AnswerDto;
 
 class AnswerDataFactory
 {
-    public static function fromRequest(SubmitInterviewQuestionAnswerRequest $request):AnswerDto
+    public static function fromRequest(SubmitInterviewQuestionAnswerRequest $request): AnswerDto
     {
         $ml_text_semantics = (new self())->getMlTextSemantics($request);
 
@@ -19,23 +19,18 @@ class AnswerDataFactory
                 [
                     'interview_id' => $request->route()->parameter('interview.id'),
                     'ml_text_semantics' => $ml_text_semantics,
-                    'score' => data_get(json_decode($ml_text_semantics,true),'rate',1),
+                    'score' => data_get(json_decode($ml_text_semantics, true), 'rate', 1),
                 ]
             )
         );
     }
 
-
-    /**
-     * @param SubmitInterviewQuestionAnswerRequest $request
-     * @return string
-     */
-    private function getMlTextSemantics(SubmitInterviewQuestionAnswerRequest $request):string
+    private function getMlTextSemantics(SubmitInterviewQuestionAnswerRequest $request): string
     {
         $promptAiModel = $request->questionVariant()->defaultAiPromptMessage()
-            ->firstOr(fn() => AiPromptMessage::query()->create([
+            ->firstOr(fn () => AiPromptMessage::query()->create([
                 'prompt_text' => 'temp prompt message',
-                'question_variant_id'   => $request->validated('question_variant_id')
+                'question_variant_id' => $request->validated('question_variant_id'),
             ])->refresh());
 
         return (new PromptAnswerAnalyticsAction(

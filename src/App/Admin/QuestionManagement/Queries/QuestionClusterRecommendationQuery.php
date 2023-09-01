@@ -3,7 +3,6 @@
 namespace App\Admin\QuestionManagement\Queries;
 
 use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;

@@ -17,7 +17,7 @@ class QuestionVariantIndexQuery extends QueryBuilder
 
         $this->allowedFilters($this->getAllowedFilters());
 
-        $this->allowedSorts('id','created_at','updated_at');
+        $this->allowedSorts('id', 'created_at', 'updated_at');
 
         $this->defaultSort('-updated_at');
 

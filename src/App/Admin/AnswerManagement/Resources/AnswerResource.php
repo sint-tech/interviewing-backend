@@ -10,10 +10,10 @@ class AnswerResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'text'  => (string) $this->text,
+            'text' => (string) $this->text,
             'min_score' => (float) $this->min_score,
             'max_score' => (float) $this->max_score,
-            'question_variant'  => QuestionVariantResource::make($this->whenLoaded('questionVariant')),
+            'question_variant' => QuestionVariantResource::make($this->whenLoaded('questionVariant')),
         ];
     }
 }

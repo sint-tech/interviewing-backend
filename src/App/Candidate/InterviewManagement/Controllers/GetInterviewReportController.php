@@ -19,8 +19,7 @@ class GetInterviewReportController extends Controller
             );
         } catch (InternalInterviewNotFinishedException $exception) {
             throw new InterviewNotFinishedException();
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             throw $exception;
         }
     }

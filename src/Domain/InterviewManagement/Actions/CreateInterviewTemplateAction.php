@@ -8,15 +8,13 @@ use Domain\InterviewManagement\Models\InterviewTemplateQuestion;
 
 class CreateInterviewTemplateAction
 {
-    public function __construct
-    (
+    public function __construct(
         public readonly InterviewTemplateDto $interviewTemplateDto,
-    )
-    {
+    ) {
 
     }
 
-    public function execute():InterviewTemplate
+    public function execute(): InterviewTemplate
     {
         $interviewTemplate = (new InterviewTemplate())->fill(
             $this->interviewTemplateDto->toArray()
@@ -26,9 +24,9 @@ class CreateInterviewTemplateAction
 
         foreach ($this->interviewTemplateDto->question_variants as $question_variant) {
             InterviewTemplateQuestion::query()->create([
-                'question_variant_id'    => $question_variant->getKey(),
+                'question_variant_id' => $question_variant->getKey(),
                 'interview_template_id' => $interviewTemplate->getKey(),
-                'question_cluster_id'   => $question_variant->questionCluster?->getKey(),
+                'question_cluster_id' => $question_variant->questionCluster?->getKey(),
             ]);
         }
 

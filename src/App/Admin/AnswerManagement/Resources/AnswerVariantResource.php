@@ -13,7 +13,7 @@ class AnswerVariantResource extends JsonResource
             'text' => (string) $this->text,
             'description' => (string) $this->description,
             'score' => (float) $this->score,
-            'answer'    => AnswerResource::make($this->whenLoaded('answer')),
+            'answer' => AnswerResource::make($this->whenLoaded('answer')),
         ];
     }
 }

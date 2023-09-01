@@ -23,19 +23,19 @@ class SubmitInterviewQuestionAnswerAction
         if ($this->interviewShouldBeEnd($answer) && $this->interviewStillRunning($answer)) {
             //@todo create event to finish the interview
             $answer->interview->update([
-                'ended_at'  => now()
+                'ended_at' => now(),
             ]);
         }
 
         return $answer;
     }
 
-
-    private function interviewShouldBeEnd(Answer $answer):bool {
+    private function interviewShouldBeEnd(Answer $answer): bool
+    {
         return $answer->interview->allQuestionsAnswered();
     }
 
-    private function interviewStillRunning(Answer $answer):bool
+    private function interviewStillRunning(Answer $answer): bool
     {
         return is_null($answer->interview->ended_at);
     }

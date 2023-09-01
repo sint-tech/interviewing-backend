@@ -14,9 +14,9 @@ class InterviewReportResource extends JsonResource
         return [
             'interview' => InterviewResource::make($this->interview),
             'average_score' => (float) $this->avgScore,
-            'advices'   => (array) $this->advices,
-            'impacts'   => (array) $this->impacts,
-            'question_clusters_scores'  => $this->questionClustersStats,
+            'advices' => (array) $this->advices,
+            'impacts' => (array) $this->impacts,
+            'question_clusters_scores' => $this->questionClustersStats,
         ];
     }
 }

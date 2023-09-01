@@ -2,9 +2,9 @@
 
 namespace Support\Interfaces;
 
-enum OwnerEnum:string
+enum OwnerEnum: string
 {
-    Case Admin = 'admin';
+    case Admin = 'admin';
 
-    Case Organization = 'organization';
+    case Organization = 'organization';
 }

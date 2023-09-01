@@ -13,7 +13,7 @@ class QuestionClusterRecommendationController extends Controller
     public function index(QuestionClusterRecommendationQuery $query)
     {
         return QuestionClusterRecommendationResource::collection(
-            $query->paginate(request()->integer('per_page',25))
+            $query->paginate(request()->integer('per_page', 25))
         );
     }
 
@@ -25,9 +25,9 @@ class QuestionClusterRecommendationController extends Controller
     public function store(QuestionClusterRecommendationStoreRequest $request)
     {
         return QuestionClusterRecommendationResource::make(
-          QuestionClusterRecommendation::query()->create(
-              $request->validated()
-          )
+            QuestionClusterRecommendation::query()->create(
+                $request->validated()
+            )
         );
     }
 

@@ -7,6 +7,7 @@ use Domain\Candidate\Models\Candidate;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Domain\ReportManagement\Traits\HasReport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class Interview extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes,HasReport;
 
     protected $fillable = [
         'interview_template_id',
@@ -76,9 +77,9 @@ class Interview extends Model
         $base_recommendation_query = QuestionClusterRecommendation::query()
             ->limit(1)
             ->select('statement')
-            ->whereColumn('interview_answers.score','>=','question_cluster_recommendations.min_score')
-            ->whereColumn('interview_answers.score','<=','question_cluster_recommendations.max_score')
-            ->whereColumn('question_cluster_recommendations.question_cluster_id','interview_answers.question_cluster_id');
+            ->whereColumn('interview_answers.score', '>=', 'question_cluster_recommendations.min_score')
+            ->whereColumn('interview_answers.score', '<=', 'question_cluster_recommendations.max_score')
+            ->whereColumn('question_cluster_recommendations.question_cluster_id', 'interview_answers.question_cluster_id');
 
         return $this->hasMany(
             Answer::class,
@@ -87,11 +88,11 @@ class Interview extends Model
         )
             ->addSelect([
                 'advice_statement' => (clone $base_recommendation_query)->whereTypeIsAdvice(),
-                'impact_statement'  => (clone $base_recommendation_query)->whereTypeIsImpact()
+                'impact_statement' => (clone $base_recommendation_query)->whereTypeIsImpact(),
             ])
             ->withCasts([
-                'advice_statement'  => 'string',
-                'impact_statement'  => 'string',
+                'advice_statement' => 'string',
+                'impact_statement' => 'string',
             ]);
     }
 
@@ -126,13 +127,13 @@ class Interview extends Model
             ->withTimestamps();
     }
 
-    public function allQuestionsAnswered():bool
+    public function allQuestionsAnswered(): bool
     {
         return $this->questionVariants()->count() ==
             $this->answers()
                 ->whereIn('question_variant_id',
                     $this->questionVariants()
-                    ->select('question_variants.id')
+                        ->select('question_variants.id')
                 )
                 ->count();
     }

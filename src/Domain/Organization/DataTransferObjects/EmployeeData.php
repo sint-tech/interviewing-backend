@@ -14,7 +14,7 @@ class EmployeeData extends Data
         public readonly string|Optional $password,
         public readonly int|Optional $parent_id,
         public readonly bool $is_organization_manager = false,
-        public readonly int|null $organization_id = null,
+        public readonly ?int $organization_id = null,
     ) {
 
     }

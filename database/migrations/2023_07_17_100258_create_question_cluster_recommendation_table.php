@@ -11,18 +11,18 @@ return new class extends Migration
         Schema::create('question_cluster_recommendations', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('question_cluster_id')->constrained('question_clusters','id')->cascadeOnDelete();
+            $table->foreignId('question_cluster_id')->constrained('question_clusters', 'id')->cascadeOnDelete();
 
-            $table->enum('type',[
+            $table->enum('type', [
                 'advice',
-                'impact'
+                'impact',
             ]);
             $table->longText('statement');
 
             $table->tinyInteger('min_score')->default(1);
             $table->tinyInteger('max_score')->default(10);
 
-            $table->unique(['question_cluster_id','type','min_score','max_score'],'unique_recommendation_state_range');
+            $table->unique(['question_cluster_id', 'type', 'min_score', 'max_score'], 'unique_recommendation_state_range');
 
             $table->timestamps();
             $table->softDeletes();

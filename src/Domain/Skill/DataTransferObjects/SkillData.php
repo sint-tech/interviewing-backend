@@ -8,7 +8,7 @@ use Spatie\LaravelData\Optional;
 class SkillData extends Data
 {
     public function __construct(
-        public readonly string $name,
+        public readonly string|Optional $name,
         public readonly string|Optional $description
     ) {
 

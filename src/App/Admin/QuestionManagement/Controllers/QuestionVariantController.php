@@ -5,10 +5,12 @@ namespace App\Admin\QuestionManagement\Controllers;
 use App\Admin\QuestionManagement\Factories\QuestionVariantDataFactory;
 use App\Admin\QuestionManagement\Queries\QuestionVariantIndexQuery;
 use App\Admin\QuestionManagement\Requests\QuestionVariantStoreRequest;
+use App\Admin\QuestionManagement\Requests\QuestionVariantUpdateRequest;
 use App\Admin\QuestionManagement\Resources\QuestionResource;
 use App\Admin\QuestionManagement\Resources\QuestionVariantResource;
 use Domain\QuestionManagement\Actions\CreateQuestionVariantAction;
 use Domain\QuestionManagement\Actions\DeleteQuestionVariantAction;
+use Domain\QuestionManagement\Actions\UpdateQuestionVariantAction;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Support\Controllers\Controller;
 
@@ -37,9 +39,11 @@ class QuestionVariantController extends Controller
         );
     }
 
-    public function update()
+    public function update(QuestionVariant $questionVariant, QuestionVariantUpdateRequest $request)
     {
-        //
+        return QuestionVariantResource::make(
+            (new UpdateQuestionVariantAction($questionVariant, QuestionVariantDataFactory::fromUpdateRequest($request)))->execute()
+        );
     }
 
     public function destroy(int $question_variant): QuestionVariantResource

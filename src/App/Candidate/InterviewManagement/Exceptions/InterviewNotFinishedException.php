@@ -15,7 +15,7 @@ class InterviewNotFinishedException extends Exception
     public function render(Request $request): JsonResponse
     {
         return response()->json([
-            'message'   => 'interview not finished yet!'
-        ],Response::HTTP_CONFLICT);
+            'message' => 'interview not finished yet!',
+        ], Response::HTTP_CONFLICT);
     }
 }

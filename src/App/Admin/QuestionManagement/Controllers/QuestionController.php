@@ -5,9 +5,11 @@ namespace App\Admin\QuestionManagement\Controllers;
 use App\Admin\QuestionManagement\Factories\QuestionDataFactory;
 use App\Admin\QuestionManagement\Queries\QuestionIndexQuery;
 use App\Admin\QuestionManagement\Requests\QuestionStoreRequest;
+use App\Admin\QuestionManagement\Requests\QuestionUpdateRequest;
 use App\Admin\QuestionManagement\Resources\QuestionResource;
 use Domain\QuestionManagement\Actions\CreateQuestionAction;
 use Domain\QuestionManagement\Actions\DeleteQuestionAction;
+use Domain\QuestionManagement\Actions\UpdateQuestionAction;
 use Domain\QuestionManagement\Models\Question;
 use Support\Controllers\Controller;
 
@@ -25,16 +27,18 @@ class QuestionController extends Controller
 
     public function store(QuestionStoreRequest $request): QuestionResource
     {
-        $dto = QuestionDataFactory::fromRequest($request);
+        $dto = QuestionDataFactory::fromStoreRequest($request);
 
         return QuestionResource::make(
             (new CreateQuestionAction($dto))->execute()
         );
     }
 
-    public function update()
+    public function update(Question $question, QuestionUpdateRequest $request)
     {
-        //
+        return QuestionResource::make(
+            (new UpdateQuestionAction($question, QuestionDataFactory::fromUpdateRequest($request)))->execute()
+        );
     }
 
     public function destroy(int $question): QuestionResource

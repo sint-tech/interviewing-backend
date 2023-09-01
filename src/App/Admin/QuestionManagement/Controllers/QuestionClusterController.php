@@ -5,9 +5,11 @@ namespace App\Admin\QuestionManagement\Controllers;
 use App\Admin\QuestionManagement\Factories\QuestionClusterDataFactory;
 use App\Admin\QuestionManagement\Queries\QuestionClusterIndexQuery;
 use App\Admin\QuestionManagement\Requests\QuestionClusterStoreRequest;
+use App\Admin\QuestionManagement\Requests\QuestionClusterUpdateRequest;
 use App\Admin\QuestionManagement\Resources\QuestionClusterResource;
 use Domain\QuestionManagement\Actions\CreateQuestionClusterAction;
 use Domain\QuestionManagement\Actions\DeleteQuestionClusterAction;
+use Domain\QuestionManagement\Actions\UpdateQuestionClusterAction;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Support\Controllers\Controller;
 
@@ -32,9 +34,11 @@ class QuestionClusterController extends Controller
         return QuestionClusterResource::make($questionCluster);
     }
 
-    public function update()
+    public function update(QuestionCluster $questionCluster, QuestionClusterUpdateRequest $request)
     {
-        //
+        $question_cluster = (new UpdateQuestionClusterAction($questionCluster, QuestionClusterDataFactory::fromRequest($request)))->execute();
+
+        return QuestionClusterResource::make($question_cluster);
     }
 
     public function destroy(int $questionCluster): QuestionClusterResource

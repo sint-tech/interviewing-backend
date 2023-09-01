@@ -7,11 +7,11 @@ use Domain\AnswerManagement\DataTransferObjects\AnswerVariantDto;
 
 class AnswerVariantDataFactory
 {
-    public static function fromStoreRequest(AnswerVariantStoreRequest $request):AnswerVariantDto
+    public static function fromStoreRequest(AnswerVariantStoreRequest $request): AnswerVariantDto
     {
         $data = array_merge(
             $request->validated(),
-            ['owner' =>$request->getOwnerObject(),'creator' => auth()->user()]
+            ['owner' => $request->getOwnerObject(), 'creator' => auth()->user()]
         );
 
         return AnswerVariantDto::from($data);

@@ -2,7 +2,7 @@
 
 namespace Domain\InterviewManagement\Enums;
 
-enum InterviewTemplateAvailabilityStatusEnum:string
+enum InterviewTemplateAvailabilityStatusEnum: string
 {
     case Pending = 'pending';
 

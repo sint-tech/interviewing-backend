@@ -5,9 +5,11 @@ namespace App\Admin\Skill\Controllers;
 use App\Admin\Skill\Factories\SkillDataFactory;
 use App\Admin\Skill\Queries\IndexSkillQuery;
 use App\Admin\Skill\Requests\SkillStoreRequest;
+use App\Admin\Skill\Requests\SkillUpdateRequest;
 use App\Admin\Skill\Resources\SkillResource;
 use Domain\Skill\Actions\CreateSkillAction;
 use Domain\Skill\Actions\DeleteSkillAction;
+use Domain\Skill\Actions\UpdateSkillAction;
 use Domain\Skill\Models\Skill;
 use Support\Controllers\Controller;
 
@@ -33,9 +35,11 @@ class SkillController extends Controller
         return SkillResource::make($skill);
     }
 
-    public function update()
+    public function update(Skill $skill, SkillUpdateRequest $request)
     {
-        //
+        return SkillResource::make(
+            (new UpdateSkillAction($skill, SkillDataFactory::fromRequest($request)))->execute()
+        );
     }
 
     public function destroy(int $skill)

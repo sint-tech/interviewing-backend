@@ -3,6 +3,7 @@
 namespace App\Admin\QuestionManagement\Factories;
 
 use App\Admin\QuestionManagement\Requests\QuestionVariantStoreRequest;
+use App\Admin\QuestionManagement\Requests\QuestionVariantUpdateRequest;
 use Domain\QuestionManagement\DataTransferObjects\QuestionVariantDto;
 
 class QuestionVariantDataFactory
@@ -13,6 +14,17 @@ class QuestionVariantDataFactory
             'creator' => auth()->user(),
             'owner' => $request->getOwnerInstance(),
         ]);
+
+        return QuestionVariantDto::from($data);
+    }
+
+    public static function fromUpdateRequest(QuestionVariantUpdateRequest $request): QuestionVariantDto
+    {
+        $data = $request->validated();
+
+        if ($request->filled('owner')) {
+            $data['owner'] = $request->getOwnerInstance();
+        }
 
         return QuestionVariantDto::from($data);
     }
