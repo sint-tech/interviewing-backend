@@ -39,7 +39,7 @@ class SkillTest extends TestCase
     public function testItShouldCreateSkill(): void
     {
         $response = $this->actingAs($this->superAdmin, 'api')
-            ->post('admin/api/skills', [
+            ->post('admin-api/skills', [
                 'name' => 'confidence',
             ]);
 

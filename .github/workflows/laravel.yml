@@ -7,8 +7,18 @@ on:
     branches: [ "development" ]
 
 jobs:
+
   laravel-tests:
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: interviewing_backend_testing
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     runs-on: ubuntu-latest
 
     steps:
@@ -30,6 +40,5 @@ jobs:
         touch database/database.sqlite
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_PORT: ${{ jobs.laravel-tests.services.mysql.ports[3306] }}
       run: vendor/bin/phpunit
