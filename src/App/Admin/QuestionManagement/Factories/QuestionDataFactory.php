@@ -9,7 +9,7 @@ use Spatie\LaravelData\Optional;
 
 class QuestionDataFactory
 {
-    public static function fromRequest(QuestionStoreRequest $request): QuestionData
+    public static function fromStoreRequest(QuestionStoreRequest $request): QuestionData
     {
         return QuestionData::from(
             array_merge(

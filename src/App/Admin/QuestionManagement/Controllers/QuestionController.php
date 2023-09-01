@@ -27,7 +27,7 @@ class QuestionController extends Controller
 
     public function store(QuestionStoreRequest $request): QuestionResource
     {
-        $dto = QuestionDataFactory::fromRequest($request);
+        $dto = QuestionDataFactory::fromStoreRequest($request);
 
         return QuestionResource::make(
             (new CreateQuestionAction($dto))->execute()

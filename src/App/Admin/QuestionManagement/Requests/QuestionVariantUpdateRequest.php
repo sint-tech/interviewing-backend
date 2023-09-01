@@ -3,25 +3,24 @@
 namespace App\Admin\QuestionManagement\Requests;
 
 use App\Admin\QuestionManagement\Requests\Traits\QuestionVariantOwnerTrait;
-use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Enums\QuestionVariantOwnerEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Support\Rules\MorphRelationExistRule;
 
-class QuestionVariantStoreRequest extends FormRequest
+class QuestionVariantUpdateRequest extends FormRequest
 {
     use QuestionVariantOwnerTrait;
 
     public function rules(): array
     {
         return [
-            'text' => ['required', 'string', 'min:3', 'max:1000'],
+            'text' => ['filled', 'string', 'min:3', 'max:1000'],
             'description' => ['string', 'min:3', 'max:1000'],
-            'question_id' => ['required', Rule::exists('questions', 'id')->withoutTrashed()],
-            'reading_time_in_seconds' => ['required', 'integer', 'min:1'],
-            'answering_time_in_seconds' => ['required', 'integer', 'min:1'],
-            'owner'     => ['required',
+            'question_id' => ['filled', Rule::exists('questions', 'id')->withoutTrashed()],
+            'reading_time_in_seconds' => ['filled', 'integer', 'min:1'],
+            'answering_time_in_seconds' => ['filled', 'integer', 'min:1'],
+            'owner'     => ['filled',
                 'array',
                 (new MorphRelationExistRule(
                     QuestionVariantOwnerEnum::class,
