@@ -34,6 +34,8 @@ jobs:
       run: |
         cp .env.ci .env
         php artisan key:generate
+    - name: Show .env
+      run: cat .env
     - name: Generate key
       run: php artisan key:generate
     - name: Directory Permissions
