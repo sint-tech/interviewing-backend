@@ -12,19 +12,32 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0.34
+        image: mysql:latest
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: interviewing_backend_testing
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: laravel
         ports:
-          - 3306
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     runs-on: ubuntu-latest
+    env:
+      DB_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: password
 
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
       with:
         php-version: '8.1'
+    - uses: mirromutth/mysql-action@v1.1
+      with:
+        collation server: 'utf8_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
+        mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
+        mysql database: 'password123' # Optional, default value is "test". The specified database which will be create
+        mysql root password: ${{ secrets.RootPassword }} # Required if "mysql user" is empty, default is empty. The root superuser password
+        mysql user: 'root' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
     - uses: actions/checkout@v3
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -38,6 +51,5 @@ jobs:
       run: sudo service mysql restart
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        DB_HOST: localhost
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_PORT: ${{ job.services.mysql.ports['3306'] }}
       run: vendor/bin/phpunit
