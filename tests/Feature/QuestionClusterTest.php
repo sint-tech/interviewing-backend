@@ -41,11 +41,6 @@ class QuestionClusterTest extends TestCase
         $this->skills = Skill::factory(10)->create();
     }
 
-    public function testItShouldGetQuestionClustersAsPaginated(): void
-    {
-
-    }
-
     public function testItShouldCreateQuestionCluster(): void
     {
         $response = $this->actingAs($this->superAdmin, 'api')
