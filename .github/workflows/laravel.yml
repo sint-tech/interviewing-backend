@@ -40,5 +40,5 @@ jobs:
         touch database/database.sqlite
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        DB_PORT: ${{ job.services.mysql.ports[3306] }}
+        DB_HOST: localhost
       run: vendor/bin/phpunit
