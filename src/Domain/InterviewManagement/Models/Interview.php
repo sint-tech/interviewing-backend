@@ -7,6 +7,7 @@ use Domain\Candidate\Models\Candidate;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Domain\ReportManagement\Traits\HasReport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class Interview extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes,HasReport;
 
     protected $fillable = [
         'interview_template_id',
