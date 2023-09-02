@@ -5,6 +5,7 @@ namespace App\Providers;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\Organization\Models\Employee;
+use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
@@ -16,6 +17,7 @@ class MorphRelationProvider extends ServiceProvider
         'admin' => User::class,
         'employee' => Employee::class,
         'interview' => Interview::class,
+        'organization'=> Organization::class
     ];
 
     /**

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class CreateOrganizationRequest extends FormRequest
+class OrganizationStoreRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -17,6 +17,7 @@ class CreateOrganizationRequest extends FormRequest
             'manager.last_name' => ['required', 'string', 'min:3', 'max:1000'],
             'manager.email' => ['required', Rule::unique('employees', 'email')],
             'manager.password' => ['required', 'string', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+            'logo'          => ['filled','image'],
         ];
     }
 }

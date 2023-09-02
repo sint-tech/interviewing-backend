@@ -7,16 +7,33 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Support\Interfaces\OwnerInterface;
 
-class Organization extends Model implements OwnerInterface
+class Organization extends Model implements OwnerInterface,HasMedia
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes,InteractsWithMedia;
 
     protected $fillable = [
         'name',
     ];
+
+    public function logos():MorphMany
+    {
+        return $this->media()->where('collection_name','logo');
+    }
+
+    public function logo():MorphOne
+    {
+        return $this
+            ->morphOne(config('media-library.media_model'), 'model')
+            ->where('collection_name','logo')
+            ->latestOfMany();
+    }
 
     public function employees(): HasMany
     {
