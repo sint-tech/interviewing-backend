@@ -5,10 +5,11 @@ namespace App\Admin\Organization\Controllers;
 use App\Admin\Organization\Factories\OrganizationDataFactory;
 use App\Admin\Organization\Factories\OrganizationManagerDataFactory;
 use App\Admin\Organization\Queries\IndexOrganizationQuery;
-use App\Admin\Organization\Requests\CreateOrganizationRequest;
+use App\Admin\Organization\Requests\OrganizationStoreRequest;
 use App\Admin\Organization\Resources\OrganizationResource;
 use Domain\Organization\Actions\CreateOrganizationAction;
 use Domain\Organization\Actions\DeleteOrganizationAction;
+use Domain\Organization\Actions\UploadOrganizationLogoAction;
 use Domain\Organization\Models\Organization;
 use Support\Controllers\Controller;
 
@@ -24,7 +25,7 @@ class OrganizationController extends Controller
         return OrganizationResource::make(Organization::query()->findOrFail($organization));
     }
 
-    public function store(CreateOrganizationRequest $request): OrganizationResource
+    public function store(OrganizationStoreRequest $request): OrganizationResource
     {
         $organization = (new CreateOrganizationAction(
             OrganizationDataFactory::fromRequest($request),

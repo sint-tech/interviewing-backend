@@ -5,6 +5,7 @@ namespace Domain\Organization\Actions;
 use Domain\Organization\DataTransferObjects\EmployeeData;
 use Domain\Organization\DataTransferObjects\OrganizationData;
 use Domain\Organization\Models\Organization;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 
 class CreateOrganizationAction
@@ -35,6 +36,10 @@ class CreateOrganizationAction
 
         $organization->oldestManager()->create($employeeData);
 
-        return $organization->refresh()->load('oldestManager');
+        if ($this->organizationData->logo instanceof UploadedFile) {
+            (new UploadOrganizationLogoAction($organization,$this->organizationData->logo))->execute();
+        }
+
+        return $organization->refresh()->load(['oldestManager','logo']);
     }
 }

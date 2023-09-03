@@ -2,12 +2,12 @@
 
 namespace App\Admin\Organization\Factories;
 
-use App\Admin\Organization\Requests\CreateOrganizationRequest;
+use App\Admin\Organization\Requests\OrganizationStoreRequest;
 use Domain\Organization\DataTransferObjects\EmployeeData;
 
 class OrganizationManagerDataFactory
 {
-    public static function fromRequest(CreateOrganizationRequest $request)
+    public static function fromRequest(OrganizationStoreRequest $request)
     {
         $manager_key = 'manager';
 
