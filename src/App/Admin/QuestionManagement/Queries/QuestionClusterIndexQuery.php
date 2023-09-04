@@ -5,6 +5,7 @@ namespace App\Admin\QuestionManagement\Queries;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class QuestionClusterIndexQuery extends QueryBuilder
@@ -24,6 +25,10 @@ class QuestionClusterIndexQuery extends QueryBuilder
             'created_at'
         );
 
+        $this->allowedIncludes(
+            $this->getAllowedIncludes()
+        );
+
         $this->defaultSort('-created_at');
     }
 
@@ -32,6 +37,17 @@ class QuestionClusterIndexQuery extends QueryBuilder
         return [
             AllowedFilter::exact('id'),
             AllowedFilter::partial('name'),
+            AllowedFilter::exact('skills.id')
+        ];
+    }
+
+    protected function getAllowedIncludes(): array
+    {
+        return [
+            AllowedInclude::relationship('skills'),
+            AllowedInclude::relationship('variants','questionVariants'),
+            AllowedInclude::relationship('questions'),
+            AllowedInclude::relationship('questions.questionVariants'),
         ];
     }
 }

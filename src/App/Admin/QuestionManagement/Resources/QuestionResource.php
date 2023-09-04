@@ -17,6 +17,7 @@ class QuestionResource extends JsonResource
             'min_reading_duration_in_seconds' => (int) $this->min_reading_duration_in_seconds,
             'max_reading_duration_in_seconds' => (int) $this->max_reading_duration_in_seconds,
             'question_cluster' => QuestionClusterResource::make($this->whenLoaded('questionCluster')),
+            'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants')),
             'created_at' => $this->created_at?->format('Y-m-d H:m'),
             'deleted_at' => $this->whenNotNull($this->deleted_at?->format('y-m-d H:m')),
         ];
