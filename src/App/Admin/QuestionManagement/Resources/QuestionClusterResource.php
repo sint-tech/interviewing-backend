@@ -16,7 +16,7 @@ class QuestionClusterResource extends JsonResource
             'created_at' => (string) $this->created_at?->format('y-m-d H:m'),
             'questions' => QuestionResource::collection($this->whenLoaded('questions')),
             'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants')),
-            'Skills' => SkillResource::collection($this->whenLoaded('skills')),
+            'skills' => SkillResource::collection($this->whenLoaded('skills')),
             'deleted_at' => $this->whenNotNull($this->deleted_at?->format('y-m-d H:m')),
         ];
     }
