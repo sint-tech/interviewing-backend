@@ -25,7 +25,7 @@ class QuestionIndexQuery extends QueryBuilder
         $this->allowedSorts('id','created_at','updated_at');
 
         $this->allowedIncludes(
-            AllowedInclude::relationship('cluster','questionCluster')
+            AllowedInclude::relationship('questionCluster')
         );
     }
 
@@ -33,7 +33,7 @@ class QuestionIndexQuery extends QueryBuilder
     {
         return [
             AllowedFilter::exact('id'),
-            AllowedFilter::exact('cluster_id', 'question_cluster_id'),
+            AllowedFilter::exact('question_cluster_id'),
             AllowedFilter::exact('question_type', 'question_type'),
             AllowedFilter::partial('title'),
             AllowedFilter::partial('description'),
