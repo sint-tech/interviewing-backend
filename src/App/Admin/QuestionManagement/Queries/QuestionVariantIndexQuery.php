@@ -11,7 +11,7 @@ class QuestionVariantIndexQuery extends QueryBuilder
 {
     public function __construct(Request $request)
     {
-        $subject = QuestionVariant::query();
+        $subject = QuestionVariant::query()->whereHas('question');
 
         parent::__construct($subject, $request);
 
