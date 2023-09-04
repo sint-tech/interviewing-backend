@@ -23,7 +23,8 @@ class QuestionVariantIndexQuery extends QueryBuilder
 
         $this->allowedIncludes(
             'question.questionCluster',
-            'questionCluster'
+            'questionCluster',
+            'aiModels'
         );
     }
 
@@ -31,6 +32,7 @@ class QuestionVariantIndexQuery extends QueryBuilder
     {
         return [
             AllowedFilter::exact('id'),
+            AllowedFilter::exact('question_id'),
         ];
     }
 }

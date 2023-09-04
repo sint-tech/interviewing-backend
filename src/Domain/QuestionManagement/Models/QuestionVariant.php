@@ -3,6 +3,7 @@
 namespace Domain\QuestionManagement\Models;
 
 use Database\Factories\QuestionVariantFactory;
+use Domain\AiPromptMessageManagement\Models\AIModel;
 use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
 use Domain\AnswerManagement\Models\Answer;
 use Domain\AnswerManagement\Models\AnswerVariant;
@@ -94,6 +95,18 @@ class QuestionVariant extends Model
             'question_variant_id',
             'id'
         );
+    }
+
+    public function aiModels():BelongsToMany
+    {
+        return $this
+            ->belongsToMany(
+                AIModel::class,
+                'ai_prompt_messages',
+                'question_variant_id',
+                'ai_model_id',
+            )->withTimestamps()
+            ->withPivot(['is_default']);
     }
 
     public function defaultAiPromptMessage(): HasOne

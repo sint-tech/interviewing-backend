@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use Domain\AiPromptMessageManagement\Models\AIModel;
 use Domain\QuestionManagement\Models\Question;
+use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\Feature\Traits\AuthenticationInstallation;
@@ -25,6 +27,27 @@ class QuestionTest extends TestCase
         $this->seedSuperAdminAccounts();
 
         $this->superAdmin = User::query()->first();
+    }
+
+    public function testItShouldCreateQuestion()
+    {
+        $question_cluster = QuestionCluster::factory()->for($this->superAdmin,'creator')->create();
+
+        $default_ai_model = AIModel::query()->create();
+
+        $response = $this->actingAs($this->superAdmin,'api')
+            ->post('admin-api/questions',[
+                'title' => 'first and last question',
+                'description'   => null,
+                'question_cluster_id'   => $question_cluster->getKey(),
+                'difficult_level' => '3',
+                'question_type' => 'written',
+                'min_reading_duration_in_seconds' => '60',
+                'max_reading_duration_in_seconds' => '120',
+                'default_ai_model_id'   => $default_ai_model->getKey()
+            ]);
+
+        $response->assertCreated();
     }
 
     public function testItShouldUpdateQuestion(): void

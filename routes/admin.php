@@ -1,5 +1,6 @@
 <?php
 
+use App\Admin\AIModelManagement\Controllers\AIModelController;
 use App\Admin\AnswerManagement\Controllers\AnswerVariantController;
 use App\Admin\Auth\Controllers\LoginController;
 use App\Admin\Auth\Controllers\LogoutController;
@@ -36,3 +37,5 @@ Route::apiResource('answer-variants', AnswerVariantController::class);
 Route::apiResource('interview-templates', InterviewTemplateController::class)->except('update');
 
 Route::apiResource('candidates', CandidateController::class)->only(['index', 'show']);
+
+Route::apiResource('ai-models', AIModelController::class)->only('index','show');
