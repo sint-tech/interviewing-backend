@@ -28,6 +28,26 @@ class QuestionVariantTest extends TestCase
         $this->superAdmin = User::query()->first();
     }
 
+    public function testItShouldCreateQuestionVariant(): void
+    {
+        $question = Question::factory()->for($this->superAdmin,'creator')->create();
+
+        $response = $this->actingAs($this->superAdmin,'api')
+            ->post('admin-api/question-variants',[
+               'text'  => 'question variant title',
+               'description'    => 'question variant description',
+               'question_id'  => $question->getKey(),
+               'reading_time_in_seconds'    => 3,
+               'answering_time_in_seconds'    => 30,
+               'owner'  => [
+                   'model_id'   => 1,
+                   'model_type' => 'admin'
+               ],
+            ]);
+
+        $response->assertCreated();
+    }
+
     public function testItShouldUpdateQuestionVariant(): void
     {
         $question = Question::factory()->for($this->superAdmin, 'creator')->create();

@@ -19,6 +19,7 @@ class QuestionUpdateRequest extends FormRequest
             'question_type' => ['filled', (new Enum(QuestionTypeEnum::class))],
             'min_reading_duration_in_seconds' => ['filled', 'integer', 'min:1', 'lt:max_reading_duration_in_seconds'],
             'max_reading_duration_in_seconds' => ['filled', 'integer', 'min:1', 'gt:min_reading_duration_in_seconds'],
+            'default_ai_model_id'   => ['filled','integer',Rule::exists('ai_models','id')->where('status','active')]
         ];
     }
 }

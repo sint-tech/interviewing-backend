@@ -5,6 +5,7 @@ namespace App\Admin\QuestionManagement\Queries;
 use Domain\QuestionManagement\Models\Question;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class QuestionIndexQuery extends QueryBuilder
@@ -20,6 +21,12 @@ class QuestionIndexQuery extends QueryBuilder
         );
 
         $this->defaultSort('-updated_at');
+
+        $this->allowedSorts('id','created_at','updated_at');
+
+        $this->allowedIncludes(
+            AllowedInclude::relationship('cluster','questionCluster')
+        );
     }
 
     public function getAllowedFilters(): array

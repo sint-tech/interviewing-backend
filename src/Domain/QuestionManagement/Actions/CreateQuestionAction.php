@@ -2,8 +2,10 @@
 
 namespace Domain\QuestionManagement\Actions;
 
+use Domain\AiPromptMessageManagement\Models\AIModel;
 use Domain\QuestionManagement\DataTransferObjects\QuestionData;
 use Domain\QuestionManagement\Models\Question;
+use Spatie\LaravelData\Optional;
 
 class CreateQuestionAction
 {
@@ -15,17 +17,16 @@ class CreateQuestionAction
 
     public function execute(): Question
     {
-        $data = array_merge(
-            [
-                'creator_id' => $this->questionData->creator->getKey(),
-                'creator_type' => $this->questionData->creator::class,
-            ], $this->questionData->toArray()
-        );
+        $data = $this->questionData->except('creator')->toArray();
 
-        $question = (new Question($data));
+        if ($this->questionData->default_ai_model_id instanceof Optional) {
+            $data['default_ai_model_id'] = AIModel::query()->first()->getKey();
+        }
+
+        $question = new Question($data);
 
         $question->save();
 
-        return $question->load(['creator', 'questionCluster']);
+        return $question->load(['creator', 'questionCluster','questionVariants']);
     }
 }

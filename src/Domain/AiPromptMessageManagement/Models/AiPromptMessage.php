@@ -12,21 +12,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property AiModelEnum $ai_model
+ * @property AIModel $ai_model
  */
 class AiPromptMessage extends Model
 {
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'prompt_text',
-        'ai_model',
+        'ai_model_id',
         'question_variant_id',
         'is_default',
-    ];
-
-    protected $casts = [
-        'ai_model' => AiModelEnum::class,
     ];
 
     public function questionVariant(): BelongsTo
@@ -38,9 +33,14 @@ class AiPromptMessage extends Model
         );
     }
 
+    public function aiModel():BelongsTo
+    {
+        return $this->belongsTo(AIModel::class,'ai_model_id');
+    }
+
     public function aiModelClientFactory(): AiModelClientInterface
     {
-        return match ($this->ai_model) {
+        return match ($this->ai_model->name) {
             AiModelEnum::Gpt_3_5 => new GPT35AiModel($this)
         };
     }
