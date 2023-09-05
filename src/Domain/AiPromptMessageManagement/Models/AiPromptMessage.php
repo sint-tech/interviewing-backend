@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property AIModel $ai_model
+ * @property AIModel $aiModel
  */
 class AiPromptMessage extends Model
 {
