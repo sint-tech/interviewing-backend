@@ -48,16 +48,6 @@ class InterviewTemplate extends Model
         return $this->morphTo('creator');
     }
 
-    public function questionClusters(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            QuestionCluster::class,
-            'interview_template_questions',
-            'interview_template_id',
-            'question_cluster_id'
-        )->withTimestamps();
-    }
-
     public function questionVariants(): BelongsToMany
     {
         return $this->belongsToMany(
