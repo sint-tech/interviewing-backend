@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property AIModel $ai_model
+ * @property AIModel $aiModel
  */
 class AiPromptMessage extends Model
 {
@@ -40,7 +40,7 @@ class AiPromptMessage extends Model
 
     public function aiModelClientFactory(): AiModelClientInterface
     {
-        return match ($this->ai_model->name) {
+        return match ($this->aiModel->name) {
             AiModelEnum::Gpt_3_5 => new GPT35AiModel($this)
         };
     }
