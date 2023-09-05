@@ -31,6 +31,7 @@ class Interview extends Model
         'candidate_id',
         'started_at',
         'ended_at',
+        'status',
     ];
 
     protected $casts = [
