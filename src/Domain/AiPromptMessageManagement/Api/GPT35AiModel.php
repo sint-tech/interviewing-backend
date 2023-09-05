@@ -9,7 +9,7 @@ class GPT35AiModel extends AiModelClientInterface
     public function ask(string $answerText)
     {
         $response = OpenAI::chat()->create([
-            'model' => $this->promptMessage->ai_model->value,
+            'model' => $this->promptMessage->aiModel->value,
             'messages' => [
                 [
                     'role' => 'system',
