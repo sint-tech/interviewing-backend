@@ -5,6 +5,7 @@ namespace Domain\InterviewManagement\Models;
 use Database\Factories\InterviewTemplateFactory;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InterviewTemplate extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes,HasSettingsField;
 
     protected $fillable = [
         'name',
