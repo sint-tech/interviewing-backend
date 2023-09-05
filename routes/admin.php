@@ -6,6 +6,7 @@ use App\Admin\Auth\Controllers\LoginController;
 use App\Admin\Auth\Controllers\LogoutController;
 use App\Admin\CandidateManagement\Controllers\CandidateController;
 use App\Admin\InterviewManagement\Controllers\InterviewTemplateController;
+use App\Admin\InterviewManagement\Controllers\ScheduleInterviewTemplateDatesController;
 use App\Admin\Organization\Controllers\OrganizationController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterRecommendationController;
@@ -35,6 +36,7 @@ Route::apiResource('question-variants', QuestionVariantController::class);
 Route::apiResource('answer-variants', AnswerVariantController::class);
 
 Route::apiResource('interview-templates', InterviewTemplateController::class)->except('update');
+Route::post('interview-templates/{interview_template}/schedule', ScheduleInterviewTemplateDatesController::class);
 
 Route::apiResource('candidates', CandidateController::class)->only(['index', 'show']);
 

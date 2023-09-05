@@ -5,6 +5,7 @@ namespace Domain\InterviewManagement\DataTransferObjects;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Spatie\LaravelData\Attributes\Validation\Filled;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
@@ -20,8 +21,9 @@ class InterviewTemplateDto extends Data
         public readonly Owner $owner,
         public readonly Authenticatable $creator,
         public readonly bool $reusable,
-        #[Required, Min(1)]
-        public readonly iterable $question_variants
+        #[Filled, Min(1)]
+        public readonly iterable $question_variants,
+        public readonly InterviewTemplateSettingsDto|Optional $interview_template_settings_dto
     ) {
         $this->additional([
             'creator_type' => $this->creator::class,
