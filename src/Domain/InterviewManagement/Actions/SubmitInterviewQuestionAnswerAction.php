@@ -20,12 +20,15 @@ class SubmitInterviewQuestionAnswerAction
 
         $answer = $answer->refresh()->load('interview');
 
-        if ($this->interviewShouldBeEnd($answer) && $this->interviewStillRunning($answer)) {
-            //@todo create event to finish the interview
-            $answer->interview->update([
-                'ended_at' => now(),
-            ]);
-        }
+        $answer->interview->update([
+            'ended_at' => now(),
+        ]);
+//        if ($this->interviewShouldBeEnd($answer) && $this->interviewStillRunning($answer)) {
+//            //@todo create event to finish the interview
+//            $answer->interview->update([
+//                'ended_at' => now(),
+//            ]);
+//        }
 
         return $answer;
     }
