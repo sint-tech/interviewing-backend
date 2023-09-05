@@ -11,7 +11,7 @@ class AiPromptMessageResource extends JsonResource
         return [
             'id' => (int) $this->id,
             'message' => (string) $this->prompt_text,
-            'ai_model' => (string) $this->ai_model->value,
+            'ai_model' => (string) $this->aiModel->name,
             'is_default' => (bool) $this->is_default,
         ];
     }
