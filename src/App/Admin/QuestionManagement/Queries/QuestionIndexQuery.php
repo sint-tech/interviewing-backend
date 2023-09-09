@@ -25,7 +25,8 @@ class QuestionIndexQuery extends QueryBuilder
         $this->allowedSorts('id','created_at','updated_at');
 
         $this->allowedIncludes(
-            AllowedInclude::relationship('questionCluster')
+            AllowedInclude::relationship('questionCluster'),
+            AllowedInclude::relationship('questionVariants'),
         );
     }
 
