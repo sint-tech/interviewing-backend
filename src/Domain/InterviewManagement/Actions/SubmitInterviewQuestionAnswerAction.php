@@ -9,8 +9,7 @@ class SubmitInterviewQuestionAnswerAction
 {
     public function __construct(
         public readonly AnswerDto $answerDto
-    ) {
-    }
+    ) {}
 
     public function execute(): Answer
     {
