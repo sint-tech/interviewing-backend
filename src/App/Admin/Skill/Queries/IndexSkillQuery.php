@@ -5,6 +5,8 @@ namespace App\Admin\Skill\Queries;
 use Domain\Skill\Models\Skill;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedInclude;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class IndexSkillQuery extends QueryBuilder
@@ -17,6 +19,16 @@ class IndexSkillQuery extends QueryBuilder
 
         $this->allowedFilters(
             $this->getAllowedFilters()
+        );
+
+        $this->defaultSorts('updated_at');
+
+        $this->allowedSorts(
+            AllowedSort::field('created_at','id')
+        );
+
+        $this->allowedIncludes(
+            AllowedInclude::relationship('questionClusters')
         );
     }
 
