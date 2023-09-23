@@ -35,7 +35,7 @@ Route::apiResource('question-variants', QuestionVariantController::class);
 
 Route::apiResource('answer-variants', AnswerVariantController::class);
 
-Route::apiResource('interview-templates', InterviewTemplateController::class)->except('update');
+Route::apiResource('interview-templates', InterviewTemplateController::class);
 Route::post('interview-templates/{interview_template}/schedule', ScheduleInterviewTemplateDatesController::class);
 
 Route::apiResource('candidates', CandidateController::class)->only(['index', 'show']);
