@@ -5,6 +5,7 @@ namespace Domain\InterviewManagement\Actions;
 use Domain\InterviewManagement\Exceptions\InterviewNotFinishedException;
 use Domain\InterviewManagement\Models\Answer;
 use Domain\InterviewManagement\Models\Interview;
+use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Domain\ReportManagement\Actions\CreateReportAction;
 use Domain\ReportManagement\DataTransferObjects\ReportDto;
 use Domain\ReportManagement\DataTransferObjects\ReportValueDto;
@@ -15,62 +16,63 @@ use OpenAI\Laravel\Facades\OpenAI;
 class GenerateInterviewReport
 {
     public function __construct(
-        public readonly Interview $interview
     ) {
     }
 
-    public function execute(): Report
+    public function execute(
+        Interview $interview
+    ): InterviewReportValueObject
     {
-        if ($this->interviewStillRunning()) {
+        if ($this->interviewStillRunning($interview)) {
             throw new InterviewNotFinishedException();
         }
 
         $reportDto = ReportDto::from([
-            'name' => '__DEFAULT_REPORT__',
-            'reportable' => $this->interview,
+            'name' => Interview::DEFAULT_REPORT_NAME,
+            'reportable' => $interview,
             'values' => [
                 ReportValueDto::from([
                     'key' => 'avg_score',
-                    'value' => $this->interview->answers->avg(fn ($answer) => $answer->score / $answer->max_score) * 100,
+                    'value' => $interview->answers->avg(fn ($answer) => $answer->score / $answer->max_score) * 100,
                 ]),
                 ReportValueDto::from([
                     'key' => 'impacts',
-                    'value' => $this->getRecommendations('impacts'),
+                    'value' => $this->getRecommendations($interview,'impacts'),
                 ]),
                 ReportValueDto::from([
                     'key' => 'advices',
-                    'value' => $this->getRecommendations('advices'),
+                    'value' => $this->getRecommendations($interview,'advices'),
                 ]),
                 ReportValueDto::from([
                     'key' => 'question_clusters_stats',
-                    'value' => $this->getQuestionClustersStats(),
+                    'value' => $this->getQuestionClustersStats($interview),
                 ]),
             ],
         ]);
 
-        return (new CreateReportAction(
-            $reportDto
-        ))->execute();
+        app(CreateReportAction::class)->execute($reportDto);
+
+        return (new InterviewReportValueObject($interview));
     }
 
-    public function interviewStillRunning(): bool
+    public function interviewStillRunning(Interview $interview): bool
     {
-        return is_null($this->interview->ended_at);
+        return is_null($interview->ended_at);
     }
 
-    private function getRecommendations(string $recommendation_type = 'advices' | 'impacts'): array
+    private function getRecommendations(Interview $interview,string $recommendation_type = 'advices' | 'impacts'): array
     {
         return match ($recommendation_type) {
-            'advices' => $this->interview->answers->map(fn (Answer $answer) => $answer->advice_statement)->filter()->toArray(),
-            'impacts' => Arr::wrap($this->getImpacts($this->getQuestionClustersStats())),
+            'advices' => $interview->answers->map(fn (Answer $answer) => $answer->advice_statement)->filter()->toArray(),
+            'impacts' => Arr::wrap($this->getImpacts($this->getQuestionClustersStats($interview))),
         };
     }
 
-    public function getQuestionClustersStats(): array
+    public function getQuestionClustersStats(Interview $interview): array
     {
         $clustersStats = [];
 
-        foreach ($this->interview->answers as $answer) {
+        foreach ($interview->answers as $answer) {
             if (is_null($answer->questionCluster)) {
                 continue;
             }

@@ -2,11 +2,13 @@
 
 namespace Domain\InterviewManagement\ValueObjects;
 
+use App\Candidate\InterviewManagement\Exceptions\InterviewNotFinishedException;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Actions\GenerateInterviewReport;
 use Domain\InterviewManagement\Models\Interview;
+use LogicException;
 
-class InterviewReportValueObject
+class InterviewReportValueObject //todo rename the value object to DefaultInterviewReportForCandidateValueObject
 {
     public readonly Candidate $candidate;
 
@@ -23,9 +25,11 @@ class InterviewReportValueObject
     ) {
         $this->candidate = $this->interview->candidate;
 
-        (new GenerateInterviewReport($this->interview))->execute();
+        $report = $this->interview->defaultLastReport;
 
-        $report = $this->interview->latestReport;
+        if (is_null($report)) {
+            throw new InterviewNotFinishedException();
+        }
 
         $report_values = $report->getMeta()->toArray();
 
