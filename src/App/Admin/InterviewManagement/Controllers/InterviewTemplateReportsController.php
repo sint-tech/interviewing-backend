@@ -6,17 +6,19 @@ use App\Admin\InterviewManagement\Resources\InterviewReportResource;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Support\Controllers\Controller;
 
 class InterviewTemplateReportsController extends Controller
 {
-    public function __invoke(InterviewTemplate $interview_template)
+    public function __invoke(InterviewTemplate $interview_template): AnonymousResourceCollection
     {
         $finishedInterviews = $interview_template
             ->finishedInterviews()
             ->withWhereHas('defaultLastReport')
             ->with('candidate')
-            ->get()->map(fn(Interview $interview) => new InterviewReportValueObject($interview));
+            ->get()
+            ->map(fn(Interview $interview) => new InterviewReportValueObject($interview));
 
         return InterviewReportResource::collection($finishedInterviews);
     }
