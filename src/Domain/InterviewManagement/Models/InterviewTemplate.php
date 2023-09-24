@@ -38,6 +38,12 @@ class InterviewTemplate extends Model
         return $this->hasMany(Interview::class, 'interview_template_id');
     }
 
+    public function finishedInterviews(): HasMany
+    {
+        return $this->interviews()
+            ->whereStatusFinished()
+            ->whereIsEnded();
+    }
     public function owner(): MorphTo
     {
         return $this->morphTo('owner');

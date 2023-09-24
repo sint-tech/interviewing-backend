@@ -18,7 +18,6 @@ class UpdateInterviewTemplateAction
 
         $interviewTemplate->update($interviewTemplateDto->toArray());
 
-
         foreach ($interviewTemplateDto->question_variants as $question_variant) {
             InterviewTemplateQuestion::query()->updateOrCreate([
                 'question_variant_id' => $question_variant->getKey(),

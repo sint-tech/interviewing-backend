@@ -4,6 +4,7 @@ namespace Domain\InterviewManagement\Models;
 
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\Candidate;
+use Domain\InterviewManagement\Builders\InterviewEloquentBuilder;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Domain\QuestionManagement\Models\QuestionCluster;
@@ -148,5 +149,20 @@ class Interview extends Model
                         ->select('question_variants.id')
                 )
                 ->count();
+    }
+
+    public function finished():bool
+    {
+        return $this->ended_at && $this->status == InterviewStatusEnum::Finished;
+    }
+
+    public function statusIs(InterviewStatusEnum $status): bool
+    {
+        return $this->status === $status;
+    }
+
+    public function newEloquentBuilder($query)
+    {
+        return new InterviewEloquentBuilder($query);
     }
 }

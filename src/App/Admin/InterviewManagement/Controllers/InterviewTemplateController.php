@@ -3,24 +3,22 @@
 namespace App\Admin\InterviewManagement\Controllers;
 
 use App\Admin\InterviewManagement\Factories\InterviewTemplateDataFactory;
+use App\Admin\InterviewManagement\Queries\InterviewTemplateIndexQuery;
 use App\Admin\InterviewManagement\Requests\InterviewTemplateUpdateRequest;
 use App\Admin\InterviewManagement\Requests\InterviewTemplateStoreRequest;
 use App\Admin\InterviewManagement\Resources\InterviewTemplateResource;
 use Domain\InterviewManagement\Actions\CreateInterviewTemplateAction;
 use Domain\InterviewManagement\Actions\UpdateInterviewTemplateAction;
-use Domain\InterviewManagement\DataTransferObjects\InterviewTemplateDto;
-use Domain\InterviewManagement\DataTransferObjects\InterviewTemplateSettingsDto;
-use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Support\Controllers\Controller;
 
 class InterviewTemplateController extends Controller
 {
-    public function index()
+    public function index(InterviewTemplateIndexQuery $query)
     {
         return InterviewTemplateResource::collection(
-            InterviewTemplate::query()->latest()->paginate(
-                request()->integer('per_page', 30)
+            $query->paginate(
+                request()->integer('per_page',30)
             )
         );
     }

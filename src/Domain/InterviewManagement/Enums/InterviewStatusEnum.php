@@ -6,7 +6,7 @@ enum InterviewStatusEnum: string
 {
     case NotStarted = 'not_started';
 
-    case Started = 'Started';
+    case Started = 'started';
 
     case Withdrew = 'withdrew';
 
