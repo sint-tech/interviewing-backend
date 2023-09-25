@@ -9,6 +9,7 @@ use App\Admin\InterviewManagement\Controllers\ChangeInterviewStatusController;
 use App\Admin\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Admin\InterviewManagement\Controllers\InterviewTemplateReportsController;
 use App\Admin\InterviewManagement\Controllers\ScheduleInterviewTemplateDatesController;
+use App\Admin\InvitationManagement\Controllers\InvitationController;
 use App\Admin\Organization\Controllers\OrganizationController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterRecommendationController;
@@ -44,5 +45,7 @@ Route::get('interview-templates/{interview_template}/reports', InterviewTemplate
 Route::post('interviews/{interview}/change-status', ChangeInterviewStatusController::class)->name('interviews.change-status');
 
 Route::apiResource('candidates', CandidateController::class)->only(['index', 'show']);
+
+Route::apiResource('invitations', InvitationController::class);
 
 Route::apiResource('ai-models', AIModelController::class)->only('index','show');
