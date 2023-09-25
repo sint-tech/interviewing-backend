@@ -4,6 +4,9 @@ namespace Domain\InterviewManagement\Models;
 
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\Candidate;
+use Domain\InterviewManagement\Builders\InterviewEloquentBuilder;
+use Domain\InterviewManagement\Enums\InterviewStatusEnum;
+use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -13,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -26,6 +30,8 @@ class Interview extends Model
 {
     use HasFactory,SoftDeletes,HasReport;
 
+    const DEFAULT_REPORT_NAME = '__DEFAULT_REPORT__';
+
     protected $fillable = [
         'interview_template_id',
         'candidate_id',
@@ -37,6 +43,7 @@ class Interview extends Model
     protected $casts = [
         'started_at' => 'datetime',
         'ended_at' => 'datetime',
+        'status'    => InterviewStatusEnum::class
     ];
 
     public function interviewTemplate(): BelongsTo
@@ -128,6 +135,11 @@ class Interview extends Model
             ->withTimestamps();
     }
 
+    public function defaultLastReport():MorphOne
+    {
+        return $this->latestReport()->where('name',self::DEFAULT_REPORT_NAME);
+    }
+
     public function allQuestionsAnswered(): bool
     {
         return $this->questionVariants()->count() ==
@@ -137,5 +149,20 @@ class Interview extends Model
                         ->select('question_variants.id')
                 )
                 ->count();
+    }
+
+    public function finished():bool
+    {
+        return $this->ended_at && $this->status == InterviewStatusEnum::Finished;
+    }
+
+    public function statusIs(InterviewStatusEnum $status): bool
+    {
+        return $this->status === $status;
+    }
+
+    public function newEloquentBuilder($query)
+    {
+        return new InterviewEloquentBuilder($query);
     }
 }

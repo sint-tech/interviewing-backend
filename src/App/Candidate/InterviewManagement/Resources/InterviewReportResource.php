@@ -17,6 +17,9 @@ class InterviewReportResource extends JsonResource
             'advices' => (array) $this->advices,
             'impacts' => (array) $this->impacts,
             'question_clusters_scores' => $this->questionClustersStats,
+            //creation_at
+            //interview_id
+            //interview_candidate_name
         ];
     }
 }

@@ -15,10 +15,10 @@ class GetInterviewReportController extends Controller
     {
         try {
             return InterviewReportResource::make(
-                (new InterviewReportValueObject($interview))
+                new InterviewReportValueObject(
+                    $interview
+                )
             );
-        } catch (InternalInterviewNotFinishedException $exception) {
-            throw new InterviewNotFinishedException();
         } catch (\Exception $exception) {
             throw $exception;
         }

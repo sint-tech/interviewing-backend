@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property QuestionCluster $questionCluster
+ * @property Interview $interview
  */
 class Answer extends Pivot
 {

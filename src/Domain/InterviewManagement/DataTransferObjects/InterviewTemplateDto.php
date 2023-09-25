@@ -5,9 +5,9 @@ namespace Domain\InterviewManagement\DataTransferObjects;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\Validation\Filled;
 use Spatie\LaravelData\Attributes\Validation\Min;
-use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 use Support\Interfaces\OwnerInterface as Owner;
@@ -21,7 +21,7 @@ class InterviewTemplateDto extends Data
         public readonly Owner $owner,
         public readonly Authenticatable $creator,
         public readonly bool $reusable,
-        #[Filled, Min(1)]
+        #[Filled, Min(1)] #[MapInputName('question_variant_ids')]
         public readonly iterable $question_variants,
         public readonly InterviewTemplateSettingsDto|Optional $interview_template_settings_dto
     ) {
@@ -33,7 +33,7 @@ class InterviewTemplateDto extends Data
         ]);
 
         foreach ($this->question_variants as $question_variant) {
-            if ($question_variant instanceof QuestionVariant) {
+            if ($question_variant instanceof QuestionVariant || is_numeric($question_variant)) {
                 continue;
             }
             throw new \InvalidArgumentException('array values must be of type QuestionVariant');

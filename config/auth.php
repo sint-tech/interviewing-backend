@@ -50,6 +50,11 @@ return [
             'driver' => 'passport',
             'provider' => 'candidates',
         ],
+
+        'api-employee'  => [
+            'driver'    => 'passport',
+            'provider'  => 'organization_employee'
+        ]
     ],
 
     /*
@@ -79,6 +84,11 @@ return [
             'driver' => 'eloquent',
             'model' => Domain\Candidate\Models\Candidate::class,
         ],
+
+        'organization_employee' => [
+            'driver'    => 'eloquent',
+            'model' => \Domain\Organization\Models\Employee::class
+        ]
     ],
 
     /*

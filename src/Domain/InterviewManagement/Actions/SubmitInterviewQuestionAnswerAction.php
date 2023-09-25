@@ -3,6 +3,7 @@
 namespace Domain\InterviewManagement\Actions;
 
 use Domain\InterviewManagement\DataTransferObjects\AnswerDto;
+use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
 use Domain\InterviewManagement\Models\Answer;
 
 class SubmitInterviewQuestionAnswerAction
@@ -19,15 +20,11 @@ class SubmitInterviewQuestionAnswerAction
 
         $answer = $answer->refresh()->load('interview');
 
-        $answer->interview->update([
-            'ended_at' => now(),
-        ]);
-//        if ($this->interviewShouldBeEnd($answer) && $this->interviewStillRunning($answer)) {
-//            //@todo create event to finish the interview
-//            $answer->interview->update([
-//                'ended_at' => now(),
-//            ]);
-//        }
+        if ($this->interviewStillRunning($answer) && $this->interviewShouldBeEnd($answer)) {
+            (new EndInterviewAction())->execute($answer->interview);
+
+            event(new InterviewAllQuestionsAnswered($answer->interview));
+        }
 
         return $answer;
     }

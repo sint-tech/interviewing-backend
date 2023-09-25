@@ -2,11 +2,15 @@
 
 namespace Domain\InterviewManagement\ValueObjects;
 
+use App\Candidate\InterviewManagement\Exceptions\InterviewNotFinishedException;
+use Carbon\Carbon;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Actions\GenerateInterviewReport;
 use Domain\InterviewManagement\Models\Interview;
+use Illuminate\Contracts\Support\Arrayable;
+use LogicException;
 
-class InterviewReportValueObject
+class InterviewReportValueObject implements Arrayable//todo rename the value object to DefaultInterviewReportForCandidateValueObject
 {
     public readonly Candidate $candidate;
 
@@ -18,14 +22,18 @@ class InterviewReportValueObject
 
     public readonly array $questionClustersStats;
 
+    public readonly Carbon $created_at;
+
     public function __construct(
         public readonly Interview $interview
     ) {
         $this->candidate = $this->interview->candidate;
 
-        (new GenerateInterviewReport($this->interview))->execute();
+        $report = $this->interview->defaultLastReport;
 
-        $report = $this->interview->latestReport;
+        if (is_null($report)) {
+            throw new InterviewNotFinishedException();
+        }
 
         $report_values = $report->getMeta()->toArray();
 
@@ -36,5 +44,16 @@ class InterviewReportValueObject
         $this->advices = $report_values['advices'];
 
         $this->impacts = $report_values['impacts'];
+
+        $this->created_at = $report->created_at;
+    }
+
+    /**
+     * get the all public props for the value object as array
+     * @return array
+     */
+    public function toArray():array
+    {
+        return get_object_vars($this);
     }
 }
