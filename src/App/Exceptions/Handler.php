@@ -49,12 +49,12 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        if($exception instanceof ModelNotFoundException) {
-            $ids = Arr::join($exception->getIds(),', ','and ');
+        if($e instanceof ModelNotFoundException) {
+            $ids = Arr::join($e->getIds(),', ','and ');
 
-            return message_response("no query result for {$ids}",Response::HTTP_NOT_FOUND);
+            return message_response("no query result for $ids",Response::HTTP_NOT_FOUND);
         }
     }
 }
