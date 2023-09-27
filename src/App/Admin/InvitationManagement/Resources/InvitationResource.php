@@ -11,6 +11,7 @@ class InvitationResource extends JsonResource
     {
         return [
             'id'    => (int) $this->getKey(),
+            'name'    => (string) $this->name,
             'batch' => (int) $this->batch,
             'email' => (string) $this->email,
             'mobile_number'    => (int) $this->mobile_number,

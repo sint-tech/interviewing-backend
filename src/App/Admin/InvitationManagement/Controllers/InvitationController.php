@@ -15,7 +15,7 @@ class InvitationController extends Controller
     public function index(): AnonymousResourceCollection
     {
         return InvitationResource::collection(
-            Invitation::query()->paginate(
+            Invitation::query()->latest()->paginate(
                 request()->integer('per_page',25)
             )
         );
