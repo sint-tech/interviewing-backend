@@ -23,6 +23,8 @@ class InvitationDataFactory
 
         $request_data['dirty_mobile_number'] = $request->validated('mobile_number');
 
+        $request['expired_at']  = $request->date('expired_at');
+
         return InvitationDto::from($request_data);
     }
 }

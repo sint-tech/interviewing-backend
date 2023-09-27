@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.8",
         "openai-php/laravel": "^0.6.3",
         "propaganistas/laravel-phone": "^5.0",
+        "rap2hpoutre/fast-excel": "^5.3",
         "spatie/data-transfer-object": "^3.9",
         "spatie/laravel-data": "^3.2",
         "spatie/laravel-medialibrary": "^10.0.0",
@@ -44,7 +45,8 @@
             "Support\\": "src/Support/"
         },
         "files": [
-            "src/Support/Helpers/common.php"
+            "src/Support/Helpers/common.php",
+            "src/Support/Helpers/response.php"
         ]
     },
     "autoload-dev": {

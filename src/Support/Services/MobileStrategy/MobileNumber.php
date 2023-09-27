@@ -2,6 +2,7 @@
 
 namespace Support\Services\MobileStrategy;
 
+use Illuminate\Validation\Validator;
 use Propaganistas\LaravelPhone\PhoneNumber;
 use Propaganistas\LaravelPhone\Rules\Phone;
 
@@ -28,7 +29,7 @@ abstract class MobileNumber
 
     public function validMobileNumber(int $mobile_number): bool
     {
-        return $this->mobileValidationRule()->mobile()->passes('mobile',$mobile_number);
+        return (new PhoneNumber($mobile_number,$this->countryCode()))->isValid();
     }
 
     public function formatNational(string $mobile_number): string

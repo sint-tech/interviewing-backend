@@ -11,6 +11,7 @@ class Invitation extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
+        'name',
         'email',
         'mobile_country_code',
         'mobile_number',
