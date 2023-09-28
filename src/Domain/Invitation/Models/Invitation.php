@@ -2,8 +2,10 @@
 
 namespace Domain\Invitation\Models;
 
+use Domain\InterviewManagement\Models\InterviewTemplate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invitation extends Model
@@ -16,6 +18,7 @@ class Invitation extends Model
         'mobile_country_code',
         'mobile_number',
         'batch',
+        'interview_template_id',
         'last_invited_at',
         'expired_at',
     ];
@@ -24,4 +27,13 @@ class Invitation extends Model
         'last_invited_at' => 'datetime',
         'expired_at' => 'datetime',
     ];
+
+    /**
+     * @deprecated
+     * @return BelongsTo
+     */
+    public function interviewTemplate(): BelongsTo
+    {
+        return $this->belongsTo(InterviewTemplate::class,'interview_template_id');
+    }
 }

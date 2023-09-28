@@ -3,33 +3,29 @@
 namespace App\Admin\InvitationManagement\Controllers;
 
 use App\Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob;
+use App\Admin\InvitationManagement\Requests\ImportInvitationRequest;
 use Domain\Invitation\Actions\CreateInvitationAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\File;
 use Support\Controllers\Controller;
 
 class ImportInvitationsController extends Controller
 {
-    public function __invoke(Request $request,CreateInvitationAction $createInvitationAction): JsonResponse
+    public function __invoke(ImportInvitationRequest $request,CreateInvitationAction $createInvitationAction): JsonResponse
     {
-        $request->validate([
-            'file'  => ['required',File::types([
-                'application/csv','application/excel',
-                'application/vnd.ms-excel', 'application/vnd.msexcel',
-                'text/csv', 'text/anytext', 'text/plain', 'text/x-c',
-                'text/comma-separated-values',
-                'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
-            )]
-        ]);
-
         $file = $request->file('file');
 
         $file_name = time() . '_' . $file->getClientOriginalName();
 
         $file_path  = $request->file('file')->store('public/imported-excels/invitations/'. $file_name);
 
-        dispatch(new ImportInvitationsFromExcelJob($file_path));
+        dispatch(new ImportInvitationsFromExcelJob(
+            storage_path('app/'.$file_path),
+            $request->validated('interview_template_id')
+        ));
 
         return message_response('file uploaded, we will send you notification once importing finished!');
     }
