@@ -24,7 +24,8 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        protected string $filePath
+        protected string $filePath,
+        protected int $interview_template_id
     )
     {
         //
@@ -37,11 +38,10 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
      */
     public function handle(CreateInvitationAction $createInvitationAction)
     {
-        $rows = (new FastExcel())->import(storage_path('app/'.$this->filePath));
+        $rows = (new FastExcel())->import($this->filePath);
 
         $rows->each(function (array $row) use($createInvitationAction) {
             try {
-
                 $dto = InvitationDto::validateAndCreate($this->prepareRow($row));
 
                 $createInvitationAction->execute($dto);
@@ -55,12 +55,16 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
 
     protected function prepareRow(array &$row): array
     {
-        return array_combine(
+        $data = array_combine(
             array_map(function ($key) {
                 return $this->trimRowKey($key);
             }, array_keys($row)),
             $row
         );
+
+        $data['interview_template_id'] = $this->interview_template_id;
+
+        return $data;
     }
 
     private function trimRowKey(string $key):string

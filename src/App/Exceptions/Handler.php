@@ -56,5 +56,7 @@ class Handler extends ExceptionHandler
 
             return message_response("no query result for $ids",Response::HTTP_NOT_FOUND);
         }
+
+        return parent::render($request,$e);
     }
 }
