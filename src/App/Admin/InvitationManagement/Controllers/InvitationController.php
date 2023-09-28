@@ -32,12 +32,8 @@ class InvitationController extends Controller
         $dto = $invitationDataFactory->fromRequest($request);
 
         return InvitationResource::make(
-<<<<<<< HEAD
-            $createInvitationAction->execute($dto)->load('interview_template')
-=======
             $createInvitationAction->execute($dto)->load('interviewTemplate')
->>>>>>> 4d6dc6854d5fc9afbbe22cbc1989f9f6b82748f2
-        );
+           );
     }
 
     public function update()
