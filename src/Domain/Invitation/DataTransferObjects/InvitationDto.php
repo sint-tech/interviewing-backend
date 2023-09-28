@@ -5,6 +5,7 @@ namespace Domain\Invitation\DataTransferObjects;
 use Carbon\CarbonImmutable;
 use Domain\Invitation\ValueObjects\InvitationBatch;
 use Illuminate\Support\Optional;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
@@ -21,6 +22,7 @@ class InvitationDto extends Data
         public readonly string $email,
         public readonly MobileCountryCodeEnum $mobile_country_code,
         public readonly int $dirty_mobile_number,
+        public int $interview_template_id,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]
         public readonly \DateTime|null|Optional $expired_at,
     )
@@ -45,6 +47,7 @@ class InvitationDto extends Data
             'dirty_mobile_number'   => ['required', 'integer',
                 new ValidMobileNumberRule(MobileCountryCodeEnum::from($context->fullPayload['mobile_country_code']))
             ],
+            'interview_template_id' => ['required','integer',Rule::exists('interview_templates','id')->withoutTrashed()],
             'expired_at'    => ['nullable','date','date_format:Y-m-d H:i','after:now']
         ];
     }
