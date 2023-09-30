@@ -19,5 +19,7 @@ class InvitationIndexQuery extends QueryBuilder
         $this->allowedFilters(
             AllowedFilter::exact('interview_template_id')
         );
+
+        $this->defaultSort('-id');
     }
 }
