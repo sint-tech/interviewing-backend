@@ -18,7 +18,7 @@ enum InterviewStatusEnum: string
 
 
     /**
-     * get status refers as this interview had ended and can't be revisit
+     * get status refers as this interview had ended and can't be revisited
      * @return array
      */
     public static function endedStatuses(): array

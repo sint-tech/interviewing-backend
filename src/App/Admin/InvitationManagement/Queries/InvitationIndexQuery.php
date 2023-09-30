@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Admin\InterviewManagement\Queries;
+namespace App\Admin\InvitationManagement\Queries;
 
-use Domain\InterviewManagement\Models\Interview;
+use Domain\Invitation\Models\Invitation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class InterviewReportsQuery extends QueryBuilder
+class InvitationIndexQuery extends QueryBuilder
 {
     public function __construct(Request $request)
     {
-        $subject = Interview::query();
+        $subject = Invitation::query();
 
         parent::__construct($subject, $request);
-
-        $this->withWhereHas('defaultLastReport');
 
         $this->allowedFilters(
             AllowedFilter::exact('interview_template_id')

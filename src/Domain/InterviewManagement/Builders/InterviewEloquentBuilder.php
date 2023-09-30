@@ -18,6 +18,11 @@ class InterviewEloquentBuilder extends Builder
         return $this->whereStatus(InterviewStatusEnum::Finished,'=',$boolean);
     }
 
+    public function whereStatusInEndedStatuses(string $boolean = 'and'): self
+    {
+        return $this->whereIn('status',InterviewStatusEnum::endedStatuses());
+    }
+
     public function whereIsEnded(bool $ended = true,string $boolean = 'and'): self
     {
         return $this->whereNull('ended_at',$boolean, $ended);

@@ -44,6 +44,14 @@ class InterviewTemplate extends Model
             ->whereStatusFinished()
             ->whereIsEnded();
     }
+
+    public function endedInterviews(): HasMany
+    {
+        return $this->interviews()
+            ->whereStatusInEndedStatuses()
+            ->whereIsEnded();
+    }
+
     public function owner(): MorphTo
     {
         return $this->morphTo('owner');
