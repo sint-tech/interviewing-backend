@@ -18,12 +18,14 @@ class Invitation extends Model
         'mobile_country_code',
         'mobile_number',
         'batch',
+        'should_be_invited_at',
         'interview_template_id',
         'last_invited_at',
         'expired_at',
     ];
 
     protected $casts = [
+        'should_be_invited_at'  => 'datetime',
         'last_invited_at' => 'datetime',
         'expired_at' => 'datetime',
     ];

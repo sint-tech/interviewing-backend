@@ -47,6 +47,7 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
                 $createInvitationAction->execute($dto);
             }
             catch (Exception $exception) {
+                dd($exception);
                 //todo handle exceptions to parse it again for the client
                 Log::info($exception->getMessage().' job_direction:' . __DIR__);
             }

@@ -17,7 +17,7 @@ class InvitationResource extends JsonResource
             'email' => (string) $this->email,
             'mobile_number'    => (int) $this->mobile_number,
             'mobile_country_code'   => (string) $this->mobile_country_code,
-
+            'should_be_invited_at'   => (string) new DateToHumanReadValueObject($this->should_be_invited_at),
             'interview_template'    => InterviewTemplateResource::make($this->whenLoaded('interviewTemplate')),
             'created_at'    => (string) new DateToHumanReadValueObject($this->created_at),
             'expired_at'    => $this->when(is_null($this->exired_at),null,new DateToHumanReadValueObject($this->exired_at))

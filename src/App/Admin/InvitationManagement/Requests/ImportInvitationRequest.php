@@ -18,7 +18,8 @@ class ImportInvitationRequest extends FormRequest
                     'text/comma-separated-values',
                     'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
             )],
-            'interview_template_id' => ['required', 'integer', Rule::exists('interview_templates','id')->withoutTrashed()]
+            'interview_template_id' => ['required', 'integer', Rule::exists('interview_templates','id')->withoutTrashed()],
+            'should_be_invited_at'  => ['required','date','date_format:Y-m-d H:i','after:now']
         ];
     }
 }

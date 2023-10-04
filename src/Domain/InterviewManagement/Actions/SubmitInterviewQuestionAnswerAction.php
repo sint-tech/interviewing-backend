@@ -3,8 +3,10 @@
 namespace Domain\InterviewManagement\Actions;
 
 use Domain\InterviewManagement\DataTransferObjects\AnswerDto;
+use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
 use Domain\InterviewManagement\Models\Answer;
+use Domain\InterviewManagement\Models\Interview;
 
 class SubmitInterviewQuestionAnswerAction
 {
@@ -20,7 +22,11 @@ class SubmitInterviewQuestionAnswerAction
 
         $answer = $answer->refresh()->load('interview');
 
-        if ($this->interviewStillRunning($answer) && $this->interviewShouldBeEnd($answer)) {
+        if ($this->interviewJustStarted($answer->interview)) {
+            $answer->interview->update(['status' => InterviewStatusEnum::Started]);
+        }
+
+        if ($this->interviewStillRunning($answer->interview) && $this->interviewShouldBeEnd($answer->interview)) {
             (new EndInterviewAction())->execute($answer->interview);
 
             event(new InterviewAllQuestionsAnswered($answer->interview));
@@ -29,13 +35,18 @@ class SubmitInterviewQuestionAnswerAction
         return $answer;
     }
 
-    private function interviewShouldBeEnd(Answer $answer): bool
+    private function interviewShouldBeEnd(Interview $interview): bool
     {
-        return $answer->interview->allQuestionsAnswered();
+        return $interview->allQuestionsAnswered();
     }
 
-    private function interviewStillRunning(Answer $answer): bool
+    private function interviewStillRunning(Interview $interview): bool
     {
-        return is_null($answer->interview->ended_at);
+        return is_null($interview->ended_at);
+    }
+
+    private function interviewJustStarted(Interview $interview): bool
+    {
+        return $interview->running() && $interview->answers()->count() === 1;
     }
 }

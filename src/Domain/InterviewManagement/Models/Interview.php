@@ -151,6 +151,11 @@ class Interview extends Model
                 ->count();
     }
 
+    public function running(): bool
+    {
+        return ! $this->finished();
+    }
+
     public function finished():bool
     {
         return $this->ended_at && $this->status == InterviewStatusEnum::Finished;
