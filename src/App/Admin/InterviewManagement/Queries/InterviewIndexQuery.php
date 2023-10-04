@@ -3,6 +3,7 @@
 namespace App\Admin\InterviewManagement\Queries;
 
 use Domain\InterviewManagement\Models\Interview;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;

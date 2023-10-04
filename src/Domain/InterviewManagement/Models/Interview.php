@@ -153,12 +153,17 @@ class Interview extends Model
 
     public function running(): bool
     {
-        return ! $this->finished();
+        return is_null($this->ended_at);
     }
 
-    public function finished():bool
+    public function ended(): bool
     {
-        return $this->ended_at && $this->status == InterviewStatusEnum::Finished;
+        return ! $this->running();
+    }
+
+    public function passed():bool
+    {
+        return $this->status == InterviewStatusEnum::Passed;
     }
 
     public function statusIs(InterviewStatusEnum $status): bool

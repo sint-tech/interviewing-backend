@@ -51,7 +51,7 @@ class InvitationDto extends Data
             ],
             'interview_template_id' => ['required','integer',Rule::exists('interview_templates','id')->withoutTrashed()],
             'expired_at'    => ['nullable','date','date_format:Y-m-d H:i','after:should_be_invited_at'],
-            'should_be_invited_at'  => ['required','date','after:now']
+            'should_be_invited_at'  => ['required','date_format:Y-m-d H:i','date','after:now']
         ];
     }
 }

@@ -3,7 +3,10 @@
 namespace Domain\InterviewManagement\Listeners;
 
 use Domain\InterviewManagement\Actions\GenerateInterviewReport;
+use Domain\InterviewManagement\Actions\SetInterviewStatusByScoreAction;
 use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
+use Domain\InterviewManagement\Models\Interview;
+use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class GenerateInterviewReportListener
@@ -15,7 +18,14 @@ class GenerateInterviewReportListener
 
     public function handle(InterviewAllQuestionsAnswered $event)
     {
-        app(GenerateInterviewReport::class)
-            ->execute($event->interview);
+        $this->generateInterviewReport($event->interview);
+
+        app(SetInterviewStatusByScoreAction::class)->execute($event->interview->refresh());
+    }
+
+    private function generateInterviewReport(Interview $interview): InterviewReportValueObject
+    {
+        return app(GenerateInterviewReport::class)
+            ->execute($interview);
     }
 }

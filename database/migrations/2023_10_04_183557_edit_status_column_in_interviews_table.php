@@ -15,8 +15,11 @@ return new class extends Migration
         Schema::table('interviews', function (Blueprint $table) {
             DB::statement("UPDATE interviews SET status = 'started' WHERE status NOT IN ('started','withdrew','canceled','accepted','finished','rejected')");
 
-            DB::statement("ALTER TABLE interviews MODIFY status ENUM('started','withdrew','canceled','accepted','finished','rejected')  DEFAULT 'started'");
+            DB::statement("ALTER TABLE interviews MODIFY status ENUM('started','withdrew','canceled','accepted','finished','passed','rejected')  DEFAULT 'started'");
 
+            DB::statement("UPDATE interviews SET status = 'passed' WHERE status = 'finished'");
+
+            DB::statement("ALTER TABLE interviews MODIFY status ENUM('started','withdrew','canceled','accepted','passed','rejected')  DEFAULT 'started'");
         });
     }
 

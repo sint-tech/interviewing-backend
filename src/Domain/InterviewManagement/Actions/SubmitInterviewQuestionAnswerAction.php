@@ -27,9 +27,9 @@ class SubmitInterviewQuestionAnswerAction
         }
 
         if ($this->interviewStillRunning($answer->interview) && $this->interviewShouldBeEnd($answer->interview)) {
-            (new FinishInterviewAction())->execute($answer->interview);
+            $answer->interview->update(['ended_at' => now()]);
 
-            event(new InterviewAllQuestionsAnswered($answer->interview));
+            event(new InterviewAllQuestionsAnswered($answer->interview->refresh()));
         }
 
         return $answer;

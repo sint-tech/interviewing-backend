@@ -12,11 +12,10 @@ enum InterviewStatusEnum: string
     //interview had been canceled
     case Canceled = 'canceled';
 
+    case Passed = 'passed';
+
     //interview's candidate accepted
     case Accepted = 'accepted';
-
-    //interview finished but still in hr selection process
-    case Finished = 'finished';
 
     //interview's candidate rejected
     case Rejected = 'rejected';
