@@ -25,7 +25,8 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
 
     public function __construct(
         protected string $filePath,
-        protected int $interview_template_id
+        protected int $interview_template_id,
+        protected \DateTime $should_be_invited_at
     )
     {
         //
@@ -64,6 +65,8 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
         );
 
         $data['interview_template_id'] = $this->interview_template_id;
+
+        $data['should_be_invited_at'] = $this->should_be_invited_at;
 
         return $data;
     }
