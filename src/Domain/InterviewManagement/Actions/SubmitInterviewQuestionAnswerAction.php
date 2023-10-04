@@ -27,7 +27,7 @@ class SubmitInterviewQuestionAnswerAction
         }
 
         if ($this->interviewStillRunning($answer->interview) && $this->interviewShouldBeEnd($answer->interview)) {
-            (new EndInterviewAction())->execute($answer->interview);
+            (new FinishInterviewAction())->execute($answer->interview);
 
             event(new InterviewAllQuestionsAnswered($answer->interview));
         }
