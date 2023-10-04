@@ -14,7 +14,7 @@ class ChangeInterviewStatusController extends Controller
     {
         //todo create action class
         if ($interview->statusIs(InterviewStatusEnum::Finished)) {
-            throw new \LogicException('you can not change interview status as its already finished!');
+            throw new \LogicException('you can not change interview status as its already had been ended!');
         }
 
         $interview->update([

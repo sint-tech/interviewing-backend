@@ -4,18 +4,22 @@ namespace Domain\InterviewManagement\Enums;
 
 enum InterviewStatusEnum: string
 {
-    case NotStarted = 'not_started';
-
     case Started = 'started';
 
+    //interview's candidate didnt complete the interview, todo: create worker for convert status to withdrew
     case Withdrew = 'withdrew';
 
+    //interview had been canceled
     case Canceled = 'canceled';
 
+    //interview's candidate accepted
     case Accepted = 'accepted';
 
+    //interview finished but still in hr selection process
     case Finished = 'finished';
 
+    //interview's candidate rejected
+    case Rejected = 'rejected';
 
     /**
      * get status refers as this interview had ended and can't be revisited
@@ -24,9 +28,10 @@ enum InterviewStatusEnum: string
     public static function endedStatuses(): array
     {
         return [
+            InterviewStatusEnum::Accepted,
+            InterviewStatusEnum::Rejected,
             InterviewStatusEnum::Withdrew,
-            InterviewStatusEnum::Finished,
-            InterviewStatusEnum::Canceled
+            InterviewStatusEnum::Canceled,
         ];
     }
 }
