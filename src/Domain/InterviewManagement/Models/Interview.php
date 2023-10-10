@@ -171,6 +171,11 @@ class Interview extends Model
         return $this->status === $status;
     }
 
+    public function statusInFinalStage(): bool
+    {
+        return in_array($this->status,InterviewStatusEnum::endedStatuses());
+    }
+
     public function newEloquentBuilder($query)
     {
         return new InterviewEloquentBuilder($query);

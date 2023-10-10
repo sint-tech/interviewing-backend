@@ -28,10 +28,6 @@ class InterviewTemplateReportsController extends Controller
                     ->selectRaw("SUM('score') as avg_score")
             ])
             ->orderByDesc('avg_score')
-            ->when(request()->filled('filter.status') && request()->enum('filter.status', InterviewStatusEnum::class) == InterviewStatusEnum::Accepted,
-                fn(Builder $builder) => $builder->take(5)
-            )
-            ->when(request()->isNotFilled('filter.status'),fn(Builder $builder) => $builder->skip(5))
             ->with('candidate')
             ->paginate()
             ->through(fn(Interview $interview) => new InterviewReportValueObject($interview));

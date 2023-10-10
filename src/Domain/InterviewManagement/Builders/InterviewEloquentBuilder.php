@@ -13,12 +13,20 @@ class InterviewEloquentBuilder extends Builder
         return $this->where('status','=',$status->value,$boolean);
     }
 
-    public function whereStatusFinished(string $boolean = 'and'): self
+    public function whereStatusIn(array $statuses,string $boolean = 'and'): self
     {
-        return $this->whereStatus(InterviewStatusEnum::Finished,'=',$boolean);
+        $values = [];
+
+        foreach ($statuses as $status) {
+            throw_unless($status instanceof InterviewStatusEnum);
+
+            $values[] = $status->value;
+        }
+
+        return $this->whereIn('status',$values);
     }
 
-    public function whereStatusInEndedStatuses(string $boolean = 'and'): self
+    public function whereStatusInFinalStage(string $boolean = 'and'): self
     {
         return $this->whereIn('status',InterviewStatusEnum::endedStatuses());
     }
