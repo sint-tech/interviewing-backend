@@ -38,4 +38,9 @@ class Invitation extends Model
     {
         return $this->belongsTo(InterviewTemplate::class,'interview_template_id');
     }
+
+    public function invitationSent(): bool
+    {
+        return ! is_null($this->last_invited_at);
+    }
 }
