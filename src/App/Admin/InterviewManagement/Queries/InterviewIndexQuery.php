@@ -7,6 +7,7 @@ use Domain\InterviewManagement\Models\Interview;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -21,7 +22,7 @@ class InterviewIndexQuery extends QueryBuilder
         $this->allowedFilters([
             AllowedFilter::exact('status'),
             AllowedFilter::callback('top_five',
-                fn(Builder $builder,$value) => $builder->whereStatusIn([InterviewStatusEnum::Accepted,InterviewStatusEnum::Passed])->take(5)
+                fn(Builder $builder,$value) => $builder->orderByAvgScoreDesc()->whereStatus(InterviewStatusEnum::Passed)->take(5)
             )
         ]);
     }

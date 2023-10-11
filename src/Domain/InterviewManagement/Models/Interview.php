@@ -95,8 +95,8 @@ class Interview extends Model
             'id'
         )
             ->addSelect([
-                'advice_statement' => (clone $base_recommendation_query)->whereTypeIsAdvice(),
-                'impact_statement' => (clone $base_recommendation_query)->whereTypeIsImpact(),
+                'advice_statement' => $base_recommendation_query->clone()->whereTypeIsAdvice(),
+                'impact_statement' => $base_recommendation_query->clone()->whereTypeIsImpact(),
             ])
             ->withCasts([
                 'advice_statement' => 'string',
@@ -163,7 +163,7 @@ class Interview extends Model
 
     public function passed():bool
     {
-        return $this->status == InterviewStatusEnum::Passed;
+        return $this->statusIs(InterviewStatusEnum::Passed);
     }
 
     public function statusIs(InterviewStatusEnum $status): bool

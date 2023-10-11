@@ -19,7 +19,7 @@ return new class extends Migration
 
             DB::statement("UPDATE interviews SET status = 'passed' WHERE status = 'finished'");
 
-            DB::statement("ALTER TABLE interviews MODIFY status ENUM('started','withdrew','canceled','accepted','passed','rejected')  DEFAULT 'started'");
+            DB::statement("ALTER TABLE interviews MODIFY status ENUM('started','withdrew','canceled','passed','rejected')  DEFAULT 'started'");
         });
     }
 
@@ -29,6 +29,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('interviews', function (Blueprint $table) {
+            DB::statement("UPDATE interviews SET status = 'passed' WHERE status = 'accepted'");
+
             DB::statement("ALTER TABLE interviews MODIFY status ENUM('not_started','started','withdrew','canceled','accepted','finished') DEFAULT 'started'");
         });
     }

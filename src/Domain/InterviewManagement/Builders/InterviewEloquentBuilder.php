@@ -3,7 +3,9 @@
 namespace Domain\InterviewManagement\Builders;
 
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
+use Domain\InterviewManagement\Models\Answer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class InterviewEloquentBuilder extends Builder
@@ -34,5 +36,28 @@ class InterviewEloquentBuilder extends Builder
     public function whereIsEnded(bool $ended = true,string $boolean = 'and'): self
     {
         return $this->whereNull('ended_at',$boolean, $ended);
+    }
+
+    public function orderByAvgScore(string $direction = 'ASC'): self
+    {
+        $answers_table = (new Answer())->getTable();
+
+        $this->orderBy(Answer::query()
+            ->select(DB::raw('AVG(score)'))
+            ->whereColumn(
+                "$answers_table.interview_id",
+                '=',
+                "{$this->getModel()->getTable()}.id"
+            )
+            ->groupBy('interview_id'),
+            $direction
+        );
+
+        return $this;
+    }
+
+    public function orderByAvgScoreDesc(): self
+    {
+        return $this->orderByAvgScore('DESC');
     }
 }

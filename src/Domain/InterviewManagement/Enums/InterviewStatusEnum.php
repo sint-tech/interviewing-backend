@@ -12,10 +12,8 @@ enum InterviewStatusEnum: string
     //interview had been canceled
     case Canceled = 'canceled';
 
+    //current user had passed the avg %50
     case Passed = 'passed';
-
-    //interview's candidate accepted
-    case Accepted = 'accepted';
 
     //interview's candidate rejected
     case Rejected = 'rejected';
