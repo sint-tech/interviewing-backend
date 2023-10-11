@@ -2,12 +2,9 @@
 
 namespace App\Admin\InterviewManagement\Queries;
 
-use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Models\Interview;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -22,5 +19,20 @@ class InterviewIndexQuery extends QueryBuilder
         $this->allowedFilters([
             AllowedFilter::exact('status')->ignore('accepted')
         ]);
+
+        $this->handleStatusFilter();
+    }
+
+    protected function handleStatusFilter(): self
+    {
+        if ($this->request->input('filter.status') === 'accepted') {
+            $this->subject->whereAccepted();
+        }
+
+        if ($this->request->input('filter.status') == 'passed') {
+            $this->subject->orderByAvgScoreDesc()->whereNotIn('id',Interview::query()->whereAccepted()->pluck('id'));
+        }
+
+        return $this;
     }
 }
