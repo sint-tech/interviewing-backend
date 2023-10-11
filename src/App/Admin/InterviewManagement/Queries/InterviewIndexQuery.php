@@ -20,10 +20,7 @@ class InterviewIndexQuery extends QueryBuilder
         parent::__construct($subject, $request);
 
         $this->allowedFilters([
-            AllowedFilter::exact('status'),
-            AllowedFilter::callback('top_five',
-                fn(Builder $builder,$value) => $builder->orderByAvgScoreDesc()->whereStatus(InterviewStatusEnum::Passed)->take(5)
-            )
+            AllowedFilter::exact('status')->ignore('accepted')
         ]);
     }
 }

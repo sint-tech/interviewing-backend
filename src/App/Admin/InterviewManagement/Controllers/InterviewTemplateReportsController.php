@@ -22,6 +22,14 @@ class InterviewTemplateReportsController extends Controller
             ->setQuery($query->toBase())
             ->withWhereHas('defaultLastReport')
             ->with('candidate')
+            ->when(
+                request()->input('filter.status') == 'accepted',
+                fn(Builder $builder) => $builder->whereAccepted()
+            )
+            ->when(
+                request()->input('filter.status') == 'passed',
+                fn(Builder $builder) => $builder->orderByAvgScoreDesc()->whereNotIn('id',Interview::query()->whereAccepted()->pluck('id'))
+            )
             ->paginate()
             ->through(fn(Interview $interview) => new InterviewReportValueObject($interview));
 

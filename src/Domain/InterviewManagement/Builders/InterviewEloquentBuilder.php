@@ -5,6 +5,7 @@ namespace Domain\InterviewManagement\Builders;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Models\Answer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -59,5 +60,18 @@ class InterviewEloquentBuilder extends Builder
     public function orderByAvgScoreDesc(): self
     {
         return $this->orderByAvgScore('DESC');
+    }
+
+    public function whereAccepted():self
+    {
+        return $this->orderByAvgScore()
+            ->whereStatus(InterviewStatusEnum::Passed)
+            ->limit(5);
+    }
+
+    public function getAccepted(): Collection
+    {
+        return $this->orderByAvgScoreDesc()
+            ->whereStatus(InterviewStatusEnum::Passed)->limit(5)->get();
     }
 }
