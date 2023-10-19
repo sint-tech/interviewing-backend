@@ -15,9 +15,9 @@ class OrganizationStoreRequest extends FormRequest
             'manager' => ['required', 'array'],
             'manager.first_name' => ['required', 'string', 'min:3', 'max:1000'],
             'manager.last_name' => ['required', 'string', 'min:3', 'max:1000'],
-            'manager.email' => ['required', Rule::unique('employees', 'email')],
+            'manager.email' => ['required', Rule::unique('organization_employees', 'email')],
             'manager.password' => ['required', 'string', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
-            'logo'          => ['filled','image'],
+            'logo' => ['filled', 'image'],
         ];
     }
 }

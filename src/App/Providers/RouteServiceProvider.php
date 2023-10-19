@@ -27,7 +27,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::middleware('api')
+            Route::middleware(['api', 'auth:api-candidate'])
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
@@ -38,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::prefix('organization-api')
                 ->name('organization_api.')
-                ->middleware(['api','auth:api'])
+                ->middleware(['api', 'auth:api-employee'])
                 ->group(base_path('routes/organization.php'));
 
             Route::middleware('web')

@@ -9,7 +9,6 @@ use App\Admin\Organization\Requests\OrganizationStoreRequest;
 use App\Admin\Organization\Resources\OrganizationResource;
 use Domain\Organization\Actions\CreateOrganizationAction;
 use Domain\Organization\Actions\DeleteOrganizationAction;
-use Domain\Organization\Actions\UploadOrganizationLogoAction;
 use Domain\Organization\Models\Organization;
 use Support\Controllers\Controller;
 
@@ -25,12 +24,12 @@ class OrganizationController extends Controller
         return OrganizationResource::make(Organization::query()->findOrFail($organization));
     }
 
-    public function store(OrganizationStoreRequest $request): OrganizationResource
+    public function store(OrganizationStoreRequest $request, CreateOrganizationAction $createOrganizationAction): OrganizationResource
     {
-        $organization = (new CreateOrganizationAction(
+        $organization = $createOrganizationAction->execute(
             OrganizationDataFactory::fromRequest($request),
             OrganizationManagerDataFactory::fromRequest($request),
-        ))->execute();
+        );
 
         return OrganizationResource::make($organization);
     }

@@ -4,6 +4,7 @@ namespace Support\Middlewares;
 
 use App\Providers\RouteServiceProvider;
 use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,8 @@ class RedirectIfAuthenticated
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     *
+     * @throws AuthorizationException
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
@@ -21,6 +24,10 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                if ($request->wantsJson()) {
+                    throw new AuthorizationException();
+                }
+
                 return redirect(RouteServiceProvider::HOME);
             }
         }

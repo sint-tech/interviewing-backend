@@ -46,15 +46,17 @@ return [
             'provider' => 'users',
         ],
 
+        /** @deprecated **/
         'api-candidate' => [
             'driver' => 'passport',
             'provider' => 'candidates',
         ],
 
-        'api-employee'  => [
-            'driver'    => 'passport',
-            'provider'  => 'organization_employee'
-        ]
+        /** @deprecated **/
+        'api-employee' => [
+            'driver' => 'passport',
+            'provider' => 'organization_employee',
+        ],
     ],
 
     /*
@@ -86,9 +88,9 @@ return [
         ],
 
         'organization_employee' => [
-            'driver'    => 'eloquent',
-            'model' => \Domain\Organization\Models\Employee::class
-        ]
+            'driver' => 'eloquent',
+            'model' => \Domain\Organization\Models\Employee::class,
+        ],
     ],
 
     /*

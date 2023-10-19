@@ -3,12 +3,16 @@
 namespace Domain\Organization\Models;
 
 use Database\Factories\EmployeeFactory;
+use Domain\Organization\Builders\EmployeeBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 
+/**
+ * @property Organization $organization
+ */
 class Employee extends Authenticatable
 {
     use HasFactory,SoftDeletes,HasApiTokens;
@@ -20,11 +24,13 @@ class Employee extends Authenticatable
         'password',
         'is_organization_manager',
         'organization_id',
-        'manager_id',
     ];
+
+    protected $table = 'organization_employees';
 
     protected $casts = [
         'is_organization_manager' => 'boolean',
+        'password' => 'hashed',
     ];
 
     public function organization(): BelongsTo
@@ -35,5 +41,10 @@ class Employee extends Authenticatable
     protected static function newFactory()
     {
         return new EmployeeFactory();
+    }
+
+    public function newEloquentBuilder($query)
+    {
+        return new EmployeeBuilder($query);
     }
 }
