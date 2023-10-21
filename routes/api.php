@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| candidate API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
+| Here is where you can register API routes for your candidate application. These
 | routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| be assigned to the "api","auth:api-candidate" middlewares group.
 |
 */
 
@@ -46,8 +46,11 @@ Route::middleware('auth:api-candidate')->group(function () {
         });
 });
 
-Route::apiResource('job-titles', JobTitleController::class)
-    ->only(['index', 'show']);
+Route::withoutMiddleware('auth:api-candidate')
+    ->group(function () {
+        Route::apiResource('job-titles', JobTitleController::class)
+            ->only(['index', 'show']);
 
-Route::apiResource('registration-reasons', RegistrationReasonsController::class)
-    ->only(['index', 'show']);
+        Route::apiResource('registration-reasons', RegistrationReasonsController::class)
+            ->only(['index', 'show']);
+});

@@ -9,24 +9,25 @@ use Domain\Organization\Actions\CreateEmployeeAction;
 use Domain\Organization\DataTransferObjects\EmployeeData;
 use Domain\Organization\Models\Employee;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Arr;
 use Support\Controllers\Controller;
 
 class EmployeeController extends Controller
 {
-    public function index(IndexEmployeesQuery $indexEmployeesQuery)
+    public function index(IndexEmployeesQuery $indexEmployeesQuery): AnonymousResourceCollection
     {
         return EmployeeResource::collection(
             $indexEmployeesQuery->paginate(pagination_per_page())
         );
     }
 
-    public function show(int $employee)
+    public function show(int $employee): EmployeeResource
     {
         return EmployeeResource::make(Employee::query()->forAuth()->findOrFail($employee));
     }
 
-    public function store(EmployeeStoreRequest $request, CreateEmployeeAction $createEmployeeAction)
+    public function store(EmployeeStoreRequest $request, CreateEmployeeAction $createEmployeeAction): EmployeeResource
     {
         $dto = EmployeeData::from(Arr::except(
             $request->validated() +

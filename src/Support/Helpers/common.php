@@ -47,7 +47,6 @@ if (! function_exists('table_name')) {
      */
     function table_name(string|Model|Builder $object): string
     {
-
         if ($object instanceof Model) {
             return $object->getTable();
         } elseif ($object instanceof Builder) {

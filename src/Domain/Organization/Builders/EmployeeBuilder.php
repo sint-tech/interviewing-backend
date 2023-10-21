@@ -9,12 +9,14 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeBuilder extends Builder
 {
-    public function forUser(Authenticatable $authenticatable)
+    /**
+     * @throws \Exception
+     */
+    public function forUser(Authenticatable $authenticated)
     {
-        if ($authenticatable instanceof Employee) {
-
-            return $this->where('organization_id', $authenticatable->organization_id);
-        } elseif ($authenticatable instanceof User) {
+        if ($authenticated instanceof Employee) {
+            return $this->where('organization_id', $authenticated->organization_id);
+        } elseif ($authenticated instanceof User) {
             return $this;
         }
 
