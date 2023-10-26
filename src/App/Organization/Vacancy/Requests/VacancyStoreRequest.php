@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Organization\JobOpportunity\Requests;
+namespace App\Organization\Vacancy\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class JobOpportunityStoreRequest extends FormRequest
+class VacancyStoreRequest extends FormRequest
 {
     public function rules(): array
     {

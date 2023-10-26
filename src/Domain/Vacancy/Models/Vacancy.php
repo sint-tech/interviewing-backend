@@ -5,8 +5,9 @@ namespace Domain\Vacancy\Models;
 use Database\Factories\JobOpportunityFactory;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
-use Domain\Vacancy\Builders\JobOpportunityBuilder;
+use Domain\Vacancy\Builders\VacancyBuilder;
 use Domain\Organization\Models\Organization;
+use Domain\Vacancy\Scopes\ForAuthUserScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +19,7 @@ use Support\Traits\Model\HasOwner;
 /**
  * @property Organization|null $organization
  */
-class JobOpportunity extends Model
+class Vacancy extends Model
 {
     use HasFactory,HasOwner,HasCreator,SoftDeletes;
 
@@ -35,7 +36,7 @@ class JobOpportunity extends Model
         'organization_id'
     ];
 
-    protected $table = 'Job_opportunities';
+    protected $table = 'vacancies';
 
     protected $casts = [
         'started_at' => 'datetime',
@@ -57,13 +58,18 @@ class JobOpportunity extends Model
         return $this->hasMany(Interview::class,'interview_id');
     }
 
-    public function newEloquentBuilder($query):JobOpportunityBuilder
+    public function newEloquentBuilder($query):VacancyBuilder
     {
-        return new JobOpportunityBuilder($query);
+        return new VacancyBuilder($query);
     }
 
     protected static function newFactory(): JobOpportunityFactory
     {
         return new JobOpportunityFactory();
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new ForAuthUserScope());
     }
 }

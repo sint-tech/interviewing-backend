@@ -11,7 +11,7 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 use Support\Traits\DTO\HasCreator;
 
-class JobOpportunityDto extends Data
+class VacancyDto extends Data
 {
     use HasCreator;
 

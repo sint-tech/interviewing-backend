@@ -7,15 +7,15 @@ use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Domain\Vacancy\Models\JobOpportunity;
+use Domain\Vacancy\Models\Vacancy;
 
 /**
- * @extends Factory<JobOpportunity>
+ * @extends Factory<Vacancy>
  */
 class JobOpportunityFactory extends Factory
 {
 
-    protected $model = JobOpportunity::class;
+    protected $model = Vacancy::class;
 
     public function definition()
     {

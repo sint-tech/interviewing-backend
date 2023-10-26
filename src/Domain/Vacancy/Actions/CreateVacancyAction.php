@@ -2,14 +2,14 @@
 
 namespace Domain\Vacancy\Actions;
 
-use Domain\Vacancy\DataTransferObjects\JobOpportunityDto;
-use Domain\Vacancy\Models\JobOpportunity;
+use Domain\Vacancy\DataTransferObjects\VacancyDto;
+use Domain\Vacancy\Models\Vacancy;
 
 class CreateVacancyAction
 {
-    public function execute(JobOpportunityDto $jobOpportunityDto): JobOpportunity
+    public function execute(VacancyDto $jobOpportunityDto): Vacancy
     {
-        $jobOpportunity = new JobOpportunity($jobOpportunityDto->toArray());
+        $jobOpportunity = new Vacancy($jobOpportunityDto->toArray());
 
         $jobOpportunity->save();
 
