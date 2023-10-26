@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature\Organization\Vacancy;
+namespace Tests\Feature\App\Organization\Vacancy;
 
-use Illuminate\Support\Carbon;
 use Domain\InterviewManagement\Models\InterviewTemplate;
-use Domain\Vacancy\Models\Vacancy;
 use Domain\Organization\Models\Employee;
+use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;

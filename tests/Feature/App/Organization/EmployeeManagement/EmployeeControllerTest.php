@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Organization\EmployeeManagement;
+namespace Tests\Feature\App\Organization\EmployeeManagement;
 
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;

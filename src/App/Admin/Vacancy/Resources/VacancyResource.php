@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Admin\JobOpportunity\Resources;
+namespace App\Admin\Vacancy\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class JobOpportunityResource extends JsonResource
+class VacancyResource extends JsonResource
 {
     public function toArray($request)
     {

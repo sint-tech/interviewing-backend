@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Optional;
 use Illuminate\Validation\Rules\Exists;
 use Spatie\LaravelData\Attributes\Validation\Rule;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 use Support\Traits\DTO\HasCreator;
@@ -18,12 +20,16 @@ class VacancyDto extends Data
     public function __construct(
         public readonly string $title,
         public readonly string|Optional|null $description = null,
+
+        #[WithCast(DateTimeInterfaceCast::class,format: 'Y-m-d H:i')]
         public readonly null|\DateTime $started_at,
+        #[WithCast(DateTimeInterfaceCast::class,format: 'Y-m-d H:i')]
         public readonly null|\DateTime $ended_at,
+
         public readonly int $max_reconnection_tries = 1,
         public readonly int $open_positions = 1,
         #[Rule([new Exists('organizations','id')])]
-        public readonly int $organization_id,
+        public readonly int|null $organization_id = null,
     )
     {
 

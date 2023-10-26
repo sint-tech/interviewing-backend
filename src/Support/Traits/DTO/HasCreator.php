@@ -24,16 +24,13 @@ trait HasCreator
             return $this;
         }
 
-        $data = func_get_args();
-
-        if (count($data) < 2) {
+        if (count($data = func_get_args()) < 2) {
             throw new Exception('2 variables expected to be passed creator_id and creator_type');
         }
 
-        $this->additional([
-            'creator_id' => $data[0],
-            'creator_type' => $data[1]
-        ]);
+        [$creator_id,$creator_type] = $data;
+
+        $this->additional(compact($creator_id,$creator_type));
 
         return $this;
     }
