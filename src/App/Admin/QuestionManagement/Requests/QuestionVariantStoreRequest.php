@@ -27,8 +27,8 @@ class QuestionVariantStoreRequest extends FormRequest
                     $this->input('owner.model_type') == 'admin' ? 'users' : null)
                 ),
             ],
-            'ai_model_ids' => ['filled','array','min:1'],
-            'ai_model_ids.*'   => ['integer',Rule::exists('ai_models','id')->where('status','active')]
+            'ai_model_ids' => ['filled', 'array', 'min:1'],
+            'ai_model_ids.*' => ['integer', Rule::exists('ai_models', 'id')->where('status', 'active')],
         ];
     }
 }

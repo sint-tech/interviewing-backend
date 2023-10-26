@@ -22,7 +22,7 @@ class QuestionIndexQuery extends QueryBuilder
 
         $this->defaultSort('-updated_at');
 
-        $this->allowedSorts('id','created_at','updated_at');
+        $this->allowedSorts('id', 'created_at', 'updated_at');
 
         $this->allowedIncludes(
             AllowedInclude::relationship('questionCluster'),

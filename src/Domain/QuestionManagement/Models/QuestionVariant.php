@@ -97,7 +97,7 @@ class QuestionVariant extends Model
         );
     }
 
-    public function aiModels():BelongsToMany
+    public function aiModels(): BelongsToMany
     {
         return $this
             ->belongsToMany(

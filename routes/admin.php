@@ -54,4 +54,4 @@ Route::apiResource('vacancy', VacancyController::class);
 
 Route::post('invitations/import', ImportInvitationsController::class);
 
-Route::apiResource('ai-models', AIModelController::class)->only('index','show');
+Route::apiResource('ai-models', AIModelController::class)->only('index', 'show');

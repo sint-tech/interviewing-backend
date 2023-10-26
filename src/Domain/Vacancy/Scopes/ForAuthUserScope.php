@@ -12,13 +12,14 @@ class ForAuthUserScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
-     * @param Builder $builder,
-     * @param Vacancy $model
+     *
+     * @param  Builder  $builder,
+     * @param  Vacancy  $model
      */
     public function apply(Builder $builder, Model $model): void
     {
         if (auth()->user() instanceof Employee) {
-            $builder->where('organization_id',auth()->user()->organization_id);
+            $builder->where('organization_id', auth()->user()->organization_id);
         }
     }
 }

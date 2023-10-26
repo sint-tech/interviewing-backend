@@ -9,16 +9,15 @@ use Spatie\LaravelData\Data;
 /** @mixin Data */
 trait HasOwner
 {
-
     /**
      * @throws \Throwable
      */
-    public function WithOwner($creator):self
+    public function WithOwner($creator): self
     {
         if ($creator instanceof Model) {
             $this->additional([
-                'owner_id'  => $creator->getKey(),
-                'owner_type' => $creator::class
+                'owner_id' => $creator->getKey(),
+                'owner_type' => $creator::class,
             ]);
 
             return $this;
@@ -32,7 +31,7 @@ trait HasOwner
 
         $this->additional([
             'owner_id' => $data[0],
-            'owner_type' => $data[1]
+            'owner_type' => $data[1],
         ]);
 
         return $this;

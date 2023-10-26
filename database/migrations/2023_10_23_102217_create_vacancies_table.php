@@ -13,9 +13,9 @@ return new class extends Migration
             $table->string('title');
             $table->longText('description')->nullable();
 
-            $table->foreignId('interview_template_id')->nullable()->constrained('interview_templates','id')->nullOnDelete();
+            $table->foreignId('interview_template_id')->nullable()->constrained('interview_templates', 'id')->nullOnDelete();
             $table->morphs('creator');
-            $table->foreignId('organization_id')->nullable()->constrained('organizations','id')->nullOnDelete();
+            $table->foreignId('organization_id')->nullable()->constrained('organizations', 'id')->nullOnDelete();
 
             $table->integer('max_reconnection_tries')->default(0);
             $table->integer('open_positions');

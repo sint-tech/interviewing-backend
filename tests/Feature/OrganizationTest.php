@@ -6,9 +6,9 @@ use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class OrganizationTest extends TestCase
@@ -69,17 +69,18 @@ class OrganizationTest extends TestCase
                     'email' => 'foo@gmail.com',
                     'password' => 'its@strongPass0word',
                 ],
-                'logo'  => UploadedFile::fake()->image('logo.jpg')
-        ]);
+                'logo' => UploadedFile::fake()->image('logo.jpg'),
+            ]);
 
-        $organization = Organization::query()->where('name','new organization')->latest()->first();
+        $organization = Organization::query()->where('name', 'new organization')->latest()->first();
 
         $response->assertSuccessful();
 
-        $this->assertCount(1,$organization->logos()->get());
+        $this->assertCount(1, $organization->logos()->get());
 
         $this->assertFileExists($organization->logo->getPath());
     }
+
     public function testItShouldDeleteOrganization(): void
     {
         $organization = Organization::factory()

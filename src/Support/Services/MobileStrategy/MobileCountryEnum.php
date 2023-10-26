@@ -2,7 +2,7 @@
 
 namespace Support\Services\MobileStrategy;
 
-enum MobileCountryEnum:string
+enum MobileCountryEnum: string
 {
     case Egypt = 'EG';
 

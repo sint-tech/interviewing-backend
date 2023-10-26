@@ -11,11 +11,11 @@ use Support\Controllers\Controller;
 
 class ScheduleInterviewTemplateDatesController extends Controller
 {
-    public function __invoke(InterviewTemplate $interview_template,ScheduleInterviewTemplateDatesRequest $request): InterviewTemplateResource
+    public function __invoke(InterviewTemplate $interview_template, ScheduleInterviewTemplateDatesRequest $request): InterviewTemplateResource
     {
-        $result = (new ScheduleInterviewTemplateDatesAction($interview_template,InterviewTemplateSettingsDto::from([
-            'started_at'    => $request->date('started_at'),
-            'ended_at'    => $request->date('ended_at'),
+        $result = (new ScheduleInterviewTemplateDatesAction($interview_template, InterviewTemplateSettingsDto::from([
+            'started_at' => $request->date('started_at'),
+            'ended_at' => $request->date('ended_at'),
         ])))->execute();
 
         return InterviewTemplateResource::make($result);

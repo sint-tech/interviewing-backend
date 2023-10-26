@@ -10,8 +10,8 @@ class ScheduleInterviewTemplateDatesAction
     public function __construct(
         public InterviewTemplate $interviewTemplate,
         public readonly InterviewTemplateSettingsDto $interviewTemplateSettingsDto
-    )
-    {}
+    ) {
+    }
 
     public function execute(): InterviewTemplate
     {

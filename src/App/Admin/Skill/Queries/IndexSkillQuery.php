@@ -24,7 +24,7 @@ class IndexSkillQuery extends QueryBuilder
         $this->defaultSorts('-updated_at');
 
         $this->allowedSorts(
-            AllowedSort::field('created_at','id')
+            AllowedSort::field('created_at', 'id')
         );
 
         $this->allowedIncludes(

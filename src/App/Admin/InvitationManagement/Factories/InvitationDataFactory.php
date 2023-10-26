@@ -14,7 +14,7 @@ class InvitationDataFactory
         if ($request instanceof InvitationStoreRequest) {
             return $this->fromStoreRequest($request);
         }
-        throw new InvalidArgumentException('request class: '. $request::class .' not supported!');
+        throw new InvalidArgumentException('request class: '.$request::class.' not supported!');
     }
 
     protected function fromStoreRequest(InvitationStoreRequest $request): InvitationDto
@@ -23,7 +23,7 @@ class InvitationDataFactory
 
         $request_data['dirty_mobile_number'] = $request->validated('mobile_number');
 
-        $request['expired_at']  = $request->date('expired_at');
+        $request['expired_at'] = $request->date('expired_at');
 
         return InvitationDto::from($request_data);
     }

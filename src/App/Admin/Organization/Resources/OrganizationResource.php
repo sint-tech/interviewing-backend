@@ -14,9 +14,9 @@ class OrganizationResource extends JsonResource
             'name' => (string) $this->name,
             'created_at' => (string) $this->created_at->format('Y-m-d'),
             'deleted_at' => $this->when(! is_null($this->deleted_at), (string) $this->deleted_at?->format('Y-m-d H:i')),
-//            'employees' => EmployeeResource::collection($this->whenLoaded('employees')),
-//            'current_manager' => EmployeeResource::make($this->whenLoaded('oldestManager')),
-            'logo'      => $this->whenLoaded('logo',$this->logo?->getFullUrl())
+            //            'employees' => EmployeeResource::collection($this->whenLoaded('employees')),
+            //            'current_manager' => EmployeeResource::make($this->whenLoaded('oldestManager')),
+            'logo' => $this->whenLoaded('logo', $this->logo?->getFullUrl()),
         ];
     }
 }

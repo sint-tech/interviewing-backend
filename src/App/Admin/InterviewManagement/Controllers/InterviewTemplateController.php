@@ -4,8 +4,8 @@ namespace App\Admin\InterviewManagement\Controllers;
 
 use App\Admin\InterviewManagement\Factories\InterviewTemplateDataFactory;
 use App\Admin\InterviewManagement\Queries\InterviewTemplateIndexQuery;
-use App\Admin\InterviewManagement\Requests\InterviewTemplateUpdateRequest;
 use App\Admin\InterviewManagement\Requests\InterviewTemplateStoreRequest;
+use App\Admin\InterviewManagement\Requests\InterviewTemplateUpdateRequest;
 use App\Admin\InterviewManagement\Resources\InterviewTemplateResource;
 use Domain\InterviewManagement\Actions\CreateInterviewTemplateAction;
 use Domain\InterviewManagement\Actions\UpdateInterviewTemplateAction;
@@ -18,7 +18,7 @@ class InterviewTemplateController extends Controller
     {
         return InterviewTemplateResource::collection(
             $query->paginate(
-                request()->integer('per_page',30)
+                request()->integer('per_page', 30)
             )
         );
     }
@@ -30,7 +30,7 @@ class InterviewTemplateController extends Controller
         );
     }
 
-    public function store(InterviewTemplateStoreRequest $request,InterviewTemplateDataFactory $interviewTemplateDataFactory): InterviewTemplateResource
+    public function store(InterviewTemplateStoreRequest $request, InterviewTemplateDataFactory $interviewTemplateDataFactory): InterviewTemplateResource
     {
         $interviewTemplate = (new CreateInterviewTemplateAction(
             $interviewTemplateDataFactory->fromRequest($request))
@@ -43,12 +43,11 @@ class InterviewTemplateController extends Controller
         InterviewTemplate $interview_template,
         InterviewTemplateUpdateRequest $request,
         UpdateInterviewTemplateAction $updateInterviewTemplateAction
-    ):InterviewTemplateResource
-    {
+    ): InterviewTemplateResource {
         $dto = (new InterviewTemplateDataFactory)->fromRequest($request);
 
         return InterviewTemplateResource::make(
-            $updateInterviewTemplateAction->execute($interview_template,$dto)
+            $updateInterviewTemplateAction->execute($interview_template, $dto)
         );
     }
 

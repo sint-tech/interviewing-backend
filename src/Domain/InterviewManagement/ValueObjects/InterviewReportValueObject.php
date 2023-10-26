@@ -5,12 +5,10 @@ namespace Domain\InterviewManagement\ValueObjects;
 use App\Candidate\InterviewManagement\Exceptions\InterviewNotFinishedException;
 use Carbon\Carbon;
 use Domain\Candidate\Models\Candidate;
-use Domain\InterviewManagement\Actions\GenerateInterviewReport;
 use Domain\InterviewManagement\Models\Interview;
 use Illuminate\Contracts\Support\Arrayable;
-use LogicException;
 
-class InterviewReportValueObject implements Arrayable//todo rename the value object to DefaultInterviewReportForCandidateValueObject
+class InterviewReportValueObject implements Arrayable //todo rename the value object to DefaultInterviewReportForCandidateValueObject
 {
     public readonly Candidate $candidate;
 
@@ -50,9 +48,8 @@ class InterviewReportValueObject implements Arrayable//todo rename the value obj
 
     /**
      * get the all public props for the value object as array
-     * @return array
      */
-    public function toArray():array
+    public function toArray(): array
     {
         return get_object_vars($this);
     }

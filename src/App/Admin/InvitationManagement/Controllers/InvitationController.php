@@ -17,7 +17,7 @@ class InvitationController extends Controller
     {
         return InvitationResource::collection(
             $query->paginate(
-                request()->integer('per_page',25)
+                request()->integer('per_page', 25)
             )
         );
     }
@@ -27,14 +27,13 @@ class InvitationController extends Controller
         return InvitationResource::make($invitation);
     }
 
-
-    public function store(InvitationStoreRequest $request,InvitationDataFactory $invitationDataFactory,CreateInvitationAction $createInvitationAction): InvitationResource
+    public function store(InvitationStoreRequest $request, InvitationDataFactory $invitationDataFactory, CreateInvitationAction $createInvitationAction): InvitationResource
     {
         $dto = $invitationDataFactory->fromRequest($request);
 
         return InvitationResource::make(
             $createInvitationAction->execute($dto)->load('interviewTemplate')
-           );
+        );
     }
 
     public function update()

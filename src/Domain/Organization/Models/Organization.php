@@ -14,7 +14,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Support\Interfaces\OwnerInterface;
 
-class Organization extends Model implements OwnerInterface,HasMedia
+class Organization extends Model implements OwnerInterface, HasMedia
 {
     use HasFactory,SoftDeletes,InteractsWithMedia;
 
@@ -22,16 +22,16 @@ class Organization extends Model implements OwnerInterface,HasMedia
         'name',
     ];
 
-    public function logos():MorphMany
+    public function logos(): MorphMany
     {
-        return $this->media()->where('collection_name','logo');
+        return $this->media()->where('collection_name', 'logo');
     }
 
-    public function logo():MorphOne
+    public function logo(): MorphOne
     {
         return $this
             ->morphOne(config('media-library.media_model'), 'model')
-            ->where('collection_name','logo')
+            ->where('collection_name', 'logo')
             ->latestOfMany();
     }
 

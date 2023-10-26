@@ -9,7 +9,6 @@ use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Domain\ReportManagement\Actions\CreateReportAction;
 use Domain\ReportManagement\DataTransferObjects\ReportDto;
 use Domain\ReportManagement\DataTransferObjects\ReportValueDto;
-use Domain\ReportManagement\Models\Report;
 use Illuminate\Support\Arr;
 use OpenAI\Laravel\Facades\OpenAI;
 
@@ -21,8 +20,7 @@ class GenerateInterviewReport
 
     public function execute(
         Interview $interview
-    ): InterviewReportValueObject
-    {
+    ): InterviewReportValueObject {
         if ($this->interviewStillRunning($interview)) {
             throw new InterviewNotFinishedException();
         }
@@ -37,11 +35,11 @@ class GenerateInterviewReport
                 ]),
                 ReportValueDto::from([
                     'key' => 'impacts',
-                    'value' => $this->getRecommendations($interview,'impacts'),
+                    'value' => $this->getRecommendations($interview, 'impacts'),
                 ]),
                 ReportValueDto::from([
                     'key' => 'advices',
-                    'value' => $this->getRecommendations($interview,'advices'),
+                    'value' => $this->getRecommendations($interview, 'advices'),
                 ]),
                 ReportValueDto::from([
                     'key' => 'question_clusters_stats',
@@ -52,7 +50,7 @@ class GenerateInterviewReport
 
         app(CreateReportAction::class)->execute($reportDto);
 
-        return (new InterviewReportValueObject($interview));
+        return new InterviewReportValueObject($interview);
     }
 
     public function interviewStillRunning(Interview $interview): bool
@@ -60,7 +58,7 @@ class GenerateInterviewReport
         return is_null($interview->ended_at);
     }
 
-    private function getRecommendations(Interview $interview,string $recommendation_type = 'advices' | 'impacts'): array
+    private function getRecommendations(Interview $interview, string $recommendation_type = 'advices' | 'impacts'): array
     {
         return match ($recommendation_type) {
             'advices' => $interview->answers->map(fn (Answer $answer) => $answer->advice_statement)->filter()->toArray(),

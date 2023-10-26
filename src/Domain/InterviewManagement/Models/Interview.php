@@ -6,7 +6,6 @@ use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Builders\InterviewEloquentBuilder;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
-use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -43,7 +42,7 @@ class Interview extends Model
     protected $casts = [
         'started_at' => 'datetime',
         'ended_at' => 'datetime',
-        'status'    => InterviewStatusEnum::class
+        'status' => InterviewStatusEnum::class,
     ];
 
     public function interviewTemplate(): BelongsTo
@@ -135,9 +134,9 @@ class Interview extends Model
             ->withTimestamps();
     }
 
-    public function defaultLastReport():MorphOne
+    public function defaultLastReport(): MorphOne
     {
-        return $this->latestReport()->where('name',self::DEFAULT_REPORT_NAME);
+        return $this->latestReport()->where('name', self::DEFAULT_REPORT_NAME);
     }
 
     public function allQuestionsAnswered(): bool
@@ -161,7 +160,7 @@ class Interview extends Model
         return ! $this->running();
     }
 
-    public function passed():bool
+    public function passed(): bool
     {
         return $this->statusIs(InterviewStatusEnum::Passed);
     }
@@ -173,7 +172,7 @@ class Interview extends Model
 
     public function statusInFinalStage(): bool
     {
-        return in_array($this->status,InterviewStatusEnum::endedStatuses());
+        return in_array($this->status, InterviewStatusEnum::endedStatuses());
     }
 
     public function newEloquentBuilder($query)

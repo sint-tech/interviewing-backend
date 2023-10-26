@@ -9,9 +9,9 @@ class InterviewResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'    => (int) $this->getKey(),
-            'status'    => $this->status,
-            'candidate' =>  InterviewCandidateResource::make($this->whenLoaded('candidate')),
+            'id' => (int) $this->getKey(),
+            'status' => $this->status,
+            'candidate' => InterviewCandidateResource::make($this->whenLoaded('candidate')),
         ];
     }
 }

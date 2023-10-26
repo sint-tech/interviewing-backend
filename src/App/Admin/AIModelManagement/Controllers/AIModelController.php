@@ -11,7 +11,7 @@ class AIModelController extends Controller
 {
     public function index(IndexAIModelQuery $query)
     {
-        return AIModelResource::collection($query->paginate(request()->integer('per_page',25)));
+        return AIModelResource::collection($query->paginate(request()->integer('per_page', 25)));
     }
 
     public function show(AIModel $ai_model)

@@ -24,6 +24,6 @@ class Skill extends Model
 
     public function questionClusters(): BelongsToMany
     {
-        return $this->belongsToMany(QuestionCluster::class,'question_cluster_skill');
+        return $this->belongsToMany(QuestionCluster::class, 'question_cluster_skill');
     }
 }

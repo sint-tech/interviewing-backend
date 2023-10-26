@@ -7,7 +7,7 @@ use Domain\Invitation\Models\Invitation;
 
 class CreateInvitationAction
 {
-    public function execute(InvitationDto $invitationDto):Invitation
+    public function execute(InvitationDto $invitationDto): Invitation
     {
         $invitation = new Invitation($invitationDto->toArray());
 

@@ -21,8 +21,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         InterviewAllQuestionsAnswered::class => [
-            GenerateInterviewReportListener::class
-        ]
+            GenerateInterviewReportListener::class,
+        ],
     ];
 
     /**

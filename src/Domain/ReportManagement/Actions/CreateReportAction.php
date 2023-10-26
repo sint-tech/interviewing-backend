@@ -13,8 +13,7 @@ class CreateReportAction
 
     public function execute(
         ReportDto $reportDto
-    ): Report
-    {
+    ): Report {
         if (! in_array('Domain\ReportManagement\Traits\HasReport', class_uses($reportDto->reportable))) {
             throw new \Exception('reportable object should use HasReport Trait!');
         }

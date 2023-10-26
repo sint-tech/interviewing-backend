@@ -11,10 +11,10 @@ class UploadOrganizationLogoAction
     public function __construct(
         public Organization $organization,
         public UploadedFile $logo
-    )
-    {}
+    ) {
+    }
 
-    public function execute():Media
+    public function execute(): Media
     {
         $this->organization->addMedia($this->logo)->toMediaCollection('logo');
 

@@ -25,18 +25,17 @@ class Invitation extends Model
     ];
 
     protected $casts = [
-        'should_be_invited_at'  => 'datetime',
+        'should_be_invited_at' => 'datetime',
         'last_invited_at' => 'datetime',
         'expired_at' => 'datetime',
     ];
 
     /**
      * @deprecated
-     * @return BelongsTo
      */
     public function interviewTemplate(): BelongsTo
     {
-        return $this->belongsTo(InterviewTemplate::class,'interview_template_id');
+        return $this->belongsTo(InterviewTemplate::class, 'interview_template_id');
     }
 
     public function invitationSent(): bool

@@ -7,16 +7,15 @@ use Domain\InterviewManagement\Models\Answer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class InterviewEloquentBuilder extends Builder
 {
-    public function whereStatus(InterviewStatusEnum $status,string $operator = '=',string $boolean = 'and'): self
+    public function whereStatus(InterviewStatusEnum $status, string $operator = '=', string $boolean = 'and'): self
     {
-        return $this->where('status','=',$status->value,$boolean);
+        return $this->where('status', '=', $status->value, $boolean);
     }
 
-    public function whereStatusIn(array $statuses,string $boolean = 'and'): self
+    public function whereStatusIn(array $statuses, string $boolean = 'and'): self
     {
         $values = [];
 
@@ -26,17 +25,17 @@ class InterviewEloquentBuilder extends Builder
             $values[] = $status->value;
         }
 
-        return $this->whereIn('status',$values);
+        return $this->whereIn('status', $values);
     }
 
     public function whereStatusInFinalStage(string $boolean = 'and'): self
     {
-        return $this->whereIn('status',InterviewStatusEnum::endedStatuses());
+        return $this->whereIn('status', InterviewStatusEnum::endedStatuses());
     }
 
-    public function whereIsEnded(bool $ended = true,string $boolean = 'and'): self
+    public function whereIsEnded(bool $ended = true, string $boolean = 'and'): self
     {
-        return $this->whereNull('ended_at',$boolean, $ended);
+        return $this->whereNull('ended_at', $boolean, $ended);
     }
 
     public function orderByAvgScore(string $direction = 'ASC'): self
@@ -62,7 +61,7 @@ class InterviewEloquentBuilder extends Builder
         return $this->orderByAvgScore('DESC');
     }
 
-    public function whereAccepted():self
+    public function whereAccepted(): self
     {
         return $this->orderByAvgScore()
             ->whereStatus(InterviewStatusEnum::Passed)

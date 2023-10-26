@@ -2,10 +2,8 @@
 
 namespace Domain\QuestionManagement\Actions;
 
-use Domain\AiPromptMessageManagement\Models\AIModel;
 use Domain\QuestionManagement\DataTransferObjects\QuestionVariantDto;
 use Domain\QuestionManagement\Models\QuestionVariant;
-use Illuminate\Support\Arr;
 
 class CreateQuestionVariantAction
 {
@@ -18,7 +16,7 @@ class CreateQuestionVariantAction
     {
         $question_variant = new QuestionVariant();
 
-        $data = $this->questionVariantDto->except('creator','owner')->toArray();
+        $data = $this->questionVariantDto->except('creator', 'owner')->toArray();
 
         $question_variant->fill($data)->save();
 
@@ -43,7 +41,7 @@ class CreateQuestionVariantAction
         foreach ($ai_model_ids as $index => $ai_model_id) {
             $ai_model_value[$ai_model_id] = [
                 'prompt_text' => '',
-                'is_default' => $index === 0
+                'is_default' => $index === 0,
             ];
         }
 

@@ -53,4 +53,4 @@ Route::withoutMiddleware('auth:api-candidate')
 
         Route::apiResource('registration-reasons', RegistrationReasonsController::class)
             ->only(['index', 'show']);
-});
+    });

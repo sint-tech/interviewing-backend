@@ -5,8 +5,8 @@ namespace Domain\Vacancy\Models;
 use Database\Factories\JobOpportunityFactory;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
-use Domain\Vacancy\Builders\VacancyBuilder;
 use Domain\Organization\Models\Organization;
+use Domain\Vacancy\Builders\VacancyBuilder;
 use Domain\Vacancy\Scopes\ForAuthUserScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,32 +33,32 @@ class Vacancy extends Model
         'ended_at',
         'max_reconnection_tries',
         'open_positions',
-        'organization_id'
+        'organization_id',
     ];
 
     protected $table = 'vacancies';
 
     protected $casts = [
         'started_at' => 'datetime',
-        'ended_at'  => 'datetime'
+        'ended_at' => 'datetime',
     ];
 
     public function organization(): BelongsTo
     {
-        return $this->belongsTo(Organization::class,'organization_id');
+        return $this->belongsTo(Organization::class, 'organization_id');
     }
 
     public function interviewTemplate(): BelongsTo
     {
-        return $this->belongsTo(InterviewTemplate::class,'interview_template_id');
+        return $this->belongsTo(InterviewTemplate::class, 'interview_template_id');
     }
 
     public function interviews(): HasMany
     {
-        return $this->hasMany(Interview::class,'interview_id');
+        return $this->hasMany(Interview::class, 'interview_id');
     }
 
-    public function newEloquentBuilder($query):VacancyBuilder
+    public function newEloquentBuilder($query): VacancyBuilder
     {
         return new VacancyBuilder($query);
     }

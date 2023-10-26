@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('interviews', function (Blueprint $table) {
             $table
-                ->enum('status',['not_started','started','withdrew','canceled','accepted'])
+                ->enum('status', ['not_started', 'started', 'withdrew', 'canceled', 'accepted'])
                 ->after('ended_at')
                 ->default('not_started');
         });

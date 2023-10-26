@@ -33,9 +33,9 @@ class AiPromptMessage extends Model
         );
     }
 
-    public function aiModel():BelongsTo
+    public function aiModel(): BelongsTo
     {
-        return $this->belongsTo(AIModel::class,'ai_model_id');
+        return $this->belongsTo(AIModel::class, 'ai_model_id');
     }
 
     public function aiModelClientFactory(): AiModelClientInterface

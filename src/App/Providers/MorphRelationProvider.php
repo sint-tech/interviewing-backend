@@ -17,7 +17,7 @@ class MorphRelationProvider extends ServiceProvider
         'admin' => User::class,
         'employee' => Employee::class,
         'interview' => Interview::class,
-        'organization'=> Organization::class
+        'organization' => Organization::class,
     ];
 
     /**

@@ -4,7 +4,6 @@ namespace Support\Traits\DTO;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Mockery\Exception;
-use phpDocumentor\Reflection\Types\Array_;
 use Spatie\LaravelData\Data;
 
 /** @mixin Data */
@@ -13,12 +12,12 @@ trait HasCreator
     /**
      * @throws \Exception
      */
-    public function withCreator($creator):self
+    public function withCreator($creator): self
     {
         if ($creator instanceof Authenticatable) {
             $this->additional([
-                'creator_id'  => $creator->getKey(),
-                'creator_type' => $creator::class
+                'creator_id' => $creator->getKey(),
+                'creator_type' => $creator::class,
             ]);
 
             return $this;
@@ -30,7 +29,7 @@ trait HasCreator
 
         [$creator_id,$creator_type] = $data;
 
-        $this->additional(compact($creator_id,$creator_type));
+        $this->additional(compact($creator_id, $creator_type));
 
         return $this;
     }
