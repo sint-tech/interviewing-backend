@@ -7,12 +7,17 @@ use Domain\Vacancy\Models\Vacancy;
 
 class CreateVacancyAction
 {
-    public function execute(VacancyDto $jobOpportunityDto): Vacancy
+    public function execute(VacancyDto $vacancyDto): Vacancy
     {
-        $jobOpportunity = new Vacancy($jobOpportunityDto->toArray());
+        $vacancy = new Vacancy(
+            $vacancyDto->except('creator')->toArray() +
+            [
+                'creator_id' => $vacancyDto->creator->creator_id,
+                'creator_type' => (new $vacancyDto->creator->creator_type())->getMorphClass(),
+            ]);
 
-        $jobOpportunity->save();
+        $vacancy->save();
 
-        return $jobOpportunity;
+        return $vacancy;
     }
 }

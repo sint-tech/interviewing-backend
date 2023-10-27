@@ -15,15 +15,15 @@ class VacancyControllerTest extends TestCase
 {
     use DatabaseMigrations,AuthenticationInstallation,WithFaker;
 
-    const INDEX_ROUTE_NAME = 'admin.vacancy.index';
+    const INDEX_ROUTE_NAME = 'admin.vacancies.index';
 
-    const SHOW_ROUTE_NAME = 'admin.vacancy.show';
+    const SHOW_ROUTE_NAME = 'admin.vacancies.show';
 
-    const STORE_ROUTE_NAME = 'admin.vacancy.store';
+    const STORE_ROUTE_NAME = 'admin.vacancies.store';
 
-    const UPDATE_ROUTE_NAME = 'admin.vacancy.update';
+    const UPDATE_ROUTE_NAME = 'admin.vacancies.update';
 
-    const DELETE_ROUTE_NAME = 'admin.vacancy.destroy';
+    const DELETE_ROUTE_NAME = 'admin.vacancies.destroy';
 
     public User $sintUser;
 

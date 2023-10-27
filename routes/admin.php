@@ -50,7 +50,7 @@ Route::apiResource('candidates', CandidateController::class)->only(['index', 'sh
 
 Route::apiResource('invitations', InvitationController::class);
 
-Route::apiResource('vacancy', VacancyController::class);
+Route::apiResource('vacancies', VacancyController::class);
 
 Route::post('invitations/import', ImportInvitationsController::class);
 

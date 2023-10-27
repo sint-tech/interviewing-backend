@@ -2,32 +2,37 @@
 
 namespace Domain\Vacancy\DataTransferObjects;
 
-use Illuminate\Support\Optional;
 use Illuminate\Validation\Rules\Exists;
 use Spatie\LaravelData\Attributes\Validation\Rule;
 use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Attributes\WithCastable;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
+use Support\Data\Creator;
 use Support\Traits\DTO\HasCreator;
 
 class VacancyDto extends Data
 {
-    use HasCreator;
+    //    use HasCreator;
 
     public function __construct(
         public readonly string $title,
         public readonly string|Optional|null $description = null,
+
+        #[Rule([new Exists('organizations', 'id')])]
+        public readonly ?int $organization_id,
 
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]
         public readonly ?\DateTime $started_at,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]
         public readonly ?\DateTime $ended_at,
 
-        public readonly int $max_reconnection_tries = 1,
-        public readonly int $open_positions = 1,
-        #[Rule([new Exists('organizations', 'id')])]
-        public readonly ?int $organization_id = null,
+        public readonly int $max_reconnection_tries,
+        public readonly int $open_positions,
+        #[WithCastable(Creator::class, lazy_load_instance: true)]
+        public Creator $creator,
     ) {
 
     }

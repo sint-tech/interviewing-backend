@@ -26,8 +26,7 @@ class VacancyController extends Controller
 
     public function store(VacancyStoreRequest $request, CreateVacancyAction $createJobOpportunityAction): VacancyResource
     {
-        $dto = VacancyDto::from($request->validated())
-            ->withCreator(auth()->user());
+        $dto = VacancyDto::from($request->validated() + ['creator' => auth()->user()]);
 
         return VacancyResource::make(
             $createJobOpportunityAction->execute($dto)
