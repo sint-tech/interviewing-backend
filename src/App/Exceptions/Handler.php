@@ -62,6 +62,10 @@ class Handler extends ExceptionHandler
             return message_response($e->getMessage(), $e->status() ?? 403);
         }
 
+        if ($request->wantsJson()) {
+            return message_response($e->getMessage(), method_exists($e, 'status') ? $e->status() : 500);
+        }
+
         return parent::render($request, $e);
     }
 }

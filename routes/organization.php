@@ -13,4 +13,4 @@ Route::withoutMiddleware('auth:api-employee')->middleware('guest:api-employee')-
 
 Route::apiResource('employees', EmployeeController::class);
 
-Route::apiResource('vacancy', VacancyController::class);
+Route::apiResource('vacancies', VacancyController::class);

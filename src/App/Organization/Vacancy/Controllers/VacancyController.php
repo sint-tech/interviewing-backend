@@ -19,10 +19,10 @@ class VacancyController extends Controller
         );
     }
 
-    public function show(Vacancy $vacancy): VacancyResource
+    public function show(int $vacancy): VacancyResource
     {
         return VacancyResource::make(
-            $vacancy
+            Vacancy::query()->findOrFail($vacancy)
         );
     }
 
@@ -36,13 +36,15 @@ class VacancyController extends Controller
         );
     }
 
-    public function update(Vacancy $vacancy)
+    public function update(int $vacancy)
     {
 
     }
 
-    public function destroy(Vacancy $vacancy)
+    public function destroy(int $vacancy): VacancyResource
     {
+        $vacancy = Vacancy::query()->findOrFail($vacancy);
+
         $vacancy->delete();
 
         return VacancyResource::make($vacancy);
