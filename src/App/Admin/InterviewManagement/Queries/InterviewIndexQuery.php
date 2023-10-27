@@ -3,7 +3,6 @@
 namespace App\Admin\InterviewManagement\Queries;
 
 use Domain\InterviewManagement\Models\Interview;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -17,7 +16,7 @@ class InterviewIndexQuery extends QueryBuilder
         parent::__construct($subject, $request);
 
         $this->allowedFilters([
-            AllowedFilter::exact('status')->ignore('accepted')
+            AllowedFilter::exact('status')->ignore('accepted'),
         ]);
 
         $this->handleStatusFilter();
@@ -30,7 +29,7 @@ class InterviewIndexQuery extends QueryBuilder
         }
 
         if ($this->request->input('filter.status') == 'passed') {
-            $this->subject->orderByAvgScoreDesc()->whereNotIn('id',Interview::query()->whereAccepted()->pluck('id'));
+            $this->subject->orderByAvgScoreDesc()->whereNotIn('id', Interview::query()->whereAccepted()->pluck('id'));
         }
 
         return $this;

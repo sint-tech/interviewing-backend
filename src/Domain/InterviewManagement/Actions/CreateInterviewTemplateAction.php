@@ -11,7 +11,8 @@ class CreateInterviewTemplateAction
 {
     public function __construct(
         public readonly InterviewTemplateDto $interviewTemplateDto,
-    ) {}
+    ) {
+    }
 
     public function execute(): InterviewTemplate
     {
@@ -23,7 +24,7 @@ class CreateInterviewTemplateAction
 
         $interviewTemplate->refresh();
 
-        if($this->interviewTemplateDto->interview_template_settings_dto instanceof InterviewTemplateSettingsDto) {
+        if ($this->interviewTemplateDto->interview_template_settings_dto instanceof InterviewTemplateSettingsDto) {
             $interviewTemplate->settings()->apply($this->interviewTemplateDto->interview_template_settings_dto->toArray());
         }
 

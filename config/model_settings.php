@@ -12,8 +12,8 @@ return [
         ],
         'interview_templates' => [
             'max_reconnection_tries' => 1,
-            'started_at'    => null,
-            'ended_at'      => null
-        ]
-    ]
+            'started_at' => null,
+            'ended_at' => null,
+        ],
+    ],
 ];

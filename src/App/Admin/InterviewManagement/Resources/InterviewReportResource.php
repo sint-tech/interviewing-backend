@@ -14,12 +14,12 @@ class InterviewReportResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'interview'  => InterviewResource::make($this->resource->interview),
+            'interview' => InterviewResource::make($this->resource->interview),
             'average_score' => (float) $this->resource->avgScore,
             'advices' => (array) $this->resource->advices,
             'impacts' => (array) $this->resource->impacts,
             'question_clusters_scores' => $this->resource->questionClustersStats,
-            'created_at'    => (new DateToHumanReadValueObject($this->resource->created_at))->toFullDateTimeFormat()
+            'created_at' => (new DateToHumanReadValueObject($this->resource->created_at))->toFullDateTimeFormat(),
         ];
     }
 }

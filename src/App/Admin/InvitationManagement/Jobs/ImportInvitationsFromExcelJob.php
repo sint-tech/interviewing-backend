@@ -6,18 +6,15 @@ use Domain\Invitation\Actions\CreateInvitationAction;
 use Domain\Invitation\DataTransferObjects\InvitationDto;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Reader\Exception\ReaderNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Symfony\Component\HttpFoundation\File\File;
 
 class ImportInvitationsFromExcelJob implements ShouldQueue
 {
@@ -27,8 +24,7 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
         protected string $filePath,
         protected int $interview_template_id,
         protected \DateTime $should_be_invited_at
-    )
-    {
+    ) {
         //
     }
 
@@ -41,16 +37,15 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
     {
         $rows = (new FastExcel())->import($this->filePath);
 
-        $rows->each(function (array $row) use($createInvitationAction) {
+        $rows->each(function (array $row) use ($createInvitationAction) {
             try {
                 $dto = InvitationDto::validateAndCreate($this->prepareRow($row));
 
                 $createInvitationAction->execute($dto);
-            }
-            catch (Exception $exception) {
+            } catch (Exception $exception) {
                 dd($exception);
                 //todo handle exceptions to parse it again for the client
-                Log::info($exception->getMessage().' job_direction:' . __DIR__);
+                Log::info($exception->getMessage().' job_direction:'.__DIR__);
             }
         });
     }
@@ -71,9 +66,9 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
         return $data;
     }
 
-    private function trimRowKey(string $key):string
+    private function trimRowKey(string $key): string
     {
-        $result =  str_replace(' ', '_', strtolower($key));
+        $result = str_replace(' ', '_', strtolower($key));
 
         if ($result === 'mobile_number') {
             $result = 'dirty_mobile_number';

@@ -10,11 +10,9 @@ use Support\Services\MobileStrategy\MobileNumberFactory;
 
 class ValidMobileNumberRule implements ValidationRule
 {
-
     public function __construct(
         protected MobileCountryCodeEnum|MobileCountryEnum $mobileCountryEnum
-    )
-    {
+    ) {
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
@@ -24,7 +22,7 @@ class ValidMobileNumberRule implements ValidationRule
         }
     }
 
-    private function mobileNotValidWithThisCountry(mixed $value):bool
+    private function mobileNotValidWithThisCountry(mixed $value): bool
     {
         return ! (new MobileNumberFactory())->createMobileNumberInstance(
             $this->mobileCountryEnum

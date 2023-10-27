@@ -2,16 +2,13 @@
 
 namespace Support\ValueObjects;
 
-
 use Carbon\Carbon;
 
 class DateToHumanReadValueObject
 {
-
     public function __construct(
-        protected readonly Carbon|null $date
-    )
-    {
+        protected readonly ?Carbon $date
+    ) {
     }
 
     public function toFullDateTimeFormat(): string

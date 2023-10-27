@@ -12,7 +12,7 @@ class OrganizationDataFactory
     {
         return OrganizationData::from([
             'name' => $request->validated('name'),
-            'logo'  => $request->validated('logo',Optional::create())
+            'logo' => $request->validated('logo', Optional::create()),
         ]);
     }
 }

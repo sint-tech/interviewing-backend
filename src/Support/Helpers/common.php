@@ -43,7 +43,7 @@ if (! function_exists('enum_to_array')) {
 
 if (! function_exists('table_name')) {
     /**
-     * get db table name based for model
+     * get model db table name
      */
     function table_name(string|Model|Builder $object): string
     {

@@ -12,21 +12,20 @@ use Illuminate\Support\Arr;
 
 class InterviewTemplateDataFactory
 {
-    public function fromRequest(Request $request):InterviewTemplateDto
+    public function fromRequest(Request $request): InterviewTemplateDto
     {
         if ($request instanceof InterviewTemplateUpdateRequest) {
             return $this->fromUpdateRequest($request);
-        }
-        else if($request instanceof InterviewTemplateStoreRequest) {
+        } elseif ($request instanceof InterviewTemplateStoreRequest) {
             return $this->fromStoreRequest($request);
         }
 
-        throw new \InvalidArgumentException("not handled request type: ". $request::class);
+        throw new \InvalidArgumentException('not handled request type: '.$request::class);
     }
 
-    protected function fromUpdateRequest(InterviewTemplateUpdateRequest $request):InterviewTemplateDto
+    protected function fromUpdateRequest(InterviewTemplateUpdateRequest $request): InterviewTemplateDto
     {
-        $interview_template = $request->interviewTemplate()->load(['owner','creator']);
+        $interview_template = $request->interviewTemplate()->load(['owner', 'creator']);
 
         $relationData = [
             'owner' => $interview_template->owner,
@@ -41,7 +40,7 @@ class InterviewTemplateDataFactory
         }
 
         $request_data = array_merge(
-            Arr::except($request->validated(),'question_variant_ids'),
+            Arr::except($request->validated(), 'question_variant_ids'),
             $relationData,
             $interview_template->unsetRelations()->toArray()
         );
@@ -49,7 +48,7 @@ class InterviewTemplateDataFactory
         return InterviewTemplateDto::from($request_data);
     }
 
-    protected function fromStoreRequest(InterviewTemplateStoreRequest $request):InterviewTemplateDto
+    protected function fromStoreRequest(InterviewTemplateStoreRequest $request): InterviewTemplateDto
     {
         $default_setting_values = InterviewTemplateSettingsDto::defaultValues();
 
@@ -60,10 +59,10 @@ class InterviewTemplateDataFactory
             'interview_template_settings_dto' => InterviewTemplateSettingsDto::from(
                 [
                     'started_at' => $request->date('settings.started_at', $default_setting_values->started_at),
-                    'ended_at'  => $request->date('settings.ended_at', $default_setting_values->ended_at),
-                    'max_reconnection_tries' => $request->validated('settings.max_reconnection_tries', $default_setting_values->max_reconnection_tries)
+                    'ended_at' => $request->date('settings.ended_at', $default_setting_values->ended_at),
+                    'max_reconnection_tries' => $request->validated('settings.max_reconnection_tries', $default_setting_values->max_reconnection_tries),
                 ]
-            )
+            ),
         ]);
 
         return InterviewTemplateDto::from($request_data);

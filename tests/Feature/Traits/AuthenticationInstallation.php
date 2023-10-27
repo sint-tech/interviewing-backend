@@ -17,9 +17,9 @@ trait AuthenticationInstallation
         ]);
 
         Artisan::call('passport:client', [
-           '--password' => 1,
-           '--name' => 'Laravel Password Grant Client FOR ORGANIZATION EMPLOYEE',
-            '--provider' => 'organization'
+            '--password' => 1,
+            '--name' => 'Laravel Password Grant Client FOR ORGANIZATION EMPLOYEE',
+            '--provider' => 'organization',
         ]);
 
     }

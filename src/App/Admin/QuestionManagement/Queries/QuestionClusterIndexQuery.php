@@ -37,7 +37,7 @@ class QuestionClusterIndexQuery extends QueryBuilder
         return [
             AllowedFilter::exact('id'),
             AllowedFilter::partial('name'),
-            AllowedFilter::exact('skills.id')
+            AllowedFilter::exact('skills.id'),
         ];
     }
 
@@ -45,7 +45,7 @@ class QuestionClusterIndexQuery extends QueryBuilder
     {
         return [
             AllowedInclude::relationship('skills'),
-            AllowedInclude::relationship('variants','questionVariants'),
+            AllowedInclude::relationship('variants', 'questionVariants'),
             AllowedInclude::relationship('questions'),
             AllowedInclude::relationship('questions.questionVariants'),
         ];

@@ -3,7 +3,6 @@
 namespace App\Admin\InvitationManagement\Queries;
 
 use Domain\Invitation\Models\Invitation;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;

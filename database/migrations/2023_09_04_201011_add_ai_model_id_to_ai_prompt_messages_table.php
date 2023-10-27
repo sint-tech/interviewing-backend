@@ -17,7 +17,7 @@ return new class extends Migration
                 ->after('ai_model')
                 ->nullable()
                 ->default(DB::table('ai_models')->first()->id)
-                ->constrained('ai_models','id')
+                ->constrained('ai_models', 'id')
                 ->nullOnDelete();
 
             $table->dropColumn('ai_model');

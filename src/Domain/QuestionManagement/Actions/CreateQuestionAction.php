@@ -27,6 +27,6 @@ class CreateQuestionAction
 
         $question->save();
 
-        return $question->load(['creator', 'questionCluster','questionVariants']);
+        return $question->load(['creator', 'questionCluster', 'questionVariants']);
     }
 }

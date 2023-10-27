@@ -6,7 +6,7 @@ use Domain\Invitation\Models\Invitation;
 
 class InvitationBatch
 {
-    private static InvitationBatch|null $instance = null;
+    private static ?InvitationBatch $instance = null;
 
     protected int $lastBatch;
 
@@ -20,9 +20,9 @@ class InvitationBatch
         if (self::$instance === null) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
-
 
     public static function destroyInstance(): void
     {

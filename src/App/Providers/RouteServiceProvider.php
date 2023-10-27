@@ -28,6 +28,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             Route::middleware(['api', 'auth:api-candidate'])
+                ->name('candidate.')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
@@ -37,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/admin.php'));
 
             Route::prefix('organization-api')
-                ->name('organization_api.')
+                ->name('organization-api.')
                 ->middleware(['api', 'auth:api-employee'])
                 ->group(base_path('routes/organization.php'));
 

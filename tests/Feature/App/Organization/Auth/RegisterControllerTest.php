@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Organization\Auth;
+namespace Tests\Feature\App\Organization\Auth;
 
 use Domain\Organization\Models\Employee;
 use Illuminate\Foundation\Testing\DatabaseMigrations;

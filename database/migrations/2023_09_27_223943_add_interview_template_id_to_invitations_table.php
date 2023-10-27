@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('interview_template_id')
                 ->after('batch')
                 ->nullable()
-                ->constrained('interview_templates','id')
+                ->constrained('interview_templates', 'id')
                 ->nullOnDelete();
         });
     }

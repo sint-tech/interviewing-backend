@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Support\Services\MobileStrategy\MobileCountryEnum;
 
 return new class extends Migration
 {
@@ -14,7 +13,7 @@ return new class extends Migration
 
             $table->string('email');
 
-            $table->enum('mobile_country_code',supported_countries_codes());
+            $table->enum('mobile_country_code', supported_countries_codes());
             $table->integer('mobile_number');
 
             $table->integer('batch');

@@ -47,9 +47,9 @@ class Question extends Model
         return $this->hasMany(QuestionVariant::class, 'question_id');
     }
 
-    public function defaultAiModel():BelongsTo
+    public function defaultAiModel(): BelongsTo
     {
-        return $this->belongsTo(AIModel::class,'default_ai_model_id');
+        return $this->belongsTo(AIModel::class, 'default_ai_model_id');
     }
 
     protected static function newFactory()

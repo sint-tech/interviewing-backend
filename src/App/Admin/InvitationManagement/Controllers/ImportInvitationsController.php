@@ -6,21 +6,17 @@ use App\Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob;
 use App\Admin\InvitationManagement\Requests\ImportInvitationRequest;
 use Domain\Invitation\Actions\CreateInvitationAction;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Exists;
-use Illuminate\Validation\Rules\File;
 use Support\Controllers\Controller;
 
 class ImportInvitationsController extends Controller
 {
-    public function __invoke(ImportInvitationRequest $request,CreateInvitationAction $createInvitationAction): JsonResponse
+    public function __invoke(ImportInvitationRequest $request, CreateInvitationAction $createInvitationAction): JsonResponse
     {
         $file = $request->file('file');
 
-        $file_name = time() . '_' . $file->getClientOriginalName();
+        $file_name = time().'_'.$file->getClientOriginalName();
 
-        $file_path  = $request->file('file')->store('public/imported-excels/invitations/'. $file_name);
+        $file_path = $request->file('file')->store('public/imported-excels/invitations/'.$file_name);
 
         dispatch(new ImportInvitationsFromExcelJob(
             storage_path('app/'.$file_path),

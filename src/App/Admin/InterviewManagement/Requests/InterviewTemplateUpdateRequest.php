@@ -16,12 +16,12 @@ class InterviewTemplateUpdateRequest extends FormRequest
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'availability_status' => ['filled', Rule::enum(InterviewTemplateAvailabilityStatusEnum::class)],
             'reusable' => ['sometimes', 'boolean'],
-            'question_variant_ids' => ['filled', 'array','min:1'],
+            'question_variant_ids' => ['filled', 'array', 'min:1'],
             'question_variant_ids.*' => ['required_with:question_variant_ids', 'numeric', Rule::exists('question_variants', 'id')->withoutTrashed(), 'distinct'],
         ];
     }
 
-    public function interviewTemplate():InterviewTemplate
+    public function interviewTemplate(): InterviewTemplate
     {
         return $this->interview_template;
     }

@@ -16,7 +16,7 @@ class CandidateResource extends JsonResource
             'email' => (string) $this->email,
             'mobile_country_code' => (string) $this->mobile_country_code,
             'mobile_number' => (string) $this->mobile_number,
-            'created_at'    => (new DateToHumanReadValueObject($this->created_at))->toFullDateTimeFormat()
+            'created_at' => (new DateToHumanReadValueObject($this->created_at))->toFullDateTimeFormat(),
         ];
     }
 }

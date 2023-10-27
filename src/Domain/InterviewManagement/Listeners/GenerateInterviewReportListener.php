@@ -7,7 +7,6 @@ use Domain\InterviewManagement\Actions\SetInterviewStatusByScoreAction;
 use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class GenerateInterviewReportListener
 {

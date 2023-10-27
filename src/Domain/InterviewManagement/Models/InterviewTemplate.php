@@ -4,7 +4,6 @@ namespace Domain\InterviewManagement\Models;
 
 use Database\Factories\InterviewTemplateFactory;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
-use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

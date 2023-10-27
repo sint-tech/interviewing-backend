@@ -31,12 +31,12 @@ class OrganizationEmployeeAuthTest extends TestCase
     {
         Employee::factory()->create([
             'email' => 'ahmedbadawy@gmail.com',
-            'password'  => Hash::make('password')
+            'password' => Hash::make('password'),
         ]);
 
         $response = $this->post('/organization-api/login', [
-           'email' => 'ahmedbadawy@gmail.com',
-           'password'   => 'password'
+            'email' => 'ahmedbadawy@gmail.com',
+            'password' => 'password',
         ]);
 
         $response->assertOk();

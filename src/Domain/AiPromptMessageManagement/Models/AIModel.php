@@ -22,13 +22,12 @@ class AIModel extends Model
         'default_prompt_message',
     ];
 
-
     protected $casts = [
         'name' => AiModelEnum::class,
     ];
 
     public function aiPromptMessages(): HasMany
     {
-        return $this->hasMany(AiPromptMessage::class,'ai_model_id');
+        return $this->hasMany(AiPromptMessage::class, 'ai_model_id');
     }
 }

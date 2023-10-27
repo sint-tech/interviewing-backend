@@ -17,6 +17,7 @@ use App\Admin\QuestionManagement\Controllers\QuestionClusterRecommendationContro
 use App\Admin\QuestionManagement\Controllers\QuestionController;
 use App\Admin\QuestionManagement\Controllers\QuestionVariantController;
 use App\Admin\Skill\Controllers\SkillController;
+use App\Admin\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:api')->withoutMiddleware('auth:api')->group(function () {
@@ -49,6 +50,8 @@ Route::apiResource('candidates', CandidateController::class)->only(['index', 'sh
 
 Route::apiResource('invitations', InvitationController::class);
 
+Route::apiResource('vacancies', VacancyController::class);
+
 Route::post('invitations/import', ImportInvitationsController::class);
 
-Route::apiResource('ai-models', AIModelController::class)->only('index','show');
+Route::apiResource('ai-models', AIModelController::class)->only('index', 'show');

@@ -30,7 +30,7 @@ class AnswerDataFactory
     {
         $promptAiModel = $request->questionVariant()->defaultAiPromptMessage()
             ->firstOr(fn () => AiPromptMessage::query()->create([
-                'ai_model_id'   => AIModel::query()->firstOrCreate()->getKey(),
+                'ai_model_id' => AIModel::query()->firstOrCreate()->getKey(),
                 'prompt_text' => 'temp prompt message',
                 'question_variant_id' => $request->validated('question_variant_id'),
             ])->refresh());
