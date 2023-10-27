@@ -32,7 +32,7 @@ class VacancyController extends Controller
             $request->validated() + ['organization_id' => auth()->user()->organization_id, 'creator' => auth()->user()]);
 
         return VacancyResource::make(
-            $action->execute($dto)
+            $action->execute($dto)->load(['interviewTemplate'])
         );
     }
 

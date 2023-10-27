@@ -2,6 +2,7 @@
 
 namespace App\Admin\Vacancy\Requests;
 
+use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -18,6 +19,7 @@ class VacancyStoreRequest extends FormRequest
             'max_reconnection_tries' => ['required', 'min:0', 'max:5'],
             'organization_id' => ['nullable', Rule::exists(table_name(Organization::class), 'id')->withoutTrashed()],
             'open_positions' => ['required', 'integer', 'min:1'],
+            'interview_template_id' => ['required', 'int', Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed()],
         ];
     }
 }
