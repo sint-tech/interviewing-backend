@@ -41,7 +41,7 @@ class VacancyController extends Controller
 
     }
 
-    public function destroy(int $vacancy): VacancyResource
+    public function destroy(Vacancy $vacancy)
     {
         $vacancy = Vacancy::query()->findOrFail($vacancy);
 
