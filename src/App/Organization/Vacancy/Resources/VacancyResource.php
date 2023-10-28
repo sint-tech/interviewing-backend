@@ -22,7 +22,7 @@ class VacancyResource extends JsonResource
             'ended_at' => $this->resource->ended_at?->format('Y-m-d H:m'),
             'created_at' => $this->resource->created_at->format('Y-m-d H:m'),
             'last_updated_at' => $this->resource->updated_at->format('Y-m-d H:m'),
-            'deleted_at' => $this->resource->deleted_at?->format('Y-m-d H:m'),
+            'deleted_at' => $this->when(! is_null($this->deleted_at), $this->resource->deleted_at?->format('Y-m-d H:m')),
         ];
     }
 }
