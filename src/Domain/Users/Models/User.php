@@ -3,6 +3,7 @@
 namespace Domain\Users\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -58,5 +59,10 @@ class User extends Authenticatable implements OwnerInterface
         return Str::of(
             config('app.name', 'SINT')
         )->lower()->ucfirst();
+    }
+
+    protected static function newFactory()
+    {
+        return new UserFactory();
     }
 }

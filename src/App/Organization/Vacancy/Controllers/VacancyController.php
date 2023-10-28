@@ -19,10 +19,10 @@ class VacancyController extends Controller
         );
     }
 
-    public function show(Vacancy $vacancy): VacancyResource
+    public function show(int $vacancy): VacancyResource
     {
         return VacancyResource::make(
-            $vacancy
+            Vacancy::query()->findOrFail($vacancy)
         );
     }
 
@@ -32,17 +32,19 @@ class VacancyController extends Controller
             $request->validated() + ['organization_id' => auth()->user()->organization_id, 'creator' => auth()->user()]);
 
         return VacancyResource::make(
-            $action->execute($dto)
+            $action->execute($dto)->load(['interviewTemplate'])
         );
     }
 
-    public function update(Vacancy $vacancy)
+    public function update(int $vacancy)
     {
 
     }
 
     public function destroy(Vacancy $vacancy)
     {
+        $vacancy = Vacancy::query()->findOrFail($vacancy);
+
         $vacancy->delete();
 
         return VacancyResource::make($vacancy);

@@ -2,6 +2,7 @@
 
 namespace Domain\Vacancy\Actions;
 
+use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Vacancy\DataTransferObjects\VacancyDto;
 use Domain\Vacancy\Models\Vacancy;
 
@@ -9,6 +10,11 @@ class CreateVacancyAction
 {
     public function execute(VacancyDto $vacancyDto): Vacancy
     {
+        //ensure interview template exists
+        InterviewTemplate::query()
+            ->whereKey($vacancyDto->interview_template_id)
+            ->existsOr(fn () => throw new \Exception('the interview template is not available now.'));
+
         $vacancy = new Vacancy(
             $vacancyDto->except('creator')->toArray() +
             [

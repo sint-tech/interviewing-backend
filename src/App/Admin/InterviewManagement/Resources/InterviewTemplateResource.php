@@ -16,7 +16,7 @@ class InterviewTemplateResource extends JsonResource
             'reusable' => (bool) $this->reusable,
             'availability_status' => $this->availability_status,
             'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants')),
-            'settings' => InterviewTemplateSettingResource::make($this->settings()->get()),
+            //            'settings' => InterviewTemplateSettingResource::make($this->settings()->get()),
         ];
     }
 }

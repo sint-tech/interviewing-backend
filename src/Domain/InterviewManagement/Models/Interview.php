@@ -32,6 +32,7 @@ class Interview extends Model
     const DEFAULT_REPORT_NAME = '__DEFAULT_REPORT__';
 
     protected $fillable = [
+        'vacancy_id',
         'interview_template_id',
         'candidate_id',
         'started_at',

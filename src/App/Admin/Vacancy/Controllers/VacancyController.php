@@ -19,9 +19,11 @@ class VacancyController extends Controller
         );
     }
 
-    public function show(Vacancy $vacancy): VacancyResource
+    public function show(int $vacancy): VacancyResource
     {
-        return VacancyResource::make($vacancy);
+        return VacancyResource::make(
+            Vacancy::query()->findOrFail($vacancy)
+        );
     }
 
     public function store(VacancyStoreRequest $request, CreateVacancyAction $createJobOpportunityAction): VacancyResource
@@ -38,8 +40,10 @@ class VacancyController extends Controller
         //
     }
 
-    public function destroy(Vacancy $vacancy): VacancyResource
+    public function destroy(int $vacancy): VacancyResource
     {
+        $vacancy = Vacancy::query()->findOrFail($vacancy);
+
         $vacancy->delete();
 
         return VacancyResource::make($vacancy);

@@ -2,7 +2,9 @@
 
 namespace App\Organization\Vacancy\Requests;
 
+use Domain\InterviewManagement\Models\InterviewTemplate;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class VacancyStoreRequest extends FormRequest
 {
@@ -15,6 +17,7 @@ class VacancyStoreRequest extends FormRequest
             'open_positions' => ['required', 'min:1', 'max:1000'],
             'started_at' => ['nullable', 'date_format:Y-m-d H:m', 'after:now'],
             'ended_at' => ['nullable', 'date_format:Y-m-d H:m', 'after:started_at'],
+            'interview_template_id' => ['required', 'int', Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed()],
             //todo add current trial for interview
         ];
     }

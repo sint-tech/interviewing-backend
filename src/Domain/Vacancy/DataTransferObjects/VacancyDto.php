@@ -2,8 +2,9 @@
 
 namespace Domain\Vacancy\DataTransferObjects;
 
-use Illuminate\Validation\Rules\Exists;
-use Spatie\LaravelData\Attributes\Validation\Rule;
+use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Organization\Models\Organization;
+use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithCastable;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
@@ -11,7 +12,6 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 use Support\Data\Creator;
-use Support\Traits\DTO\HasCreator;
 
 class VacancyDto extends Data
 {
@@ -21,9 +21,8 @@ class VacancyDto extends Data
         public readonly string $title,
         public readonly string|Optional|null $description = null,
 
-        #[Rule([new Exists('organizations', 'id')])]
         public readonly ?int $organization_id,
-
+        public readonly int $interview_template_id,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]
         public readonly ?\DateTime $started_at,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]
@@ -46,6 +45,8 @@ class VacancyDto extends Data
             'ended_at' => ['nullable', 'date_format:Y-m-d H:m', 'after:started_at'],
             'max_reconnection_tries' => ['required', 'min:0', 'max:5'],
             'open_positions' => ['required', 'integer', 'min:1'],
+            'organization_id' => ['nullable', 'int', Rule::exists(table_name(Organization::class, 'id'))->withoutTrashed()],
+            'interview_template_id' => ['required', 'int', Rule::exists(table_name(InterviewTemplate::class, 'id'))->withoutTrashed()],
         ];
     }
 }

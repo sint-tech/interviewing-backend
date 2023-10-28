@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InterviewTemplateFactory extends Factory
@@ -21,6 +22,10 @@ class InterviewTemplateFactory extends Factory
             'description' => $this->faker->text(1000),
             'availability_status' => $this->faker->randomElement(['available', 'unavailable', 'pending', 'paused']),
             'reusable' => $this->faker->boolean(90),
+            'creator_id' => User::factory(),
+            'creator_type' => User::class,
+            'owner_id' => User::factory(),
+            'owner_type' => User::class,
         ];
     }
 }
