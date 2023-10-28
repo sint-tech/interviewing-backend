@@ -40,7 +40,7 @@ Route::middleware('auth:api-candidate')->group(function () {
     Route::prefix('interviews')
         ->group(function () {
             Route::get('', MyInterviewsController::class);
-            Route::any('/{interview_template}/start-interview', StartInterviewController::class);
+            Route::post('/start-interview', StartInterviewController::class)->name('interviews.start');
             Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class);
             Route::get('/{interview}/report', GetInterviewReportController::class);
         });

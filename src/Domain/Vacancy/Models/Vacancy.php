@@ -2,7 +2,7 @@
 
 namespace Domain\Vacancy\Models;
 
-use Database\Factories\JobOpportunityFactory;
+use Database\Factories\VacancyFactory;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
@@ -53,6 +53,11 @@ class Vacancy extends Model
         return $this->belongsTo(InterviewTemplate::class, 'interview_template_id');
     }
 
+    public function defaultInterviewTemplate(): BelongsTo
+    {
+        return $this->interviewTemplate();
+    }
+
     public function interviews(): HasMany
     {
         return $this->hasMany(Interview::class, 'interview_id');
@@ -63,9 +68,9 @@ class Vacancy extends Model
         return new VacancyBuilder($query);
     }
 
-    protected static function newFactory(): JobOpportunityFactory
+    protected static function newFactory(): VacancyFactory
     {
-        return new JobOpportunityFactory();
+        return new VacancyFactory();
     }
 
     protected static function booted(): void

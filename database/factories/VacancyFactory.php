@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Vacancy>
  */
-class JobOpportunityFactory extends Factory
+class VacancyFactory extends Factory
 {
     protected $model = Vacancy::class;
 
