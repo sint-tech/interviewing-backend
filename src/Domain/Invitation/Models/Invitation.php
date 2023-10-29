@@ -3,6 +3,7 @@
 namespace Domain\Invitation\Models;
 
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,7 @@ class Invitation extends Model
         'batch',
         'should_be_invited_at',
         'interview_template_id',
+        'vacancy_id',
         'last_invited_at',
         'expired_at',
     ];
@@ -36,6 +38,11 @@ class Invitation extends Model
     public function interviewTemplate(): BelongsTo
     {
         return $this->belongsTo(InterviewTemplate::class, 'interview_template_id');
+    }
+
+    public function vacancy(): BelongsTo
+    {
+        return $this->belongsTo(Vacancy::class, 'vacancy_id', 'id');
     }
 
     public function invitationSent(): bool

@@ -5,6 +5,7 @@ namespace App\Admin\InvitationManagement\Queries;
 use Domain\Invitation\Models\Invitation;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class InvitationIndexQuery extends QueryBuilder
@@ -17,6 +18,11 @@ class InvitationIndexQuery extends QueryBuilder
 
         $this->allowedFilters(
             AllowedFilter::exact('interview_template_id')
+        );
+
+        $this->allowedIncludes(
+            AllowedInclude::relationship('vacancy'),
+            AllowedInclude::relationship('interviewTemplate'),
         );
 
         $this->defaultSort('-id');

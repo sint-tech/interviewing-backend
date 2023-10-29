@@ -50,8 +50,8 @@ Route::apiResource('candidates', CandidateController::class)->only(['index', 'sh
 
 Route::apiResource('invitations', InvitationController::class);
 
-Route::apiResource('vacancies', VacancyController::class);
+Route::post('invitations/import', ImportInvitationsController::class)->name('invitations.import');
 
-Route::post('invitations/import', ImportInvitationsController::class);
+Route::apiResource('vacancies', VacancyController::class);
 
 Route::apiResource('ai-models', AIModelController::class)->only('index', 'show');

@@ -20,10 +20,12 @@ class VacancyFactory extends Factory
         return [
             'title' => $this->faker->text(100),
             'description' => $this->faker->text(1000),
-            'interview_template_id' => InterviewTemplate::factory()->for(Employee::factory()->createOne(), 'creator')
-                ->for(Employee::factory()->createOne(), 'owner'),
+            'interview_template_id' => InterviewTemplate::factory()->for($employee = Employee::factory()->createOne(), 'creator')
+                ->for($employee, 'owner'),
             'organization_id' => Organization::factory(),
             'open_positions' => $this->faker->numberBetween(1, 15),
+            'creator_id' => $employee->getKey(),
+            'creator_type' => $employee::class,
         ];
     }
 }
