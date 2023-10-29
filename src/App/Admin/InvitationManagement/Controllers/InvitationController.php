@@ -22,9 +22,12 @@ class InvitationController extends Controller
         );
     }
 
-    public function show(Invitation $invitation): InvitationResource
+    public function show(int $invitation): InvitationResource
     {
-        return InvitationResource::make($invitation);
+
+        return InvitationResource::make(
+            Invitation::query()->findOrFail($invitation)
+        );
     }
 
     public function store(InvitationStoreRequest $request, InvitationDataFactory $invitationDataFactory, CreateInvitationAction $createInvitationAction): InvitationResource
@@ -32,7 +35,7 @@ class InvitationController extends Controller
         $dto = $invitationDataFactory->fromRequest($request);
 
         return InvitationResource::make(
-            $createInvitationAction->execute($dto)->load('interviewTemplate')
+            $createInvitationAction->execute($dto)->load('vacancy', 'interviewTemplate')
         );
     }
 
@@ -41,8 +44,10 @@ class InvitationController extends Controller
         //
     }
 
-    public function destroy(Invitation $invitation): InvitationResource
+    public function destroy(int $invitation): InvitationResource
     {
+        $invitation = Invitation::query()->findOrFail($invitation);
+
         $invitation->delete();
 
         return InvitationResource::make($invitation);
