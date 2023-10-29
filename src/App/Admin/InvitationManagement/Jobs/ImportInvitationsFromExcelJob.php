@@ -6,6 +6,7 @@ use Domain\Invitation\Actions\CreateInvitationAction;
 use Domain\Invitation\DataTransferObjects\InvitationDto;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,12 +21,15 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected Authenticatable $creator;
+
     public function __construct(
         protected string $filePath,
-        protected int $interview_template_id,
-        protected \DateTime $should_be_invited_at
+        protected int $vacancy_id,
+        protected ?int $interview_template_id,
+        protected \DateTime $should_be_invited_at,
     ) {
-        //
+        $this->creator = auth()->user();
     }
 
     /**
@@ -59,9 +63,13 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
             $row
         );
 
+        $data['vacancy_id'] = $this->vacancy_id;
+
         $data['interview_template_id'] = $this->interview_template_id;
 
-        $data['should_be_invited_at'] = $this->should_be_invited_at;
+        $data['should_be_invited_at'] = $this->should_be_invited_at->format('Y-m-d H:i');
+
+        $data['creator'] = $this->creator;
 
         return $data;
     }

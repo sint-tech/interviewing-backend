@@ -2,6 +2,8 @@
 
 namespace App\Admin\InvitationManagement\Requests;
 
+use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -18,7 +20,8 @@ class InvitationStoreRequest extends FormRequest
             'mobile_country_code' => ['required',
                 new Enum(MobileCountryCodeEnum::class),
             ],
-            'interview_template_id' => ['required', 'integer', Rule::exists('interview_templates', 'id')->withoutTrashed()],
+            'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class))->withoutTrashed()],
+            'interview_template_id' => ['nullable', 'integer', Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed()],
             'mobile_number' => ['required', 'integer',
                 (new ValidMobileNumberRule($this->enum('mobile_country_code', MobileCountryCodeEnum::class))),
             ],
