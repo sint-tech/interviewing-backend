@@ -4,6 +4,7 @@ namespace Domain\InterviewManagement\Models;
 
 use Database\Factories\InterviewTemplateFactory;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
+use Domain\InterviewManagement\Scopes\ForAuthUserScope;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -67,5 +68,10 @@ class InterviewTemplate extends Model
     protected static function newFactory(): InterviewTemplateFactory
     {
         return new InterviewTemplateFactory();
+    }
+
+    protected static function booted(): void
+    {
+        parent::addGlobalScope(new ForAuthUserScope());
     }
 }

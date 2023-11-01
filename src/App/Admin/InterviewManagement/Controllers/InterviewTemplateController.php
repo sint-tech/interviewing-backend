@@ -32,9 +32,10 @@ class InterviewTemplateController extends Controller
 
     public function store(InterviewTemplateStoreRequest $request, InterviewTemplateDataFactory $interviewTemplateDataFactory): InterviewTemplateResource
     {
-        $interviewTemplate = (new CreateInterviewTemplateAction(
-            $interviewTemplateDataFactory->fromRequest($request))
-        )->execute()->load('questionVariants');
+        $interviewTemplate = (new CreateInterviewTemplateAction()
+        )->execute(
+            $interviewTemplateDataFactory->fromRequest($request)
+        )->load('questionVariants');
 
         return InterviewTemplateResource::make($interviewTemplate);
     }

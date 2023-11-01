@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -56,6 +57,10 @@ class Handler extends ExceptionHandler
             $ids = Arr::join($e->getIds(), ', ', 'and ');
 
             return message_response("no query result for $ids", Response::HTTP_NOT_FOUND);
+        }
+
+        if ($e instanceof NotFoundHttpException) {
+            return message_response(sprintf('URL:%s not found', url()->current()), 404);
         }
 
         if ($e instanceof AuthorizationException) {

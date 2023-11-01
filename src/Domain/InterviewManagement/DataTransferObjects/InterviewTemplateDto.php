@@ -23,7 +23,6 @@ class InterviewTemplateDto extends Data
         public readonly bool $reusable,
         #[Filled, Min(1)] #[MapInputName('question_variant_ids')]
         public readonly iterable $question_variants,
-        public readonly InterviewTemplateSettingsDto|Optional $interview_template_settings_dto
     ) {
         $this->additional([
             'creator_type' => $this->creator::class,
