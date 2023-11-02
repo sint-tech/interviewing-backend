@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Support\Scopes\ForAuthScope;
+use Support\Traits\Model\HasBatch;
 
 class Invitation extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,HasBatch,SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -61,7 +62,11 @@ class Invitation extends Model
     protected static function booted(): void
     {
         static::addGlobalScope((new ForAuthScope())->forOrganizationEmployee(function (Builder $builder) {
-            //vacancy global scope will bound, so need to check
+            /*
+             * vacancy global scope will bound,
+             * the final query will contain
+             * `where has vacancies where organization_id = (current employee organizational id)`
+             */
             $builder->whereHas('vacancy');
         }));
     }

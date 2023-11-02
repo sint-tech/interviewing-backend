@@ -13,20 +13,29 @@ use Illuminate\Database\Eloquent\Scope;
 
 class ForAuthScope implements Scope
 {
-    public array $buildersBerUser = [];
+    protected array $buildersBerUser = [];
+
+    const GUEST_KEY = '__GUEST__';
+
+    protected bool $shouldApplyGuestBuilder = false;
 
     /**
      * Apply the scope to a given Eloquent query builder.
      *
      * @throws AuthorizationException
+     * @throws \Throwable
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (! app()->runningInConsole() && ! auth()->hasUser()) {
-            throw new AuthorizationException('forbidden');
+        if (app()->runningInConsole() && ! auth()->runningUnitTests()) {
+            return;
         }
 
-        $key = $this->modelKey(auth()->user());
+        if (auth()->guest() && ! isset($this->buildersBerUser[self::GUEST_KEY])) {
+            return;
+        }
+
+        $key = auth()->guest() ? self::GUEST_KEY : $this->modelKey(auth()->user());
 
         if (! isset($this->buildersBerUser[$key])) {
             return;
@@ -54,6 +63,13 @@ class ForAuthScope implements Scope
     public function forCandidate(\Closure $builder): self
     {
         $this->forAuthUser(Candidate::class, $builder);
+
+        return $this;
+    }
+
+    public function forGuest(\Closure $builder): self
+    {
+        $this->buildersBerUser[self::GUEST_KEY] = $builder;
 
         return $this;
     }

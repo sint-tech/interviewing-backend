@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Domain\Invitation\Models\Invitation;
-use Domain\Invitation\ValueObjects\InvitationBatch;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,7 +28,6 @@ class InvitationFactory extends Factory
             'should_be_invited_at' => now()->addDays(1),
             'expired_at' => now()->addDays(5),
             'vacancy_id' => Vacancy::factory(),
-            'batch' => InvitationBatch::getInstance()->getNextBatch(),
         ];
     }
 }

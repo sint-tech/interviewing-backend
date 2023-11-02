@@ -2,7 +2,6 @@
 
 namespace Domain\Invitation\DataTransferObjects;
 
-use Domain\Invitation\ValueObjects\InvitationBatch;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Support\Optional;
 use Illuminate\Validation\Rule;
@@ -37,7 +36,6 @@ class InvitationDto extends Data
             ->createMobileNumberInstance($this->mobile_country_code);
 
         $this->additional([
-            'batch' => InvitationBatch::getInstance()->getNextBatch(),
             'mobile_number' => $mobileStrategy->trimToNationalInteger($this->dirty_mobile_number),
         ]);
 

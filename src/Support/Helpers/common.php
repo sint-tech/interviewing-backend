@@ -43,7 +43,7 @@ if (! function_exists('enum_to_array')) {
 
 if (! function_exists('table_name')) {
     /**
-     * get model db table name
+     * get db table name
      */
     function table_name(string|Model|Builder $object): string
     {
@@ -53,7 +53,7 @@ if (! function_exists('table_name')) {
             return $object->getModel()->getTable();
         }
 
-        return (new $object)->getTable();
+        return class_exists($object) ? (new $object)->getTable() : $object;
     }
 }
 
