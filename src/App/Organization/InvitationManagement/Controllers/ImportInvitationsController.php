@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Admin\InvitationManagement\Controllers;
+namespace App\Organization\InvitationManagement\Controllers;
 
 use App\Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob;
-use App\Admin\InvitationManagement\Requests\ImportInvitationRequest;
-use Domain\Invitation\Actions\CreateInvitationAction;
-use Illuminate\Http\JsonResponse;
+use App\Organization\InvitationManagement\Requests\ImportInvitationRequest;
 use Support\Controllers\Controller;
 
 class ImportInvitationsController extends Controller
 {
-    public function __invoke(ImportInvitationRequest $request): JsonResponse
+    public function __invoke(ImportInvitationRequest $request)
     {
         $file = $request->file('file');
 
@@ -26,5 +24,6 @@ class ImportInvitationsController extends Controller
         ));
 
         return message_response('file uploaded, we will send you notification once importing finished!');
+
     }
 }

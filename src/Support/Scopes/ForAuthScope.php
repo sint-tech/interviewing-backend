@@ -27,7 +27,7 @@ class ForAuthScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (app()->runningInConsole() && ! auth()->runningUnitTests()) {
+        if (app()->runningInConsole() && ! app()->runningUnitTests()) {
             return;
         }
 

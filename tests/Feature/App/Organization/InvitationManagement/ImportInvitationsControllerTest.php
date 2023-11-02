@@ -1,0 +1,72 @@
+<?php
+
+namespace Tests\Feature\App\Organization\InvitationManagement;
+
+use App\Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob;
+use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Invitation\Models\Invitation;
+use Domain\Organization\Models\Employee;
+use Domain\Users\Models\User;
+use Domain\Vacancy\Models\Vacancy;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Bus;
+use Tests\Feature\Traits\AuthenticationInstallation;
+use Tests\TestCase;
+
+class ImportInvitationsControllerTest extends TestCase
+{
+    use DatabaseMigrations,AuthenticationInstallation,WithFaker;
+
+    protected Employee $employee;
+
+    protected UploadedFile $excelFile;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->migrateFreshUsing();
+
+        $this->installPassport();
+
+        Artisan::call('db:seed', [
+            '--class' => 'SintAdminsSeeder',
+        ]);
+
+        $this->employee = Employee::factory()->createOne();
+
+        $this->excelFile = (new UploadedFile(
+            public_path('tests/invitations.csv'),
+            'invitations.csv',
+            'csv',
+            null,
+            true
+        ));
+
+        $this->actingAs($this->employee,'api-employee');
+    }
+
+    /** @test  */
+    public function itShouldCallImportInvitationsFromExcelJobWhenHitEndpoint(): void
+    {
+        Bus::fake();
+
+        $vacancy = Vacancy::factory()->createOne([
+            'interview_template_id' => InterviewTemplate::factory()
+                ->for($this->employee,'creator')
+                ->for($this->employee,'owner')
+                ->createOne()->getKey()
+        ]);
+
+        $this->post(route('organization-api.invitations.import'), [
+            'file' => $this->excelFile,
+            'vacancy_id' => $vacancy->getKey(),
+            'should_be_invited_at' => now()->addDays(5)->format('Y-m-d H:i'),
+        ])->assertSuccessful();
+
+        Bus::assertDispatched(ImportInvitationsFromExcelJob::class);
+    }
+}

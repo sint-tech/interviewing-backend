@@ -4,6 +4,7 @@ use App\Organization\Auth\Controllers\LoginController;
 use App\Organization\Auth\Controllers\RegisterController;
 use App\Organization\EmployeeManagement\Controllers\EmployeeController;
 use App\Organization\InterviewManagement\Controllers\InterviewTemplateController;
+use App\Organization\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Organization\InvitationManagement\Controllers\InvitationController;
 use App\Organization\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
@@ -23,3 +24,4 @@ Route::prefix('interview-management')
     });
 
 Route::apiResource('invitations', InvitationController::class);
+Route::post('invitations/import', ImportInvitationsController::class)->name('invitations.import');
