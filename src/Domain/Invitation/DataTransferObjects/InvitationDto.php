@@ -24,7 +24,8 @@ class InvitationDto extends Data
         public readonly string $email,
         public readonly MobileCountryCodeEnum $mobile_country_code,
         public readonly int $dirty_mobile_number,
-        public int $interview_template_id,
+        public readonly int $vacancy_id,
+        public readonly int $interview_template_id,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]
         public readonly \DateTime $should_be_invited_at,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]

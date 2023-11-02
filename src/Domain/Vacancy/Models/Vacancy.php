@@ -7,12 +7,13 @@ use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
 use Domain\Vacancy\Builders\VacancyBuilder;
-use Domain\Vacancy\Scopes\ForAuthUserScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Support\Scopes\ForAuthScope;
 use Support\Traits\Model\HasCreator;
 use Support\Traits\Model\HasOwner;
 
@@ -75,6 +76,12 @@ class Vacancy extends Model
 
     protected static function booted(): void
     {
-        static::addGlobalScope(new ForAuthUserScope());
+        $scope = new ForAuthScope();
+
+        $scope->forOrganizationEmployee(
+            fn (Builder $builder) => $builder->where('organization_id', auth()->user()->organization_id)
+        );
+
+        static::addGlobalScope($scope);
     }
 }

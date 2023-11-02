@@ -2,12 +2,15 @@
 
 namespace Domain\Invitation\Models;
 
+use Database\Factories\InvitationFactory;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Vacancy\Models\Vacancy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Support\Scopes\ForAuthScope;
 
 class Invitation extends Model
 {
@@ -48,5 +51,18 @@ class Invitation extends Model
     public function invitationSent(): bool
     {
         return ! is_null($this->last_invited_at);
+    }
+
+    protected static function newFactory(): InvitationFactory
+    {
+        return new InvitationFactory();
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope((new ForAuthScope())->forOrganizationEmployee(function (Builder $builder) {
+            //vacancy global scope will bound, so need to check
+            $builder->whereHas('vacancy');
+        }));
     }
 }

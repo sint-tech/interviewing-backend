@@ -4,6 +4,7 @@ use App\Organization\Auth\Controllers\LoginController;
 use App\Organization\Auth\Controllers\RegisterController;
 use App\Organization\EmployeeManagement\Controllers\EmployeeController;
 use App\Organization\InterviewManagement\Controllers\InterviewTemplateController;
+use App\Organization\InvitationManagement\Controllers\InvitationController;
 use App\Organization\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,5 @@ Route::prefix('interview-management')
     ->group(function () {
         Route::apiResource('interview-templates', InterviewTemplateController::class);
     });
+
+Route::apiResource('invitations', InvitationController::class);

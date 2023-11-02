@@ -4,15 +4,17 @@ namespace Domain\InterviewManagement\Models;
 
 use Database\Factories\InterviewTemplateFactory;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
-use Domain\InterviewManagement\Scopes\ForAuthUserScope;
+use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Glorand\Model\Settings\Traits\HasSettingsField;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Support\Scopes\ForAuthScope;
 
 class InterviewTemplate extends Model
 {
@@ -72,6 +74,14 @@ class InterviewTemplate extends Model
 
     protected static function booted(): void
     {
-        parent::addGlobalScope(new ForAuthUserScope());
+        $scope = (new ForAuthScope());
+
+        parent::addGlobalScope(
+            $scope->forOrganizationEmployee(
+                function (Builder $builder) {
+                    $builder->whereIn('owner_type', [Organization::class, (new Organization())->getMorphClass()])
+                        ->where('owner_id', auth()->id());
+                })
+        );
     }
 }
