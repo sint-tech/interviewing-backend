@@ -17,8 +17,6 @@ class ForAuthScope implements Scope
 
     const GUEST_KEY = '__GUEST__';
 
-    protected bool $shouldApplyGuestBuilder = false;
-
     /**
      * Apply the scope to a given Eloquent query builder.
      *
@@ -31,11 +29,14 @@ class ForAuthScope implements Scope
             return;
         }
 
-        if (auth()->guest() && ! isset($this->buildersBerUser[self::GUEST_KEY])) {
+        if (auth()->guest() && ! isset($this->buildersBerUser[$this->modelKey(self::GUEST_KEY)])) {
             return;
         }
 
-        $key = auth()->guest() ? self::GUEST_KEY : $this->modelKey(auth()->user());
+        $key = $this->modelKey(auth()->guest() ?
+            self::GUEST_KEY :
+            auth()->user()
+        );
 
         if (! isset($this->buildersBerUser[$key])) {
             return;
@@ -69,7 +70,7 @@ class ForAuthScope implements Scope
 
     public function forGuest(\Closure $builder): self
     {
-        $this->buildersBerUser[self::GUEST_KEY] = $builder;
+        $this->forAuthUser(self::GUEST_KEY,$builder);
 
         return $this;
     }

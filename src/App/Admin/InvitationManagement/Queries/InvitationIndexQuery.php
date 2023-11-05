@@ -18,7 +18,7 @@ class InvitationIndexQuery extends QueryBuilder
 
         $this->allowedFilters(
             AllowedFilter::exact('interview_template_id'),
-            AllowedFilter::exact('invitation_id'),
+            AllowedFilter::exact('vacancy_id'),
             AllowedFilter::exact('id'),
         );
 

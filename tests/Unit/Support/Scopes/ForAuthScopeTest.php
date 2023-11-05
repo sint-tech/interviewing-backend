@@ -69,7 +69,7 @@ class ForAuthScopeTest extends TestCase
 
         $this->assertIsArray($result);
 
-        foreach (['user', 'employee', 'candidate', '__GUEST__'] as $key) {
+        foreach (['user', 'employee', 'candidate', '__guest__'] as $key) {
             $this->assertArrayHasKey($key, $result);
         }
     }
