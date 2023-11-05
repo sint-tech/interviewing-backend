@@ -3,6 +3,7 @@
 namespace App\Organization\InvitationManagement\Controllers;
 
 use App\Organization\InvitationManagement\Factories\InvitationDtoFactory;
+use App\Organization\InvitationManagement\Queries\InvitationIndexQuery;
 use App\Organization\InvitationManagement\Requests\InvitationStoreRequest;
 use App\Organization\InvitationManagement\Resources\InvitationResource;
 use Domain\Invitation\Actions\CreateInvitationAction;
@@ -12,10 +13,10 @@ use Support\Controllers\Controller;
 
 class InvitationController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(InvitationIndexQuery $query): AnonymousResourceCollection
     {
         return InvitationResource::collection(
-            Invitation::query()->paginate(pagination_per_page())
+            $query->paginate(pagination_per_page())
         );
     }
 

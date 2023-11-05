@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\InvitationManagement\Queries;
+namespace App\Organization\InvitationManagement\Queries;
 
 use Domain\Invitation\Models\Invitation;
 use Illuminate\Http\Request;
