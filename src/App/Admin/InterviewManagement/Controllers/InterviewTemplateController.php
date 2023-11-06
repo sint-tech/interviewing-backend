@@ -41,14 +41,14 @@ class InterviewTemplateController extends Controller
     }
 
     public function update(
-        InterviewTemplate $interview_template,
+        int $interview_template,
         InterviewTemplateUpdateRequest $request,
         UpdateInterviewTemplateAction $updateInterviewTemplateAction
     ): InterviewTemplateResource {
         $dto = (new InterviewTemplateDataFactory)->fromRequest($request);
 
         return InterviewTemplateResource::make(
-            $updateInterviewTemplateAction->execute($interview_template, $dto)
+            $updateInterviewTemplateAction->execute(InterviewTemplate::query()->findOrFail($interview_template), $dto)
         );
     }
 
