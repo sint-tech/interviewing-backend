@@ -32,7 +32,7 @@ class InterviewTemplateDto extends Data
         ]);
 
         foreach ($this->question_variants as $question_variant) {
-            if ($question_variant instanceof QuestionVariant || is_numeric($question_variant)) {
+            if ($question_variant instanceof QuestionVariant) {
                 continue;
             }
             throw new \InvalidArgumentException('array values must be of type QuestionVariant');

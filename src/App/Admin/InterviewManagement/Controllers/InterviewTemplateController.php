@@ -26,7 +26,7 @@ class InterviewTemplateController extends Controller
     public function show(int $interview_template): InterviewTemplateResource
     {
         return InterviewTemplateResource::make(
-            InterviewTemplate::query()->findOrFail($interview_template)
+            InterviewTemplate::query()->findOrFail($interview_template)->load('questionVariants')
         );
     }
 
@@ -52,8 +52,14 @@ class InterviewTemplateController extends Controller
         );
     }
 
-    public function destroy(int $interview_template)
+    public function destroy(int $interview_template): InterviewTemplateResource
     {
-        return $interview_template;
+        $interview_template = InterviewTemplate::query()->findOrFail($interview_template);
+
+        $interview_template->questionVariants()->detach();
+
+        $interview_template->delete();
+
+        return InterviewTemplateResource::make($interview_template);
     }
 }

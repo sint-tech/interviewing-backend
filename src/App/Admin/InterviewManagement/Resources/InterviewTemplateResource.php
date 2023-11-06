@@ -19,6 +19,7 @@ class InterviewTemplateResource extends JsonResource
             'description' => (string) $this->resource->description,
             'reusable' => (bool) $this->resource->reusable,
             'availability_status' => $this->resource->availability_status,
+            'deleted_at' => $this->whenNotNull($this->deleted_at?->format('Y-m-d H:i')),
             'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants')),
         ];
     }

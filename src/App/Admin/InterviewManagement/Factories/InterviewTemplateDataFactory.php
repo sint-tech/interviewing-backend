@@ -29,6 +29,7 @@ class InterviewTemplateDataFactory
         $relationData = [
             'owner' => $interview_template->owner,
             'creator' => $interview_template->creator,
+            'question_variants' => [],
         ];
 
         if ($request->filled('question_variant_ids')) {
@@ -39,9 +40,9 @@ class InterviewTemplateDataFactory
         }
 
         $request_data = array_merge(
-            Arr::except($request->validated(), 'question_variant_ids'),
             $relationData,
-            $interview_template->unsetRelations()->toArray()
+            $interview_template->unsetRelations()->toArray(),
+            Arr::except($request->validated(), 'question_variant_ids'),
         );
 
         return InterviewTemplateDto::from($request_data);
@@ -52,7 +53,7 @@ class InterviewTemplateDataFactory
         $request_data = array_merge($request->validated(), [
             'creator' => auth()->user(),
             'owner' => $request->getOwnerInstance(),
-            'question_variants' => $request->questionVariants(),
+            'question_variant_ids' => $request->questionVariants(),
         ]);
 
         return InterviewTemplateDto::from($request_data);
