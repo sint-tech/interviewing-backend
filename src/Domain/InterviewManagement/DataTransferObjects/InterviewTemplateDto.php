@@ -19,6 +19,7 @@ class InterviewTemplateDto extends Data
         public readonly InterviewTemplateAvailabilityStatusEnum $availability_status,
         public readonly ?int $organization_id,
         public readonly Authenticatable $creator,
+        public readonly Optional|int $parent_id,
         public readonly bool $reusable,
         #[Filled, Min(1)] #[MapInputName('question_variant_ids')]
         public readonly iterable $question_variants,

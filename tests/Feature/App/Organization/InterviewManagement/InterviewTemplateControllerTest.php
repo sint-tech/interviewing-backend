@@ -53,4 +53,24 @@ class InterviewTemplateControllerTest extends TestCase
 
         $this->assertCount(1, InterviewTemplate::query()->get());
     }
+
+    /** @test  */
+    public function itShouldCreateInterviewTemplateForParent(): void
+    {
+        $this->actingAs($this->employeeAuth, 'api-employee')->post(route('organization-api.interview-templates.store'), [
+            'name' => 'testing name',
+            'description' => null,
+            'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,
+            'reusable' => 1,
+            'question_variants' => [
+                $this->questionVariants->first()->getKey(),
+                $this->questionVariants->last()->getKey(),
+            ],
+            'parent_id' => InterviewTemplate::factory()->create([
+                'organization_id' => $this->employeeAuth->organization_id,
+            ])->getKey(),
+        ])->assertSuccessful();
+
+        $this->assertNotNull(InterviewTemplate::query()->latest('id')->first()->parent_id);
+    }
 }

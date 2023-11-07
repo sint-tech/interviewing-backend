@@ -15,17 +15,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kalnoy\Nestedset\NodeTrait;
 use Support\Scopes\ForAuthScope;
 
 class InterviewTemplate extends Model
 {
-    use HasFactory,SoftDeletes,HasSettingsField;
+    use HasFactory,SoftDeletes,HasSettingsField,NodeTrait;
 
     protected $fillable = [
         'name',
         'description',
         'availability_status',
         'organization_id',
+        'parent_id',
         'creator_id',
         'creator_type',
         'reusable',

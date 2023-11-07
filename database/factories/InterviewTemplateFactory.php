@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,8 +25,7 @@ class InterviewTemplateFactory extends Factory
             'reusable' => $this->faker->boolean(90),
             'creator_id' => User::factory(),
             'creator_type' => User::class,
-            'owner_id' => User::factory(),
-            'owner_type' => User::class,
+            'organization_id' => Organization::factory(),
         ];
     }
 }
