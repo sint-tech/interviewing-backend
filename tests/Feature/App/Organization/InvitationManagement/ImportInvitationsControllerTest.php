@@ -4,9 +4,7 @@ namespace Tests\Feature\App\Organization\InvitationManagement;
 
 use App\Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob;
 use Domain\InterviewManagement\Models\InterviewTemplate;
-use Domain\Invitation\Models\Invitation;
 use Domain\Organization\Models\Employee;
-use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -46,7 +44,7 @@ class ImportInvitationsControllerTest extends TestCase
             true
         ));
 
-        $this->actingAs($this->employee,'api-employee');
+        $this->actingAs($this->employee, 'api-employee');
     }
 
     /** @test  */
@@ -56,12 +54,12 @@ class ImportInvitationsControllerTest extends TestCase
 
         $vacancy = Vacancy::factory()->createOne([
             'interview_template_id' => InterviewTemplate::factory()
-                ->for($this->employee,'creator')
-                ->for($this->employee,'owner')
-                ->createOne()->getKey()
+                ->for($this->employee, 'creator')
+                ->for($this->employee, 'owner')
+                ->createOne()->getKey(),
         ]);
 
-        $this->post(route('organization-api.invitations.import'), [
+        $this->post(route('organization.invitations.import'), [
             'file' => $this->excelFile,
             'vacancy_id' => $vacancy->getKey(),
             'should_be_invited_at' => now()->addDays(5)->format('Y-m-d H:i'),

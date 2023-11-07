@@ -40,7 +40,7 @@ class InterviewTemplateControllerTest extends TestCase
     {
         $this->assertCount(0, InterviewTemplate::query()->get());
 
-        $this->actingAs($this->employeeAuth, 'api-employee')->post(route('organization-api.interview-templates.store'), [
+        $this->actingAs($this->employeeAuth, 'api-employee')->post(route('organization.interview-templates.store'), [
             'name' => 'testing name',
             'description' => null,
             'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,
@@ -57,7 +57,7 @@ class InterviewTemplateControllerTest extends TestCase
     /** @test  */
     public function itShouldCreateInterviewTemplateForParent(): void
     {
-        $this->actingAs($this->employeeAuth, 'api-employee')->post(route('organization-api.interview-templates.store'), [
+        $this->actingAs($this->employeeAuth, 'api-employee')->post(route('organization.interview-templates.store'), [
             'name' => 'testing name',
             'description' => null,
             'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,

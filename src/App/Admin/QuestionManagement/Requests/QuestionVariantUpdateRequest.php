@@ -3,10 +3,9 @@
 namespace App\Admin\QuestionManagement\Requests;
 
 use App\Admin\QuestionManagement\Requests\Traits\QuestionVariantOwnerTrait;
-use Domain\QuestionManagement\Enums\QuestionVariantOwnerEnum;
+use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Support\Rules\MorphRelationExistRule;
 
 class QuestionVariantUpdateRequest extends FormRequest
 {
@@ -20,13 +19,11 @@ class QuestionVariantUpdateRequest extends FormRequest
             'question_id' => ['filled', Rule::exists('questions', 'id')->withoutTrashed()],
             'reading_time_in_seconds' => ['filled', 'integer', 'min:1'],
             'answering_time_in_seconds' => ['filled', 'integer', 'min:1'],
-            'owner' => ['filled',
-                'array',
-                (new MorphRelationExistRule(
-                    QuestionVariantOwnerEnum::class,
-                    $this->input('owner.model_type') == 'admin' ? 'users' : null)
-                ),
-            ],
         ];
+    }
+
+    public function questionVariant(): QuestionVariant
+    {
+        return QuestionVariant::query()->findOrFail($this->question_variant);
     }
 }

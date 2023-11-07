@@ -8,6 +8,8 @@ use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
 use Domain\AnswerManagement\Models\Answer;
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Organization\Models\Organization;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Support\Scopes\ForAuthScope;
 
 /**
  * @property AiPromptMessage $defaultAiPromptMessage
@@ -37,13 +40,17 @@ class QuestionVariant extends Model
         'question_id',
         'creator_id',
         'creator_type',
-        'owner_id',
-        'owner_type',
+        'organization_id',
     ];
 
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class, 'question_id');
+    }
+
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'organization_id');
     }
 
     public function questionCluster(): HasOneDeep
@@ -123,5 +130,16 @@ class QuestionVariant extends Model
     protected static function newFactory()
     {
         return new QuestionVariantFactory;
+    }
+
+    protected static function booted()
+    {
+        $scope = new ForAuthScope();
+
+        $scope->forOrganizationEmployee(function (Builder $builder) {
+            return $builder->where('organization_id', auth()->user()->organization_id);
+        });
+
+        static::addGlobalScope($scope);
     }
 }

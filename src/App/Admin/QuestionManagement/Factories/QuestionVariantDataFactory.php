@@ -12,7 +12,6 @@ class QuestionVariantDataFactory
     {
         $data = array_merge($request->validated(), [
             'creator' => auth()->user(),
-            'owner' => $request->getOwnerInstance(),
         ]);
 
         return QuestionVariantDto::from($data);
@@ -20,11 +19,7 @@ class QuestionVariantDataFactory
 
     public static function fromUpdateRequest(QuestionVariantUpdateRequest $request): QuestionVariantDto
     {
-        $data = $request->validated();
-
-        if ($request->filled('owner')) {
-            $data['owner'] = $request->getOwnerInstance();
-        }
+        $data = array_merge($request->questionVariant()->toArray(), $request->validated());
 
         return QuestionVariantDto::from($data);
     }

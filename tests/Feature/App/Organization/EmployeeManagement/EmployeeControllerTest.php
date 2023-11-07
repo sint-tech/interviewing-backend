@@ -77,7 +77,7 @@ class EmployeeControllerTest extends TestCase
         ];
 
         $this->actingAs($organizationManager, 'api')
-            ->post(route('organization-api.employees.store'), $request_data)
+            ->post(route('organization.employees.store'), $request_data)
             ->assertCreated()
             ->assertJson(function (AssertableJson $json) {
                 return $json->hasAll('data.first_name', 'data.last_name', 'data.email')
@@ -90,7 +90,7 @@ class EmployeeControllerTest extends TestCase
     {
         $employee = Employee::factory()->for(Organization::factory())->createOne(['is_organization_manager' => true]);
 
-        $this->actingAs($employee, 'api-employee')->delete(route('organization-api.employees.destroy', ['employee' => $employee->getKey()]))
+        $this->actingAs($employee, 'api-employee')->delete(route('organization.employees.destroy', ['employee' => $employee->getKey()]))
             ->assertForbidden();
     }
 
@@ -101,14 +101,14 @@ class EmployeeControllerTest extends TestCase
 
         $outside_employee = Employee::factory()->for(Organization::factory())->createOne(['is_organization_manager' => true]);
 
-        $this->actingAs($employee, 'api-employee')->delete(route('organization-api.employees.destroy',
+        $this->actingAs($employee, 'api-employee')->delete(route('organization.employees.destroy',
             [
                 'employee' => Employee::query()->whereKey(2)->first()->getKey(),
             ]))
             ->assertSuccessful()
             ->assertJson(fn (AssertableJson $json) => $json->has('data.deleted_at')->whereType('data.deleted_at', 'string'));
 
-        $this->actingAs($employee, 'api-employee')->delete(route('organization-api.employees.destroy', ['employee' => $outside_employee->getKey()]))
+        $this->actingAs($employee, 'api-employee')->delete(route('organization.employees.destroy', ['employee' => $outside_employee->getKey()]))
             ->assertNotFound();
 
     }

@@ -6,17 +6,17 @@ use App\Admin\QuestionManagement\Factories\QuestionVariantDataFactory;
 use App\Admin\QuestionManagement\Queries\QuestionVariantIndexQuery;
 use App\Admin\QuestionManagement\Requests\QuestionVariantStoreRequest;
 use App\Admin\QuestionManagement\Requests\QuestionVariantUpdateRequest;
-use App\Admin\QuestionManagement\Resources\QuestionResource;
 use App\Admin\QuestionManagement\Resources\QuestionVariantResource;
 use Domain\QuestionManagement\Actions\CreateQuestionVariantAction;
 use Domain\QuestionManagement\Actions\DeleteQuestionVariantAction;
 use Domain\QuestionManagement\Actions\UpdateQuestionVariantAction;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Support\Controllers\Controller;
 
 class QuestionVariantController extends Controller
 {
-    public function index(QuestionVariantIndexQuery $query)
+    public function index(QuestionVariantIndexQuery $query): AnonymousResourceCollection
     {
         return QuestionVariantResource::collection(
             $query->paginate(
@@ -25,24 +25,26 @@ class QuestionVariantController extends Controller
         );
     }
 
-    public function show(int $question_variant)
+    public function show(int $question_variant): QuestionVariantResource
     {
-        return QuestionResource::make(QuestionVariant::query()->findOrFail($question_variant));
+        return QuestionVariantResource::make(QuestionVariant::query()->findOrFail($question_variant));
     }
 
-    public function store(QuestionVariantStoreRequest $request)
+    public function store(QuestionVariantStoreRequest $request): QuestionVariantResource
     {
         $question_variant_dto = QuestionVariantDataFactory::fromRequest($request);
 
         return QuestionVariantResource::make(
-            (new CreateQuestionVariantAction($question_variant_dto))->execute()
+            (new CreateQuestionVariantAction())->execute($question_variant_dto)->load('organization')
         );
     }
 
-    public function update(QuestionVariant $questionVariant, QuestionVariantUpdateRequest $request)
+    public function update(QuestionVariant $questionVariant, QuestionVariantUpdateRequest $request): QuestionVariantResource
     {
         return QuestionVariantResource::make(
-            (new UpdateQuestionVariantAction($questionVariant, QuestionVariantDataFactory::fromUpdateRequest($request)))->execute()
+            (new UpdateQuestionVariantAction())->execute(
+                $questionVariant, QuestionVariantDataFactory::fromUpdateRequest($request)
+            )
         );
     }
 

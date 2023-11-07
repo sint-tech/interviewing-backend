@@ -8,15 +8,13 @@ use Domain\QuestionManagement\Models\QuestionVariant;
 class UpdateQuestionVariantAction
 {
     public function __construct(
-        public QuestionVariant $questionVariant,
-        public readonly QuestionVariantDto $questionVariantDto
     ) {
     }
 
-    public function execute(): QuestionVariant
+    public function execute(QuestionVariant $questionVariant, QuestionVariantDto $questionVariantDto): QuestionVariant
     {
-        $this->questionVariant->update($this->questionVariantDto->except('creator', 'owner')->toArray());
+        $questionVariant->update($questionVariantDto->except('creator')->toArray());
 
-        return $this->questionVariant->refresh();
+        return $questionVariant->refresh();
     }
 }

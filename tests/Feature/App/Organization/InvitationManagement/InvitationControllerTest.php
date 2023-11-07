@@ -33,7 +33,7 @@ class InvitationControllerTest extends TestCase
 
         Invitation::factory(15)->for(Vacancy::factory()->for(Organization::factory(), 'organization')->create())->create();
 
-        $this->get(route('organization-api.invitations.index'))
+        $this->get(route('organization.invitations.index'))
             ->assertSuccessful()
             ->assertJsonCount(15, 'data');
     }
@@ -45,10 +45,10 @@ class InvitationControllerTest extends TestCase
 
         $outOfScopeInvitations = Invitation::factory(15)->for(Vacancy::factory()->for(Organization::factory(), 'organization'))->create();
 
-        $this->get(route('organization-api.invitations.show', $scopedInvitations->first()))
+        $this->get(route('organization.invitations.show', $scopedInvitations->first()))
             ->assertSuccessful();
 
-        $this->get(route('organization-api.invitations.show', $outOfScopeInvitations->first()))
+        $this->get(route('organization.invitations.show', $outOfScopeInvitations->first()))
             ->assertNotFound();
     }
 
@@ -67,7 +67,7 @@ class InvitationControllerTest extends TestCase
 
         $this->assertEmpty(Invitation::query()->get());
 
-        $this->post(route('organization-api.invitations.store'), $request_data)
+        $this->post(route('organization.invitations.store'), $request_data)
             ->assertSuccessful();
 
         $this->assertCount(1, Invitation::query()->get());
@@ -78,7 +78,7 @@ class InvitationControllerTest extends TestCase
     {
         $invitation = Invitation::factory()->for(Vacancy::factory()->for($this->employeeAuth->organization, 'organization')->createOne())->createOne();
 
-        $this->delete(route('organization-api.invitations.destroy', $invitation))
+        $this->delete(route('organization.invitations.destroy', $invitation))
             ->assertSuccessful()
             ->assertJson(function (AssertableJson $json) {
                 return $json->has('data.deleted_at')

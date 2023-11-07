@@ -7,13 +7,16 @@ use Domain\QuestionManagement\Models\QuestionVariant;
 
 class CreateQuestionVariantAction
 {
+    protected QuestionVariantDto $questionVariantDto;
+
     public function __construct(
-        public QuestionVariantDto $questionVariantDto
     ) {
     }
 
-    public function execute(): QuestionVariant
+    public function execute(QuestionVariantDto $questionVariantDto): QuestionVariant
     {
+        $this->questionVariantDto = $questionVariantDto;
+
         $question_variant = new QuestionVariant();
 
         $data = $this->questionVariantDto->except('creator', 'owner')->toArray();
@@ -26,7 +29,6 @@ class CreateQuestionVariantAction
 
         return $question_variant->load([
             'question',
-            'owner',
             'creator',
         ]);
     }
