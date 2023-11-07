@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('interview_templates', function (Blueprint $table) {
-            $table->dropUnique(['name', 'organization_id']);
+            $table->dropUnique(['name', 'organization_id', 'deleted_at']);
         });
     }
 };
