@@ -13,7 +13,10 @@ class InterviewTemplateStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'name' => ['required', 'string', 'min:3', 'max:255',
+                Rule::unique(InterviewTemplate::class)
+                    ->where('organization_id', auth()->user()->organization_id),
+            ],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'reusable' => ['required', 'boolean'],
             'parent_id' => ['filled', Rule::exists(table_name(InterviewTemplate::class), 'id')

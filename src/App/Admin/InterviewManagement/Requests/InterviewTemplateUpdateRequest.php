@@ -13,10 +13,12 @@ class InterviewTemplateUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['filled', 'string', 'min:3', 'max:255'],
+            'name' => ['filled', 'string', 'min:3', 'max:255', Rule::unique(InterviewTemplate::class)
+                ->where('organization_id',$this->interviewTemplate()->organization_id)
+                ->ignore($this->interviewTemplate())
+            ],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'availability_status' => ['filled', Rule::enum(InterviewTemplateAvailabilityStatusEnum::class)],
-            'organization_id' => ['nullable', Rule::exists(table_name(Organization::class), 'id')->withoutTrashed()],
             'reusable' => ['sometimes', 'boolean'],
             'question_variant_ids' => ['filled', 'array', 'min:1'],
             'question_variant_ids.*' => ['required_with:question_variant_ids', 'numeric', Rule::exists('question_variants', 'id')->withoutTrashed(), 'distinct'],
