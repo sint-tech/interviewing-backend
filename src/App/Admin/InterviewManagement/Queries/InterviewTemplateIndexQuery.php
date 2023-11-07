@@ -24,6 +24,7 @@ class InterviewTemplateIndexQuery extends QueryBuilder
 
         $this->allowedIncludes(
             AllowedInclude::relationship('questionVariants'),
+            AllowedInclude::relationship('organization'),
         );
 
         $this->defaultSort('-id');
