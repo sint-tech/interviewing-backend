@@ -10,6 +10,7 @@ use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -24,8 +25,7 @@ class InterviewTemplate extends Model
         'name',
         'description',
         'availability_status',
-        'owner_id',
-        'owner_type',
+        'organization_id',
         'creator_id',
         'creator_type',
         'reusable',
@@ -47,9 +47,9 @@ class InterviewTemplate extends Model
             ->whereIsEnded();
     }
 
-    public function owner(): MorphTo
+    public function organization(): BelongsTo
     {
-        return $this->morphTo('owner');
+        return $this->belongsTo(Organization::class, 'organization_id');
     }
 
     public function creator(): MorphTo
@@ -79,8 +79,7 @@ class InterviewTemplate extends Model
         parent::addGlobalScope(
             $scope->forOrganizationEmployee(
                 function (Builder $builder) {
-                    $builder->whereIn('owner_type', [Organization::class, (new Organization())->getMorphClass()])
-                        ->where('owner_id', auth()->id());
+                    return $builder->where('organization_id', auth()->user()->organization_id);
                 })
         );
     }

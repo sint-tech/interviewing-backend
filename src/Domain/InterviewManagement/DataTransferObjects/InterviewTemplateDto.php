@@ -10,7 +10,6 @@ use Spatie\LaravelData\Attributes\Validation\Filled;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
-use Support\Interfaces\OwnerInterface as Owner;
 
 class InterviewTemplateDto extends Data
 {
@@ -18,7 +17,7 @@ class InterviewTemplateDto extends Data
         public readonly string $name,
         public readonly string|Optional|null $description = null,
         public readonly InterviewTemplateAvailabilityStatusEnum $availability_status,
-        public readonly Owner $owner,
+        public readonly ?int $organization_id,
         public readonly Authenticatable $creator,
         public readonly bool $reusable,
         #[Filled, Min(1)] #[MapInputName('question_variant_ids')]
@@ -27,8 +26,6 @@ class InterviewTemplateDto extends Data
         $this->additional([
             'creator_type' => $this->creator::class,
             'creator_id' => $this->creator->getKey(),
-            'owner_id' => $this->owner->getKey(),
-            'owner_type' => $this->owner::class,
         ]);
 
         foreach ($this->question_variants as $question_variant) {

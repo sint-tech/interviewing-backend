@@ -18,6 +18,7 @@ class InterviewTemplateIndexQuery extends QueryBuilder
 
         $this->allowedFilters(
             AllowedFilter::exact('id'),
+            AllowedFilter::exact('organization_id'),
             AllowedFilter::exact('availability_status')
         );
 

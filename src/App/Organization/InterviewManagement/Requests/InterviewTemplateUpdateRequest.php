@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Admin\InterviewManagement\Requests;
+namespace App\Organization\InterviewManagement\Requests;
 
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
-use Domain\InterviewManagement\Models\InterviewTemplate;
-use Domain\Organization\Models\Organization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,15 +14,9 @@ class InterviewTemplateUpdateRequest extends FormRequest
             'name' => ['filled', 'string', 'min:3', 'max:255'],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'availability_status' => ['filled', Rule::enum(InterviewTemplateAvailabilityStatusEnum::class)],
-            'organization_id' => ['nullable', Rule::exists(table_name(Organization::class), 'id')->withoutTrashed()],
             'reusable' => ['sometimes', 'boolean'],
             'question_variant_ids' => ['filled', 'array', 'min:1'],
             'question_variant_ids.*' => ['required_with:question_variant_ids', 'numeric', Rule::exists('question_variants', 'id')->withoutTrashed(), 'distinct'],
         ];
-    }
-
-    public function interviewTemplate(): InterviewTemplate
-    {
-        return InterviewTemplate::query()->find($this->interview_template);
     }
 }

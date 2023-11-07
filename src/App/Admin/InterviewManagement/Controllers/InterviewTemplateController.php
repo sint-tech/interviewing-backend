@@ -26,7 +26,7 @@ class InterviewTemplateController extends Controller
     public function show(int $interview_template): InterviewTemplateResource
     {
         return InterviewTemplateResource::make(
-            InterviewTemplate::query()->findOrFail($interview_template)->load('questionVariants')
+            InterviewTemplate::query()->findOrFail($interview_template)->load('questionVariants', 'organization')
         );
     }
 
@@ -35,7 +35,7 @@ class InterviewTemplateController extends Controller
         $interviewTemplate = (new CreateInterviewTemplateAction()
         )->execute(
             $interviewTemplateDataFactory->fromRequest($request)
-        )->load('questionVariants');
+        )->load('questionVariants', 'organization');
 
         return InterviewTemplateResource::make($interviewTemplate);
     }

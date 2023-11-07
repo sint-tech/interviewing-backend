@@ -4,7 +4,6 @@ namespace Domain\InterviewManagement\Actions;
 
 use Domain\InterviewManagement\DataTransferObjects\InterviewTemplateDto;
 use Domain\InterviewManagement\Models\InterviewTemplate;
-use Domain\InterviewManagement\Models\InterviewTemplateQuestion;
 
 class CreateInterviewTemplateAction
 {
@@ -15,20 +14,20 @@ class CreateInterviewTemplateAction
     public function execute(InterviewTemplateDto $interviewTemplateDto): InterviewTemplate
     {
         $interviewTemplate = (new InterviewTemplate())->fill(
-            $interviewTemplateDto->except('creator', 'owner')->toArray()
+            $interviewTemplateDto->except('creator')->toArray()
         );
 
         $interviewTemplate->save();
 
         $interviewTemplate = $interviewTemplate->refresh();
 
+        $question_variants = [];
+
         foreach ($interviewTemplateDto->question_variants as $question_variant) {
-            InterviewTemplateQuestion::query()->create([
-                'question_variant_id' => $question_variant->getKey(),
-                'interview_template_id' => $interviewTemplate->getKey(),
-                'question_cluster_id' => $question_variant->questionCluster?->getKey(),
-            ]);
+            $question_variants[$question_variant->getKey()] = ['question_cluster_id' => $question_variant->questionCluster?->getKey()];
         }
+
+        $interviewTemplate->questionVariants()->sync($question_variants);
 
         return $interviewTemplate;
     }

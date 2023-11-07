@@ -24,10 +24,9 @@ class InterviewTemplateDataFactory
 
     protected function fromUpdateRequest(InterviewTemplateUpdateRequest $request): InterviewTemplateDto
     {
-        $interview_template = $request->interviewTemplate()->load(['owner', 'creator']);
+        $interview_template = $request->interviewTemplate()->load(['creator']);
 
         $relationData = [
-            'owner' => $interview_template->owner,
             'creator' => $interview_template->creator,
             'question_variants' => [],
         ];
@@ -52,7 +51,6 @@ class InterviewTemplateDataFactory
     {
         $request_data = array_merge($request->validated(), [
             'creator' => auth()->user(),
-            'owner' => $request->getOwnerInstance(),
             'question_variant_ids' => $request->questionVariants(),
         ]);
 
