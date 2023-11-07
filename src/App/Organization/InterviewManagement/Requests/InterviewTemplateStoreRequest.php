@@ -15,7 +15,8 @@ class InterviewTemplateStoreRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:3', 'max:255',
                 Rule::unique(InterviewTemplate::class)
-                    ->where('organization_id', auth()->user()->organization_id),
+                    ->where('organization_id', auth()->user()->organization_id)
+                    ->withoutTrashed(),
             ],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'reusable' => ['required', 'boolean'],

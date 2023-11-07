@@ -14,6 +14,7 @@ class InterviewTemplateUpdateRequest extends FormRequest
         return [
             'name' => ['filled', 'string', 'min:3', 'max:255', Rule::unique(InterviewTemplate::class)
                 ->where('organization_id',auth()->user()->organization_id)
+                ->withoutTrashed()
                 ->ignore($this->interviewTemplate())
             ],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],

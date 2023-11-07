@@ -17,7 +17,8 @@ class InterviewTemplateStoreRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:3', 'max:255',
                 Rule::unique(table_name(InterviewTemplate::class))
-                    ->where('organization_id', $this->input('organization_id')),
+                    ->where('organization_id', $this->input('organization_id'))
+                    ->withoutTrashed(),
             ],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'availability_status' => ['required', Rule::enum(InterviewTemplateAvailabilityStatusEnum::class)],
