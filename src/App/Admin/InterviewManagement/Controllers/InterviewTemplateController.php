@@ -10,11 +10,12 @@ use App\Admin\InterviewManagement\Resources\InterviewTemplateResource;
 use Domain\InterviewManagement\Actions\CreateInterviewTemplateAction;
 use Domain\InterviewManagement\Actions\UpdateInterviewTemplateAction;
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Support\Controllers\Controller;
 
 class InterviewTemplateController extends Controller
 {
-    public function index(InterviewTemplateIndexQuery $query)
+    public function index(InterviewTemplateIndexQuery $query): AnonymousResourceCollection
     {
         return InterviewTemplateResource::collection(
             $query->paginate(
