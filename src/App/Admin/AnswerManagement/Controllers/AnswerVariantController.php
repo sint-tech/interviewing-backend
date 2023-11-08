@@ -8,11 +8,12 @@ use App\Admin\AnswerManagement\Requests\AnswerVariantStoreRequest;
 use App\Admin\AnswerManagement\Resources\AnswerVariantResource;
 use Domain\AnswerManagement\Actions\CreateAnswerVariantAction;
 use Domain\AnswerManagement\Models\AnswerVariant;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Support\Controllers\Controller;
 
 class AnswerVariantController extends Controller
 {
-    public function index(AnswerVariantIndexQuery $query)
+    public function index(AnswerVariantIndexQuery $query): AnonymousResourceCollection
     {
         return AnswerVariantResource::collection(
             $query->paginate(
@@ -21,7 +22,7 @@ class AnswerVariantController extends Controller
         );
     }
 
-    public function show(int $answer_variant_id)
+    public function show(int $answer_variant_id): AnswerVariantResource
     {
         return AnswerVariantResource::make(
             AnswerVariant::query()->firstOrFail($answer_variant_id)

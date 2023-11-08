@@ -2,13 +2,10 @@
 
 namespace App\Admin\AnswerManagement\Requests;
 
-use Domain\AnswerManagement\Enums\AnswerVariantOwnerEnum;
 use Domain\AnswerManagement\Models\Answer;
 use Domain\Organization\Models\Organization;
-use Domain\Users\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Support\Rules\MorphRelationExistRule;
 
 class AnswerVariantStoreRequest extends FormRequest
 {
@@ -19,24 +16,8 @@ class AnswerVariantStoreRequest extends FormRequest
             'text' => ['required', 'string', 'min:3', 'max:100000'],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'score' => ['required', 'numeric', 'between:'.implode(',', $this->allowedScoreRange())],
-            'owner' => ['required', 'array',
-                (new MorphRelationExistRule(
-                    AnswerVariantOwnerEnum::class,
-                    $this->input('owner.type') == 'admin' ? 'users' : null
-                ))
-                    ->configMorphInputNames('id', 'type'),
-            ],
+            'organization_id' => ['nullable', Rule::exists(Organization::class, 'id')->withoutTrashed()],
         ];
-    }
-
-    public function getOwnerObject(): User|Organization
-    {
-        $query = match ($this->validated('owner.type')) {
-            AnswerVariantOwnerEnum::Organization->value => Organization::query(),
-            AnswerVariantOwnerEnum::Admin->value => User::query(),
-        };
-
-        return $query->find($this->validated('owner.id'));
     }
 
     protected function allowedScoreRange(): array

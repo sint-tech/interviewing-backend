@@ -11,7 +11,7 @@ class AnswerVariantDataFactory
     {
         $data = array_merge(
             $request->validated(),
-            ['owner' => $request->getOwnerObject(), 'creator' => auth()->user()]
+            ['creator' => auth()->user()]
         );
 
         return AnswerVariantDto::from($data);
