@@ -53,6 +53,10 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        if (app()->isLocal()) {
+            return parent::render($request, $e);
+        }
+
         if ($e instanceof ModelNotFoundException) {
             $ids = Arr::join($e->getIds(), ', ', 'and ');
 

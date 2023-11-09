@@ -11,13 +11,14 @@ class DateToHumanReadValueObject
     ) {
     }
 
-    public function toFullDateTimeFormat(): string
+    public static function format(?Carbon $date): ?string
     {
-        if (! $this->date) {
-            return '';
-        }
+        return (new self($date))->toFullDateTimeFormat();
+    }
 
-        return $this->date->format('Y-m-d H:m');
+    public function toFullDateTimeFormat(): ?string
+    {
+        return $this->date?->format('Y-m-d H:i');
     }
 
     public function __toString(): string

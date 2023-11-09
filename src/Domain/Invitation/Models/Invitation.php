@@ -2,6 +2,7 @@
 
 namespace Domain\Invitation\Models;
 
+use Carbon\Carbon;
 use Database\Factories\InvitationFactory;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Vacancy\Models\Vacancy;
@@ -12,10 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Support\Scopes\ForAuthScope;
 use Support\Traits\Model\HasBatch;
+use Support\Traits\Model\HasCreator;
 
+/**
+ * @property Carbon $should_be_invited_at
+ */
 class Invitation extends Model
 {
-    use HasFactory,HasBatch,SoftDeletes;
+    use HasFactory,HasBatch,SoftDeletes,HasCreator;
 
     protected $fillable = [
         'name',
@@ -24,10 +29,10 @@ class Invitation extends Model
         'mobile_number',
         'batch',
         'should_be_invited_at',
+        'expired_at',
         'interview_template_id',
         'vacancy_id',
         'last_invited_at',
-        'expired_at',
     ];
 
     protected $casts = [

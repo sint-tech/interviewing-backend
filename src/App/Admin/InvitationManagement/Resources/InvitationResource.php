@@ -16,7 +16,7 @@ class InvitationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => (int) $this->getKey(),
+            'id' => (int) $this->resource->getKey(),
             'name' => (string) $this->name,
             'batch' => (int) $this->batch,
             'email' => (string) $this->email,
@@ -26,8 +26,8 @@ class InvitationResource extends JsonResource
             'vacancy' => VacancyResource::make($this->whenLoaded('vacancy')),
             'interview_template' => InterviewTemplateResource::make($this->whenLoaded('interviewTemplate')),
             'invitation_sent' => $this->resource->invitationSent(),
-            'created_at' => (string) new DateToHumanReadValueObject($this->created_at),
-            'expired_at' => $this->when(is_null($this->exired_at), null, new DateToHumanReadValueObject($this->exired_at)),
+            'created_at' => (string) new DateToHumanReadValueObject($this->resource->created_at),
+            'expired_at' => DateToHumanReadValueObject::format($this->resource->expired_at),
         ];
     }
 }

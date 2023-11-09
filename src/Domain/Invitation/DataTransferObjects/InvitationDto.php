@@ -25,12 +25,12 @@ class InvitationDto extends Data
         public readonly int $dirty_mobile_number,
         public readonly int $vacancy_id,
         public readonly int $interview_template_id,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]
+        #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z'])]
         public readonly \DateTime $should_be_invited_at,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i')]
+        #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z'])]
         public readonly \DateTime|null|Optional $expired_at,
         #[WithCastable(Creator::class, lazy_load_instance: false)]
-        public readonly Creator $creator,
+        public readonly ?Creator $creator,
     ) {
         $mobileStrategy = (new MobileNumberFactory())
             ->createMobileNumberInstance($this->mobile_country_code);
