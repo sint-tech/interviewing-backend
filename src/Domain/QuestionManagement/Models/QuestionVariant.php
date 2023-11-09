@@ -90,11 +90,6 @@ class QuestionVariant extends Model
         return $this->morphTo('creator');
     }
 
-    public function owner(): MorphTo
-    {
-        return $this->morphTo('owner');
-    }
-
     public function aiPromptMessages(): HasMany
     {
         return $this->hasMany(
