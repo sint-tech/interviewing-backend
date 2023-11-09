@@ -22,6 +22,22 @@ class Report extends Model
         'reportable_type',
     ];
 
+    protected static function booted()
+    {
+        static::retrieved(function (self $interviewReport) {
+            $meta = $interviewReport->metaKeys();
+
+            foreach ($interviewReport->getMeta(array_keys($meta), $meta) as $meta => $value) {
+                $interviewReport->getAttribute($meta, $value);
+            }
+        });
+    }
+
+    public function metaKeys(): array
+    {
+        throw new \Exception('please define meta keys');
+    }
+
     public function reportable(): MorphTo
     {
         return $this->morphTo('reportable');
@@ -29,6 +45,11 @@ class Report extends Model
 
     public function values(): HasMany
     {
-        return $this->hasMany(ReportValue::class, 'report_id');
+        return $this->metas();
+    }
+
+    public function getTable(): string
+    {
+        return 'reports';
     }
 }

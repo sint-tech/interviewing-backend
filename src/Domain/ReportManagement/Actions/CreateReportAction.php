@@ -11,6 +11,9 @@ class CreateReportAction
     ) {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function execute(
         ReportDto $reportDto
     ): Report {

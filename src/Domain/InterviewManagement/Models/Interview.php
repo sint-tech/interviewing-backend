@@ -9,7 +9,9 @@ use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Domain\ReportManagement\Models\InterviewReport;
 use Domain\ReportManagement\Traits\HasReport;
+use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,6 +51,11 @@ class Interview extends Model
     public function interviewTemplate(): BelongsTo
     {
         return $this->belongsTo(InterviewTemplate::class, 'interview_template_id');
+    }
+
+    public function vacancy(): BelongsTo
+    {
+        return $this->belongsTo(Vacancy::class, 'vacancy_id');
     }
 
     public function candidate(): BelongsTo
@@ -137,7 +144,9 @@ class Interview extends Model
 
     public function defaultLastReport(): MorphOne
     {
-        return $this->latestReport()->where('name', self::DEFAULT_REPORT_NAME);
+        return $this->morphOne(InterviewReport::class, 'reportable')
+            ->where('name', self::DEFAULT_REPORT_NAME)
+            ->latest();
     }
 
     public function allQuestionsAnswered(): bool

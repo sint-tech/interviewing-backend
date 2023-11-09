@@ -6,6 +6,7 @@ use App\Admin\Auth\Controllers\LoginController;
 use App\Admin\Auth\Controllers\LogoutController;
 use App\Admin\CandidateManagement\Controllers\CandidateController;
 use App\Admin\InterviewManagement\Controllers\ChangeInterviewStatusController;
+use App\Admin\InterviewManagement\Controllers\GetInterviewsReportsController;
 use App\Admin\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Admin\InterviewManagement\Controllers\InterviewTemplateReportsController;
 use App\Admin\InterviewManagement\Controllers\ScheduleInterviewTemplateDatesController;
@@ -45,6 +46,7 @@ Route::post('interview-templates/{interview_template}/schedule', ScheduleIntervi
 Route::get('interview-templates/{interview_template}/reports', InterviewTemplateReportsController::class)->name('interview-templates.reports');
 
 Route::post('interviews/{interview}/change-status', ChangeInterviewStatusController::class)->name('interviews.change-status');
+Route::get('interviews/reports', GetInterviewsReportsController::class)->name('interviews.reports');
 
 Route::apiResource('candidates', CandidateController::class)->only(['index', 'show']);
 
