@@ -25,7 +25,9 @@ class AnswerVariantController extends Controller
     public function show(int $answer_variant_id): AnswerVariantResource
     {
         return AnswerVariantResource::make(
-            AnswerVariant::query()->firstOrFail($answer_variant_id)
+            AnswerVariant::query()
+                ->firstOrFail($answer_variant_id)
+                ->load(['organization'])
         );
     }
 
@@ -34,7 +36,7 @@ class AnswerVariantController extends Controller
         $answer_variant_dto = AnswerVariantDataFactory::fromStoreRequest($request);
 
         return AnswerVariantResource::make(
-            (new CreateAnswerVariantAction($answer_variant_dto))->execute()
+            (new CreateAnswerVariantAction($answer_variant_dto))->execute()->load(['organization'])
         );
     }
 

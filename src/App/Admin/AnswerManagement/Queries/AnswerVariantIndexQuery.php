@@ -5,6 +5,7 @@ namespace App\Admin\AnswerManagement\Queries;
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AnswerVariantIndexQuery extends QueryBuilder
@@ -18,6 +19,10 @@ class AnswerVariantIndexQuery extends QueryBuilder
         $this->setAllowedFilters();
 
         $this->defaultSort('-id');
+
+        $this->allowedIncludes(
+            AllowedInclude::relationship('organization')
+        );
     }
 
     protected function setAllowedFilters(): self

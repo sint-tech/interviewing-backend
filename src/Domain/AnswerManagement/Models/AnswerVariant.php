@@ -5,6 +5,7 @@ namespace Domain\AnswerManagement\Models;
 use Database\Factories\AnswerVariantFactory;
 use Domain\InterviewManagement\Models\Answer as InterviewAnswer;
 use Domain\InterviewManagement\Models\Interview;
+use Domain\Organization\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +31,7 @@ class AnswerVariant extends Model
         'owner_type',
         'creator_id',
         'creator_type',
+        'organization_id',
     ];
 
     public function creator(): MorphTo
@@ -37,9 +39,9 @@ class AnswerVariant extends Model
         return $this->morphTo('creator');
     }
 
-    public function owner(): MorphTo
+    public function organization(): BelongsTo
     {
-        return $this->morphTo('owner');
+        return $this->belongsTo(Organization::class, 'organization_id');
     }
 
     public function answer(): BelongsTo
