@@ -9,8 +9,14 @@ use Domain\InterviewManagement\DataTransferObjects\InterviewTemplateSettingsDto;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Support\Controllers\Controller;
 
+/**
+ * @deprecated
+ */
 class ScheduleInterviewTemplateDatesController extends Controller
 {
+    /**
+     * @deprecated
+     */
     public function __invoke(InterviewTemplate $interview_template, ScheduleInterviewTemplateDatesRequest $request): InterviewTemplateResource
     {
         $result = (new ScheduleInterviewTemplateDatesAction($interview_template, InterviewTemplateSettingsDto::from([

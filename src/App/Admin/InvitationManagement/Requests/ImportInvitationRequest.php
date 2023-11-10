@@ -21,7 +21,7 @@ class ImportInvitationRequest extends FormRequest
                 'text/comma-separated-values',
                 'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'csv']
             )],
-            'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class), 'id')->withoutTrashed()],
+            'vacancy_id' => ['required', 'integer', Rule::exists(Vacancy::class, 'id')->withoutTrashed()],
             'interview_template_id' => ['nullable',
                 'integer',
                 Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed(),

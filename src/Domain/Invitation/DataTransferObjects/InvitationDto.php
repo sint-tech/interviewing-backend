@@ -2,6 +2,7 @@
 
 namespace Domain\Invitation\DataTransferObjects;
 
+use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Support\Optional;
 use Illuminate\Validation\Rule;
@@ -51,10 +52,12 @@ class InvitationDto extends Data
             'dirty_mobile_number' => ['required', 'integer',
                 new ValidMobileNumberRule(MobileCountryCodeEnum::from($context->fullPayload['mobile_country_code'])),
             ],
-            'interview_template_id' => ['required', 'integer', Rule::exists('interview_templates', 'id')->withoutTrashed(),
+            'interview_template_id' => ['required', 'integer',
+                Rule::exists(InterviewTemplate::class, 'id')->withoutTrashed(),
+                function ($attribute, mixed $value, \Closure $closure) use (&$context) {
+                },
             ],
-            'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class), 'id')
-                ->where('interview_template_id', $context->payload['interview_template_id'] ?? -1)->withoutTrashed()],
+            'vacancy_id' => ['required', 'integer', Rule::exists(Vacancy::class, 'id')],
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],
             'should_be_invited_at' => ['required', 'date_format:Y-m-d H:i', 'date', 'after:now'],
         ];

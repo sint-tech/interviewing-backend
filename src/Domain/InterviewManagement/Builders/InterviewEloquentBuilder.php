@@ -5,7 +5,6 @@ namespace Domain\InterviewManagement\Builders;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Models\Answer;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class InterviewEloquentBuilder extends Builder
@@ -61,16 +60,17 @@ class InterviewEloquentBuilder extends Builder
         return $this->orderByAvgScore('DESC');
     }
 
-    public function whereAccepted(): self
+    /**
+     * get the top candidates passed the interview
+     */
+    public function whereAccepted(int $open_positions = 1): self
     {
-        return $this->orderByAvgScore()
-            ->whereStatus(InterviewStatusEnum::Passed)
-            ->limit(5);
+        return $this->wherePassed()->take($open_positions);
     }
 
-    public function getAccepted(): Collection
+    public function wherePassed(): self
     {
         return $this->orderByAvgScoreDesc()
-            ->whereStatus(InterviewStatusEnum::Passed)->limit(5)->get();
+            ->whereStatus(InterviewStatusEnum::Passed);
     }
 }

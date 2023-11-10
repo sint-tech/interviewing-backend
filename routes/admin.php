@@ -8,7 +8,6 @@ use App\Admin\CandidateManagement\Controllers\CandidateController;
 use App\Admin\InterviewManagement\Controllers\ChangeInterviewStatusController;
 use App\Admin\InterviewManagement\Controllers\GetInterviewsReportsController;
 use App\Admin\InterviewManagement\Controllers\InterviewTemplateController;
-use App\Admin\InterviewManagement\Controllers\InterviewTemplateReportsController;
 use App\Admin\InterviewManagement\Controllers\ScheduleInterviewTemplateDatesController;
 use App\Admin\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Admin\InvitationManagement\Controllers\InvitationController;
@@ -43,7 +42,6 @@ Route::apiResource('answer-variants', AnswerVariantController::class);
 
 Route::apiResource('interview-templates', InterviewTemplateController::class);
 Route::post('interview-templates/{interview_template}/schedule', ScheduleInterviewTemplateDatesController::class);
-Route::get('interview-templates/{interview_template}/reports', InterviewTemplateReportsController::class)->name('interview-templates.reports');
 
 Route::post('interviews/{interview}/change-status', ChangeInterviewStatusController::class)->name('interviews.change-status');
 Route::get('interviews/reports', GetInterviewsReportsController::class)->name('interviews.reports');

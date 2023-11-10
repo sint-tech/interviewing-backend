@@ -24,7 +24,6 @@ enum InterviewStatusEnum: string
     public static function endedStatuses(): array
     {
         return [
-            InterviewStatusEnum::Accepted,
             InterviewStatusEnum::Rejected,
             InterviewStatusEnum::Withdrew,
             InterviewStatusEnum::Canceled,
