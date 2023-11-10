@@ -3,8 +3,10 @@
 namespace App\Admin\Vacancy\Controllers;
 
 use App\Admin\Vacancy\Requests\VacancyStoreRequest;
+use App\Admin\Vacancy\Requests\VacancyUpdateRequest;
 use App\Admin\Vacancy\Resources\VacancyResource;
 use Domain\Vacancy\Actions\CreateVacancyAction;
+use Domain\Vacancy\Actions\UpdateVacancyAction;
 use Domain\Vacancy\DataTransferObjects\VacancyDto;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -35,9 +37,15 @@ class VacancyController extends Controller
         );
     }
 
-    public function update()
+    public function update(int $vacancy,VacancyUpdateRequest $request,UpdateVacancyAction $action): VacancyResource
     {
-        //
+        $vacancy = Vacancy::query()->findOrFail($vacancy);
+
+        $dto = VacancyDto::from(array_merge($vacancy->toArray(),$request->validated()));
+
+        return VacancyResource::make(
+            $action->execute($vacancy,$dto)
+        );
     }
 
     public function destroy(int $vacancy): VacancyResource
