@@ -22,20 +22,25 @@ class Report extends Model
         'reportable_type',
     ];
 
+    protected $with = 'values';
+
     protected static function booted()
     {
         static::retrieved(function (self $interviewReport) {
             $meta = $interviewReport->metaKeys();
 
             foreach ($interviewReport->getMeta(array_keys($meta), $meta) as $meta => $value) {
-                $interviewReport->getAttribute($meta, $value);
+                $interviewReport->setAttribute($meta, $value);
             }
         });
     }
 
+    /**
+     * @throws \Exception
+     */
     public function metaKeys(): array
     {
-        throw new \Exception('please define meta keys');
+        throw new \Exception('this method should be defined');
     }
 
     public function reportable(): MorphTo

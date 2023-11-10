@@ -19,17 +19,21 @@ class InvitationUpdateRequest extends FormRequest
         return [
             'name' => ['filled', 'string', 'min:1'],
             'email' => ['filled', 'string', 'email'],
-            'mobile_country_code' => ['filled',
+            'mobile_country_code' => ['required_with:mobile_number',
                 new Enum(MobileCountryCodeEnum::class),
+            ],
+            'mobile_number' => ['required_with:mobile_country_code', 'integer',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (empty($value)) {
+                        return ;
+                    }
+                    (new ValidMobileNumberRule($this->enum('mobile_country_code', MobileCountryCodeEnum::class)))
+                        ->validate($attribute,$value,$fail);
+                },
             ],
             'vacancy_id' => ['filled', 'integer', Rule::exists(table_name(Vacancy::class), 'id')->withoutTrashed()],
             'interview_template_id' => ['nullable', 'integer',
                 Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed(),
-            ],
-            'mobile_number' => ['filled', 'integer',
-                $this->whenFilled('mobile_number', function () {
-                    (new ValidMobileNumberRule($this->enum('mobile_country_code', MobileCountryCodeEnum::class)));
-                }),
             ],
             'should_be_invited_at' => ['filled', 'date', 'date_format:Y-m-d H:i', 'after:now'],
             'expired_at' => ['nullable',

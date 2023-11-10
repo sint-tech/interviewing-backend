@@ -11,12 +11,15 @@ use Support\Services\MobileStrategy\MobileNumberFactory;
 class ValidMobileNumberRule implements ValidationRule
 {
     public function __construct(
-        protected MobileCountryCodeEnum|MobileCountryEnum $mobileCountryEnum
+        protected MobileCountryCodeEnum|MobileCountryEnum | null $mobileCountryEnum = null
     ) {
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if (is_null($this->mobileCountryEnum)){
+            $fail('mobile country code must be filled');
+        }
         if ($this->mobileNotValidWithThisCountry($value)) {
             $fail("the :attribute value not valid with country : {$this->mobileCountryEnum->value}");
         }
