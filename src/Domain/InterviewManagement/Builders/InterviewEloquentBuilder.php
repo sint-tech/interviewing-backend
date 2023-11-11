@@ -7,6 +7,9 @@ use Domain\InterviewManagement\Models\Answer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @mixin Builder
+ */
 class InterviewEloquentBuilder extends Builder
 {
     public function whereStatus(InterviewStatusEnum $status, string $operator = '=', string $boolean = 'and'): self

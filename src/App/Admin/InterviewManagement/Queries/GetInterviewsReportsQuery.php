@@ -31,11 +31,10 @@ class GetInterviewsReportsQuery extends QueryBuilder
     protected function handleStatusFilter(): self
     {
         if ($this->request->input('filter.status') === 'accepted') {
-            $this->subject
-                ->when(
-                    $this->request->missing('filter.vacancy_id'),
-                    fn () => abort(400, 'filter by vacancy_id Must be filled when filter by status = \'accepted\''))
-                ->whereAccepted(Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'))->open_positions);
+            $this->request->whenMissing('filter.vacancy_id',
+                fn () => abort(400, 'filter by vacancy_id Must be filled when filter by status = \'accepted\'')
+            );
+            $this->subject->whereAccepted(Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'))->open_positions);
         }
 
         if ($this->request->input('filter.status') == 'passed') {
@@ -62,10 +61,12 @@ class GetInterviewsReportsQuery extends QueryBuilder
     {
         $count = count(explode(QueryBuilderRequest::getFilterArrayValueDelimiter(), $this->request->input($filter_name)));
 
-        if ($count > 1) {
-            $filter_name = str_replace('filter.','',$filter_name);
-
-            abort(400, "only supported filter by single value for key: $filter_name");
+        if ($count <= 1) {
+            return;
         }
+
+        $filter_name = str_replace('filter.', '', $filter_name);
+
+        abort(400, "only supported filter by single value for key: $filter_name");
     }
 }
