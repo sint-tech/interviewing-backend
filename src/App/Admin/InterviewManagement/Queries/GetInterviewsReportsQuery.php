@@ -6,6 +6,7 @@ use Domain\InterviewManagement\Models\Interview;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\Exceptions\InvalidFilterQuery;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 
@@ -31,9 +32,8 @@ class GetInterviewsReportsQuery extends QueryBuilder
     protected function handleStatusFilter(): self
     {
         if ($this->request->input('filter.status') === 'accepted') {
-            $this->request->whenMissing('filter.vacancy_id',
-                fn () => abort(400, 'filter by vacancy_id Must be filled when filter by status = \'accepted\'')
-            );
+            $this->abortFilterVacancyIdRequired();
+
             $this->subject->whereAccepted(Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'))->open_positions);
         }
 
@@ -68,5 +68,12 @@ class GetInterviewsReportsQuery extends QueryBuilder
         $filter_name = str_replace('filter.', '', $filter_name);
 
         abort(400, "only supported filter by single value for key: $filter_name");
+    }
+
+    protected function abortFilterVacancyIdRequired(): void
+    {
+        $this->request->whenMissing('filter.vacancy_id',
+            fn () => abort(400, 'filter by vacancy_id Must be filled when filter by status = \'accepted\'')
+        );
     }
 }

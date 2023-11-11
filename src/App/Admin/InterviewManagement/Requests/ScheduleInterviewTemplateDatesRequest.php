@@ -4,6 +4,9 @@ namespace App\Admin\InterviewManagement\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @deprecated
+ */
 class ScheduleInterviewTemplateDatesRequest extends FormRequest
 {
     public function rules(): array

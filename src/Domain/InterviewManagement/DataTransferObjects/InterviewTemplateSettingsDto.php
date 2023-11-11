@@ -5,6 +5,9 @@ namespace Domain\InterviewManagement\DataTransferObjects;
 use Illuminate\Support\Carbon;
 use Spatie\LaravelData\Data;
 
+/**
+ * @deprecated
+ */
 class InterviewTemplateSettingsDto extends Data
 {
     public function __construct(

@@ -5,6 +5,9 @@ namespace Domain\InterviewManagement\Actions;
 use Domain\InterviewManagement\DataTransferObjects\InterviewTemplateSettingsDto;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 
+/**
+ * @deprecated
+ */
 class ScheduleInterviewTemplateDatesAction
 {
     public function __construct(
