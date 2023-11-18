@@ -8,6 +8,8 @@ return new class extends Migration
 {
     public function up()
     {
+        Schema::dropIfExists('invitations');
+
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
 
@@ -17,6 +19,8 @@ return new class extends Migration
             $table->integer('mobile_number');
 
             $table->integer('batch');
+
+            $table->morphs('creator');
 
             $table->timestamp('last_invited_at')->nullable();
             $table->timestamp('expired_at')->nullable();

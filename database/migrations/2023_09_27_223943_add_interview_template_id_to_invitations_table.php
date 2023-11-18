@@ -26,6 +26,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('invitations', function (Blueprint $table) {
+            if (Schema::getConnection()->getName() == 'sqlite') {
+                return;
+            }
             $table->dropConstrainedForeignId('interview_template_id');
         });
     }

@@ -9,6 +9,7 @@ use App\Admin\Organization\Requests\OrganizationStoreRequest;
 use App\Admin\Organization\Resources\OrganizationResource;
 use Domain\Organization\Actions\CreateOrganizationAction;
 use Domain\Organization\Actions\DeleteOrganizationAction;
+use Domain\Organization\Actions\RestoreOrganizationAction;
 use Domain\Organization\Models\Organization;
 use Support\Controllers\Controller;
 
@@ -44,5 +45,12 @@ class OrganizationController extends Controller
         $deletedOrganization = (new DeleteOrganizationAction($organization))->execute();
 
         return OrganizationResource::make($deletedOrganization);
+    }
+
+    public function restore(int $organization, RestoreOrganizationAction $action): OrganizationResource
+    {
+        return OrganizationResource::make(
+            $action->execute(Organization::onlyTrashed()->findOrFail($organization))
+        );
     }
 }

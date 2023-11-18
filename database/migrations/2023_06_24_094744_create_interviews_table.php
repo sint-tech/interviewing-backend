@@ -23,6 +23,7 @@ return new class extends Migration
 
             $table->timestamp('started_at')->nullable();
             $table->timestamp('ended_at')->nullable();
+            $table->enum('status', ['started', 'withdrew', 'canceled', 'finished', 'passed', 'rejected'])->default('started');
 
             $table->timestamps();
             $table->softDeletes();

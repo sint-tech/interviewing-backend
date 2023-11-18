@@ -15,7 +15,10 @@ return new class extends Migration
             $table->enum('availability_status', ['pending', 'available', 'unavailable', 'paused']);
 
             $table->morphs('creator');
-            $table->morphs('owner');
+            $table->foreignId('organization_id')
+                ->nullable()
+                ->constrained('organizations', 'id')
+                ->nullOnDelete();
 
             $table->boolean('reusable')->default(false);
 

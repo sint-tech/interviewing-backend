@@ -17,7 +17,10 @@ return new class extends Migration
             $table->foreignId('answer_id')->nullable()->constrained('answers')->nullOnDelete();
 
             $table->morphs('creator');
-            $table->morphs('owner');
+            $table->foreignId('organization_id')
+                ->nullable()
+                ->constrained('organizations', 'id')
+                ->nullOnDelete();
 
             $table->timestamps();
             $table->softDeletes();

@@ -28,6 +28,8 @@ Route::any('/logout', LogoutController::class)->name('logout');
 
 Route::apiResource('organizations', OrganizationController::class);
 
+Route::post('organizations/{organization}/restore', [OrganizationController::class, 'restore'])->name('organizations.restore');
+
 Route::apiResource('skills', SkillController::class);
 
 Route::apiResource('question-clusters/recommendations', QuestionClusterRecommendationController::class);
