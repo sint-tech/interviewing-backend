@@ -13,9 +13,9 @@ abstract class AiModelClientInterface
 
     }
 
-    abstract public function ask(string $answerText);
+    abstract public function prompt(string $answerText): string|null;
 
-    protected function getQuestionVariantInstance(): QuestionVariant
+    protected function question(): QuestionVariant
     {
         return $this->promptMessage->questionVariant;
     }

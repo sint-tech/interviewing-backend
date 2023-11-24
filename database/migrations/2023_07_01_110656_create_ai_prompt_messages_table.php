@@ -10,17 +10,26 @@ return new class extends Migration
     {
         Schema::create('ai_prompt_messages', function (Blueprint $table) {
             $table->id();
-            $table->enum('ai_model', ['gpt-3.5-turbo']);
-            $table->longText('prompt_text');
+
+            $table->foreignId('ai_model_id')
+                ->nullable()
+                ->constrained('ai_models', 'id')
+                ->nullOnDelete();
 
             $table->foreignId('question_variant_id')
                 ->nullable()
                 ->constrained('question_variants')
                 ->nullOnDelete();
 
-            $table->boolean('is_default')
-                ->default(true)
-                ->comment('the default prompt message template for the question variant');
+            $table->enum('status', [
+                'enabled',
+                'disabled',
+                'enabled_not_used',
+            ]);
+
+            $table->longText('system_prompt');
+            $table->longText('content_prompt');
+            $table->integer('weight')->comment('total weight group by question variant should equal 100');
 
             $table->timestamps();
             $table->softDeletes();

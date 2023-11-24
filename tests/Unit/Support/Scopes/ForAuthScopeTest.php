@@ -125,6 +125,38 @@ class ForAuthScopeTest extends TestCase
         );
     }
 
+    /** @test  */
+    public function itShouldWorkWithChildClass(): void
+    {
+        Auth::shouldReceive('api-candidate')->andReturnSelf()
+            ->shouldReceive('user')->andReturn(new Employee(['email' => 'employee@test.com', 'organization_id' => 1]))
+            ->shouldReceive('check')->andReturn(true)
+            ->shouldReceive('guest')->andReturn(false);
+
+        $model = new User();
+
+        $childBuilder = new class($model) extends Builder
+        {
+            public function __construct(User $model)
+            {
+                parent::__construct($model->newQuery()->toBase());
+            }
+
+            public function forOrganizationEmployee(Employee $employee)
+            {
+                return $this->where('organization_id', $employee->organization_id);
+            }
+        };
+
+        $this->scope->forOrganizationEmployee(function (Builder $builder) {
+            $builder->forOrganizationEmployee(\auth()->user());
+        });
+
+        $this->scope->apply($builder = new $childBuilder($model), $model);
+
+        $this->assertEquals($builder->toRawSql(), 'select * from "users" where "organization_id" = 1');
+    }
+
     private function applyScope(Model $testing_model = new User()): Builder
     {
         $builder = $testing_model->newQuery();

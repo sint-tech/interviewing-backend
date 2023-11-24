@@ -35,7 +35,7 @@ class QuestionVariantController extends Controller
         $question_variant_dto = QuestionVariantDataFactory::fromRequest($request);
 
         return QuestionVariantResource::make(
-            (new CreateQuestionVariantAction())->execute($question_variant_dto)->load('organization')
+            (new CreateQuestionVariantAction())->execute($question_variant_dto)->load(['organization', 'aiModels'])
         );
     }
 

@@ -6,18 +6,18 @@ use OpenAI\Laravel\Facades\OpenAI;
 
 class GPT35AiModel extends AiModelClientInterface
 {
-    public function ask(string $answerText)
+    public function prompt(string $answerText): string|null
     {
         $response = OpenAI::chat()->create([
             'model' => $this->promptMessage->aiModel->name->value,
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => $this->systemMessage(),
+                    'content' => $this->systemPrompt(),
                 ],
                 [
                     'role' => 'user',
-                    'content' => $this->questionMessage($answerText),
+                    'content' => $this->contentPrompt($answerText),
                 ],
             ],
         ]);
@@ -30,32 +30,36 @@ class GPT35AiModel extends AiModelClientInterface
         return $content = str_replace($key, $value, $content);
     }
 
-    protected function questionMessage(string $answerText): string
+    protected function contentPrompt(string $answerText): string //todo rename to promptMessage
     {
-        $messageContent = 'interviewer: {{INTERVIEWER_QUESTION}}.\\n interviewee: {{INTERVIEWEE_ANSWER}}.';
+        $replacers = [
+            '_QUESTION_TEXT_' => $this->promptMessage->questionVariant->text,
+            '_INTERVIEWEE_ANSWER_' => $answerText,
+        ];
 
-        $this->replaceKeyWithValue($messageContent, '{{INTERVIEWER_QUESTION}}', $this->promptMessage->questionVariant->text);
+        $content = $this->promptMessage->content_prompt;
 
-        $this->replaceKeyWithValue($messageContent, '{{INTERVIEWEE_ANSWER}}', $answerText);
+        foreach ($replacers as $replacer => $value) {
+            $this->replaceKeyWithValue($content, $replacer, $value);
+        }
 
-        return $messageContent;
+        return $content;
     }
 
-    private function systemMessage(): string
+    private function systemPrompt(): string
     {
-        return "I'm conducting an interview, and I asked the interviewee some questions about the interviewee behaviors
-        Please provide your maximum precise evaluation as an HR expert about this answer regarding 4 points is it logical or illogical.
-        rate this answer using scale 1 to 10, as 1 means he has a bad behavior or trait, and 10 means he doesn't have any bad behavior or trait.
-        is the interviewee answer correct.
-        analyze in brief the answer.
-        with this json shape
-        {
+        $content = $this->promptMessage->system_prompt;
+
+        $this->replaceKeyWithValue(
+            $content,
+            '_RESPONSE_JSON_STRUCTURE_',
+            "{
             is_logical: <true|false>,
             rate: <1 to 10>,
             is_correct: <true|false>,
-            answer_analysis: <analysis interviewee's about the answer>,
-        }
+            answer_analysis: <analysis interviewee's about the answer>
+            }");
 
-        Next, I\'ll send you the question, and the answer, you reply and be precise to the max and be bold and cold-hearted, and be 100% sure about it.";
+        return $content;
     }
 }

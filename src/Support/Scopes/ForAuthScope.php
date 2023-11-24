@@ -47,6 +47,11 @@ class ForAuthScope implements Scope
         $closure($builder);
     }
 
+    public static function make(): self
+    {
+        return new self();
+    }
+
     public function forOrganizationEmployee(\Closure $builder): self
     {
         $this->forAuthUser(Employee::class, $builder);
@@ -70,7 +75,7 @@ class ForAuthScope implements Scope
 
     public function forGuest(\Closure $builder): self
     {
-        $this->forAuthUser(self::GUEST_KEY,$builder);
+        $this->forAuthUser(self::GUEST_KEY, $builder);
 
         return $this;
     }

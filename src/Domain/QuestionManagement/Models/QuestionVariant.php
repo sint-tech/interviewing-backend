@@ -9,7 +9,7 @@ use Domain\AnswerManagement\Models\Answer;
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
-use Illuminate\Database\Eloquent\Builder;
+use Domain\QuestionManagement\Builders\QuestionVariantBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -108,7 +108,9 @@ class QuestionVariant extends Model
                 'question_variant_id',
                 'ai_model_id',
             )->withTimestamps()
-            ->withPivot(['is_default']);
+            ->using(AiPromptMessage::class)
+            ->as('prompt_message')
+            ->withPivot(['status', 'weight', 'content_prompt', 'system_prompt']);
     }
 
     public function defaultAiPromptMessage(): HasOne
@@ -127,13 +129,17 @@ class QuestionVariant extends Model
         return new QuestionVariantFactory;
     }
 
+    public function newEloquentBuilder($query): QuestionVariantBuilder
+    {
+        return new QuestionVariantBuilder($query);
+    }
+
     protected static function booted()
     {
-        $scope = new ForAuthScope();
-
-        $scope->forOrganizationEmployee(function (Builder $builder) {
-            return $builder->where('organization_id', auth()->user()->organization_id);
-        });
+        $scope = ForAuthScope::make()
+            ->forOrganizationEmployee(function (QuestionVariantBuilder $builder) {
+                return $builder->forOrganizationEmployee(auth()->user());
+            });
 
         static::addGlobalScope($scope);
     }

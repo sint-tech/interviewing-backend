@@ -2,6 +2,7 @@
 
 namespace App\Organization\QuestionManagement\Requests;
 
+use Domain\QuestionManagement\Models\Question;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -15,8 +16,11 @@ class QuestionVariantStoreRequest extends FormRequest
             'question_id' => ['required', Rule::exists('questions', 'id')->withoutTrashed()],
             'reading_time_in_seconds' => ['required', 'integer', 'min:1'],
             'answering_time_in_seconds' => ['required', 'integer', 'min:1'],
-            'ai_model_ids' => ['filled', 'array', 'min:1'],
-            'ai_model_ids.*' => ['integer', Rule::exists('ai_models', 'id')->where('status', 'active')],
         ];
+    }
+
+    public function question(): Question
+    {
+        return Question::query()->find($this->validated('question_id'));
     }
 }

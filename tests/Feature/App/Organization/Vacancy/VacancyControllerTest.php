@@ -19,8 +19,6 @@ class VacancyControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->migrateFreshUsing();
-
         $this->installPassport();
     }
 
@@ -148,8 +146,6 @@ class VacancyControllerTest extends TestCase
             'interview_template_id' => InterviewTemplate::factory()->createOne([
                 'creator_type' => $employee::class,
                 'creator_id' => $employee->getKey(),
-                'owner_type' => $employee::class,
-                'owner_id' => $employee->getKey(),
             ])->getKey(),
             'open_positions' => 5,
             'max_reconnection_tries' => 1,

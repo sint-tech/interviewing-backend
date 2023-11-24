@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('is_organization_manager')->default(false);
             $table->foreignId('organization_id')->constrained('organizations');
-            $table->nestedSet();
             $table->timestamps();
             $table->softDeletes();
         });

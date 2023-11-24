@@ -19,13 +19,17 @@ class CreateQuestionVariantAction
 
         $question_variant = new QuestionVariant();
 
-        $data = $this->questionVariantDto->except('creator', 'owner')->toArray();
+        $data = $this->questionVariantDto->except('creator', 'owner', 'ai_models')->toArray();
 
         $question_variant->fill($data)->save();
 
         $question_variant = $question_variant->refresh();
 
-        $this->syncQuestionVariantWithAIModelIds($question_variant);
+        $question_variant
+            ->aiModels()
+            ->sync(
+                collect($questionVariantDto->ai_models)->keyBy('id')->toArray()
+            );
 
         return $question_variant->load([
             'question',

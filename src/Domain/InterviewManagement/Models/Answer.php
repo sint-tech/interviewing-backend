@@ -31,7 +31,7 @@ class Answer extends Pivot
         'min_score',
         'max_score',
         'interview_id',
-        'answer_variant_id',
+        //        'answer_variant_id',
         'question_variant_id',
         'question_cluster_id',
         'ml_video_semantics',

@@ -27,8 +27,6 @@ class AnswerVariant extends Model
         'description',
         'score',
         'answer_id',
-        'owner_id',
-        'owner_type',
         'creator_id',
         'creator_type',
         'organization_id',

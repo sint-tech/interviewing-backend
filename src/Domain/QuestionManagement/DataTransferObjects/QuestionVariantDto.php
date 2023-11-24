@@ -15,8 +15,8 @@ class QuestionVariantDto extends Data
         public readonly int|Optional $answering_time_in_seconds,
         public readonly int|Optional $question_id,
         public readonly Authorizable|Optional $creator,
-        public readonly ?int $organization_id,
-        public readonly array|Optional $ai_model_ids,
+        public readonly int $organization_id,
+        public readonly array $ai_models,
     ) {
         if ($this->creator instanceof Authorizable) {
             $this->additional([

@@ -16,6 +16,6 @@ class PromptAnswerAnalyticsAction
     {
         return $this->aiPromptMessage
             ->aiModelClientFactory()
-            ->ask($this->answerText);
+            ->prompt($this->answerText);
     }
 }
