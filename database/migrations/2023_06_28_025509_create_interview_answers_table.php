@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreignId('interview_id')->constrained('interviews')->cascadeOnDelete();
             $table->foreignId('answer_variant_id')->nullable()->constrained('answer_variants')->nullOnDelete();
             $table->foreignId('question_variant_id')->nullable()->constrained('question_variants')->nullOnDelete();
+            $table->foreignId('question_cluster_id')->nullable()->constrained('question_clusters')->nullOnDelete();
 
             $table->json('ml_video_semantics')->nullable();
             $table->json('ml_audio_semantics')->nullable();

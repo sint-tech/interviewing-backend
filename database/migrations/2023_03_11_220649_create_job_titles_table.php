@@ -17,7 +17,7 @@ return new class() extends Migration
             $table->string('title')->unique();
             $table->longText('description')->nullable();
 
-            $table->enum('availability_status', ['active', 'inactive'])->default('inactive');
+            $table->enum('availability_status', ['active', 'inactive'])->default('active');
 
             $table->timestamps();
             $table->softDeletes();

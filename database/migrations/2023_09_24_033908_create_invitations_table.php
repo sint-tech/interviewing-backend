@@ -13,12 +13,14 @@ return new class extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
 
+            $table->string('name');
             $table->string('email');
 
             $table->enum('mobile_country_code', supported_countries_codes());
             $table->integer('mobile_number');
 
             $table->integer('batch');
+            $table->timestamp('should_be_invited_at');
 
             $table->morphs('creator');
 

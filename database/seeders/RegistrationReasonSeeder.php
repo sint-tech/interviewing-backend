@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Domain\Candidate\Enums\RegistrationReasonsAvailabilityStatusEnum;
 use Domain\Candidate\Models\RegistrationReason;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,7 +22,10 @@ class RegistrationReasonSeeder extends Seeder
         ];
 
         foreach ($reasons as $reason) {
-            RegistrationReason::query()->firstOrCreate(['name' => $reason]);
+            RegistrationReason::query()->updateOrCreate(
+                ['name' => $reason],
+                ['availability_status' => RegistrationReasonsAvailabilityStatusEnum::Active]
+            );
         }
     }
 }
