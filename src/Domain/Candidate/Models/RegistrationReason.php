@@ -12,7 +12,7 @@ class RegistrationReason extends Model
     use HasFactory;
 
     protected $fillable = [
-        'reason',
+        'name',
         'availability_status',
     ];
 

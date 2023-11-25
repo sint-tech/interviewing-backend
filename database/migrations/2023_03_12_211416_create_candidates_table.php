@@ -22,6 +22,11 @@ return new class() extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
 
+            $table->foreignId('current_job_title_id')
+                ->nullable()
+                ->constrained('candidates')
+                ->nullOnDelete();
+
             $table->timestamps();
             $table->softDeletes();
         });

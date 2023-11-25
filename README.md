@@ -41,6 +41,9 @@ php artisan passport:install
 ```php 
 php artisan passport:client --password --provider=candidates --name="Laravel Password Grant Client FOR CANDIDATE"
 ```
+```php
+php artisan passport:client --password --provider=candidates --name="Laravel Password Grant Client FOR ORGANIZATION EMPLOYEE"
+```
 ### and to start the server run
 
 ```php  

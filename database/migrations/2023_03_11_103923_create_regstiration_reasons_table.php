@@ -10,7 +10,7 @@ return new class() extends Migration
     {
         Schema::create('registration_reasons', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->unique();
+            $table->string('name')->unique();
             $table->enum('availability_status', ['active', 'inactive']);
 
             $table->timestamps();

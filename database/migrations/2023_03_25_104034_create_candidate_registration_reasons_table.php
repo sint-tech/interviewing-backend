@@ -9,8 +9,6 @@ return new class() extends Migration
     public function up()
     {
         Schema::create('candidate_registration_reasons', function (Blueprint $table) {
-            $table->id();
-
             $table->foreignId('candidate_id')->nullable()->constrained('candidates')->nullOnDelete();
             $table->foreignId('registration_reason_id')->nullable()->constrained('registration_reasons')->nullOnDelete();
 
