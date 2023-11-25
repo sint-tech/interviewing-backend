@@ -12,13 +12,12 @@ class QuestionVariantAIModelResource extends JsonResource
 {
     public function toArray($request)
     {
-        dd($this->resource);
-
         return [
             'name' => $this->resource->name,
-            'status' => (string) $this->resource->pivot->status,
-            'weight' => $this->resource->pivoit->weight,
-            'system_prompt' => $this->resource->pivot->aiModelClientFactory(),
+            'status' =>  $this->resource->prompt_message->status,
+            'weight' => $this->resource->prompt_message->weight,
+            'system_prompt' => $this->resource->prompt_message->system_prompt,
+            'content_prompt' => $this->resource->prompt_message->content_prompt,
         ];
     }
 }
