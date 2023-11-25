@@ -22,7 +22,6 @@ class AIModel extends Model
     protected $fillable = [
         'name',
         'status',
-        'default_prompt_message',
     ];
 
     protected $casts = [

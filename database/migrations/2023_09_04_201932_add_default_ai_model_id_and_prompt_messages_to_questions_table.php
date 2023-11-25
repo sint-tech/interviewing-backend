@@ -13,11 +13,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('questions', function (Blueprint $table) {
-            $table->foreignId('default_ai_model_id')
-                ->nullable()
-                ->default(DB::table('ai_models')->first()->id)
-                ->constrained('ai_models', 'id')
-                ->nullOnDelete();
+            if (! Schema::hasColumn('questions','default_ai_model_id')) {
+                $table->foreignId('default_ai_model_id')
+                    ->nullable()
+                    ->default(DB::table('ai_models')->first()->id)
+                    ->constrained('ai_models', 'id')
+                    ->nullOnDelete();
+            }
+
+            $table->longText('system_prompt');
+            $table->longText('content_prompt');
         });
     }
 

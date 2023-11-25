@@ -4,6 +4,8 @@ namespace App\Admin\QuestionManagement\Requests;
 
 use Domain\QuestionManagement\Enums\QuestionTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
@@ -19,7 +21,23 @@ class QuestionStoreRequest extends FormRequest
             'question_type' => ['required', (new Enum(QuestionTypeEnum::class))],
             'min_reading_duration_in_seconds' => ['required', 'integer', 'min:1', 'lt:max_reading_duration_in_seconds'],
             'max_reading_duration_in_seconds' => ['required', 'integer', 'min:1', 'gt:min_reading_duration_in_seconds'],
-            'default_ai_model_id' => ['filled', 'integer', Rule::exists('ai_models', 'id')->where('status', 'active')],
+            'default_ai_model_id' => ['required', Rule::exists('ai_models', 'id')->where('status', 'active')],
+            'content_prompt' => ['required','string', function($attribute, $value, \Closure $fail) {
+                if ($this->promptPlaceHolderDoesntExistInString($value,$placeholders = ['_INTERVIEWEE_ANSWER_','_QUESTION_TEXT_'])) {
+                    $fail("prompt should contain all the placeholders: ".Arr::join($placeholders,', ',' and '));
+                }
+            }],
+            'system_prompt' => ['required','string',function($attribute,$value,\Closure $fail) {
+                if($this->promptPlaceHolderDoesntExistInString($value,$placeholder = '_RESPONSE_JSON_STRUCTURE_')) {
+                    $fail("Prompt should contain placeholder: $placeholder");
+                }
+            }]
         ];
+    }
+
+
+    protected function promptPlaceHolderDoesntExistInString(string $haystack,string| array $placeHolder): bool
+    {
+        return ! Str::containsAll($haystack,Arr::wrap($placeHolder));
     }
 }

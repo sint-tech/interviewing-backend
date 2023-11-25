@@ -25,16 +25,16 @@ class QuestionController extends Controller
         return QuestionResource::make(Question::query()->findOrFail($question));
     }
 
-    public function store(QuestionStoreRequest $request): QuestionResource
+    public function store(QuestionStoreRequest $request,CreateQuestionAction $action): QuestionResource
     {
         $dto = QuestionDataFactory::fromStoreRequest($request);
 
         return QuestionResource::make(
-            (new CreateQuestionAction($dto))->execute()
+            $action->execute($dto)
         );
     }
 
-    public function update(Question $question, QuestionUpdateRequest $request)
+    public function update(Question $question, QuestionUpdateRequest $request): QuestionResource
     {
         return QuestionResource::make(
             (new UpdateQuestionAction($question, QuestionDataFactory::fromUpdateRequest($request)))->execute()

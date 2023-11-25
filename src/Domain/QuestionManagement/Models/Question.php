@@ -30,6 +30,8 @@ class Question extends Model
         'min_reading_duration_in_seconds',
         'max_reading_duration_in_seconds',
         'default_ai_model_id',
+        'content_prompt',
+        'system_prompt',
     ];
 
     public function questionCluster(): BelongsTo

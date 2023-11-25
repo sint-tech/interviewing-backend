@@ -10,16 +10,15 @@ use Spatie\LaravelData\Optional;
 class CreateQuestionAction
 {
     public function __construct(
-        public readonly QuestionData $questionData
     ) {
 
     }
 
-    public function execute(): Question
+    public function execute(QuestionData $questionData): Question
     {
-        $data = $this->questionData->except('creator')->toArray();
+        $data = $questionData->except('creator')->toArray();
 
-        if ($this->questionData->default_ai_model_id instanceof Optional) {
+        if ($questionData->default_ai_model_id instanceof Optional) {
             $data['default_ai_model_id'] = AIModel::query()->first()->getKey();
         }
 
