@@ -28,7 +28,7 @@ class QuestionVariantStoreRequest extends FormRequest
             'organization_id' => ['required', Rule::exists(Organization::class, 'id')->withoutTrashed()],
             'ai_models' => ['required', 'array', 'min:1'],
             'ai_models.*' => ['required_with:ai_models', 'array'],
-            'ai_models.*.id' => ['required', Rule::exists(AIModel::class, 'id')],
+            'ai_models.*.id' => ['required', 'distinct', Rule::exists(AIModel::class, 'id')],
             'ai_models.*.weight' => ['required', 'integer'],
             'ai_models.*.status' => ['required', new Enum(PromptMessageStatus::class)],
             'ai_models.*.content_prompt' => ['required', 'string',
