@@ -7,6 +7,7 @@ use Database\Factories\InvitationFactory;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,9 +15,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Support\Scopes\ForAuthScope;
 use Support\Traits\Model\HasBatch;
 use Support\Traits\Model\HasCreator;
+use Support\ValueObjects\URL;
 
 /**
  * @property Carbon $should_be_invited_at
+ * @property Carbon $last_invited_at
+ * @property URL $url
+ * @property bool $sent
  */
 class Invitation extends Model
 {
@@ -54,9 +59,23 @@ class Invitation extends Model
         return $this->belongsTo(Vacancy::class, 'vacancy_id', 'id');
     }
 
-    public function invitationSent(): bool
+    public function sent(): Attribute
     {
-        return ! is_null($this->last_invited_at);
+        return Attribute::get(fn () => ! is_null($this->last_invited_at));
+    }
+
+    public function url(): Attribute
+    {
+        return Attribute::get(function () {
+            return URL::make(
+                config('sint.candidate.website_url', 'https://sint.com'),
+                [
+                    'vacancy_id' => $this->vacancy_id,
+                    'invitation_id' => $this->getKey(),
+                    'email' => $this->email,
+                ]
+            );
+        });
     }
 
     protected static function newFactory(): InvitationFactory

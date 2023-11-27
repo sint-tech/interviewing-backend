@@ -11,6 +11,7 @@ use App\Admin\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Admin\InterviewManagement\Controllers\ScheduleInterviewTemplateDatesController;
 use App\Admin\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Admin\InvitationManagement\Controllers\InvitationController;
+use App\Admin\InvitationManagement\Controllers\SendInvitationController;
 use App\Admin\Organization\Controllers\OrganizationController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterRecommendationController;
@@ -53,6 +54,7 @@ Route::apiResource('candidates', CandidateController::class)->only(['index', 'sh
 Route::apiResource('invitations', InvitationController::class);
 
 Route::post('invitations/import', ImportInvitationsController::class)->name('invitations.import');
+Route::post('invitations/{invitation}/send-email', SendInvitationController::class)->name('invitations.send-email');
 
 Route::apiResource('vacancies', VacancyController::class);
 
