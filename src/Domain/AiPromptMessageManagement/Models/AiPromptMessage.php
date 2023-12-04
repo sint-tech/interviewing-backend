@@ -7,11 +7,14 @@ use Domain\AiPromptMessageManagement\Api\GPT35AiModel;
 use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
 use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OpenAI\Laravel\Facades\OpenAI;
+use Support\ValueObjects\PromptMessage;
 
 /**
  * @property AIModel $aiModel
@@ -23,6 +26,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AiPromptMessage extends Pivot //change the model path to domain questionVariant
 {
     use HasFactory,SoftDeletes;
+
+    protected $table = 'ai_prompt_message';
 
     protected $fillable = [
         'ai_model_id',
@@ -50,6 +55,58 @@ class AiPromptMessage extends Pivot //change the model path to domain questionVa
     public function aiModel(): BelongsTo
     {
         return $this->belongsTo(AIModel::class, 'ai_model_id');
+    }
+
+    public function systemPrompt(): Attribute
+    {
+        return Attribute::make(get: function () {
+
+            $replacers = match ($this->aiModel->name) {
+                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => "{
+                    is_logical: <true|false>,
+                    rate: <1 to 10>,
+                    is_correct: <true|false>,
+                    answer_analysis: <analysis interviewee's about the answer>
+                    }"]
+            };
+
+            return PromptMessage::make($this->system_prompt,$replacers);
+        });
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function contentPrompt(string $answerText): string
+    {
+        $replacers = match ($this->aiModel->name) {
+            AiModelEnum::Gpt_3_5 =>
+            [
+                '_QUESTION_TEXT_' => $this->questionVariant->text,
+                '_INTERVIEWEE_ANSWER_' => $answerText,
+            ]
+        };
+
+        return (string) PromptMessage::make($this->system_prompt,$replacers);
+    }
+
+    public function prompt(string $answer): string
+    {
+        return match ($this->aiModel->name) {
+            AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
+                'model' => $this->aiModel->name->value,
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $this->system_prompt,
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $this->contentPrompt($answer),
+                    ],
+                ],
+            ])[0]->message->content
+        };
     }
 
     public function aiModelClientFactory(): AiModelClientInterface

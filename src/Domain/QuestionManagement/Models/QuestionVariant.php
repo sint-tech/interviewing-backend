@@ -104,7 +104,7 @@ class QuestionVariant extends Model
         return $this
             ->belongsToMany(
                 AIModel::class,
-                'ai_prompt_messages',
+                table_name(AiPromptMessage::class),
                 'question_variant_id',
                 'ai_model_id',
             )->withTimestamps()
