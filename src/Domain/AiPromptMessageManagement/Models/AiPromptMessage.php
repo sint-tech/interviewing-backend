@@ -27,7 +27,7 @@ class AiPromptMessage extends Pivot //change the model path to domain questionVa
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = 'ai_prompt_message';
+    protected $table = 'ai_prompt_messages';
 
     protected $fillable = [
         'ai_model_id',
