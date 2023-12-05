@@ -7,30 +7,24 @@ use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
 use Domain\InterviewManagement\Models\Answer;
 use Domain\InterviewManagement\Models\Interview;
+use Domain\QuestionManagement\Models\QuestionVariant;
 
 class SubmitInterviewQuestionAnswerAction
 {
-    public function __construct(
-        public readonly AnswerDto $answerDto
-    ) {
-    }
-
-    public function execute(): Answer
+    public function execute(Interview $interview, AnswerDto $answerDto): Answer
     {
-        $answer = new Answer($this->answerDto->toArray());
+        $data = $answerDto->toArray() + ['score' => $this->calculateAverageScore($answerDto->question_variant_id, $answerDto->answer_text)];
 
-        $answer->save();
+        $answer = $interview->answers()->create($data)->refresh();
 
-        $answer = $answer->refresh()->load('interview');
-
-        if ($this->interviewJustStarted($answer->interview)) {
+        if ($this->interviewJustStarted($interview)) {
             $answer->interview->update(['status' => InterviewStatusEnum::Started]);
         }
 
-        if ($this->interviewStillRunning($answer->interview) && $this->interviewShouldBeEnd($answer->interview)) {
+        if ($this->interviewStillRunning($interview) && $this->interviewShouldBeEnd($interview)) {
             $answer->interview->update(['ended_at' => now()]);
 
-            event(new InterviewAllQuestionsAnswered($answer->interview->refresh()));
+            event(new InterviewAllQuestionsAnswered($interview->refresh()));
         }
 
         return $answer;
@@ -49,5 +43,14 @@ class SubmitInterviewQuestionAnswerAction
     private function interviewJustStarted(Interview $interview): bool
     {
         return $interview->running() && $interview->answers()->count() === 1;
+    }
+
+    protected function calculateAverageScore(int $question_variant_id, string $answer): float
+    {
+        $enabled_ai_models = QuestionVariant::query()
+            ->findOrFail($question_variant_id)
+            ->aiModels;
+
+        dd($enabled_ai_models);
     }
 }

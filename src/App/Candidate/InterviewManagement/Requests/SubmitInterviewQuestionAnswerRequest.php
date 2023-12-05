@@ -4,6 +4,7 @@ namespace App\Candidate\InterviewManagement\Requests;
 
 use Domain\InterviewManagement\Enums\QuestionOccurrenceReasonEnum;
 use Domain\InterviewManagement\Models\Answer;
+use Domain\InterviewManagement\Models\Interview;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -12,7 +13,7 @@ class SubmitInterviewQuestionAnswerRequest extends FormRequest
 {
     public function authorize()
     {
-        return $this->interview->candidate_id == auth()->id();
+        return auth()->user()->interviews()->whereKey($this->interview())->exists();
     }
 
     public function rules(): array
@@ -28,17 +29,22 @@ class SubmitInterviewQuestionAnswerRequest extends FormRequest
             ],
             'question_variant_id' => ['required',
                 Rule::exists('interview_template_questions', 'question_variant_id')
-                    ->where('interview_template_id', $this->interview->interview_template_id)
+                    ->where('interview_template_id', $this->interview()->interview_template_id)
                     ->withoutTrashed(),
             ],
-            'answer_text' => ['required', 'string', 'min:3', 'max:1000'],
+            'answer_text' => ['required', 'string', 'min:3', 'max:1000000'],
         ];
+    }
+
+    public function interview(): Interview
+    {
+        return Interview::query()->findOrFail($this->route()->parameter('interview'));
     }
 
     protected function questionAnsweredBefore(): bool
     {
         return Answer::query()
-            ->where('interview_id', $this->interview->getKey())
+            ->where('interview_id', $this->interview()->getKey())
             ->where('answer_variant_id', $this->input('answer_variant_id'))
             ->where('question_variant_id', $this->input('question_variant_id'))
             ->exists();

@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Support\Scopes\ForAuthScope;
 
 class Candidate extends Authenticatable implements HasMedia
 {
@@ -65,7 +66,8 @@ class Candidate extends Authenticatable implements HasMedia
 
     public function interviews(): HasMany
     {
-        return $this->hasMany(Interview::class, 'candidate_id');
+        return $this->hasMany(Interview::class, 'candidate_id')
+            ->withoutGlobalScope(ForAuthScope::class);
     }
 
     public function desireHiringPositions(): BelongsToMany
