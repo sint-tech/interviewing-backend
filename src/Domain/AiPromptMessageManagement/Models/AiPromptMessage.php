@@ -57,37 +57,36 @@ class AiPromptMessage extends Pivot //change the model path to domain questionVa
         return $this->belongsTo(AIModel::class, 'ai_model_id');
     }
 
-    public function systemPrompt(): Attribute
+    public function systemPromptMessage(): Attribute
     {
         return Attribute::make(get: function () {
 
             $replacers = match ($this->aiModel->name) {
-                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => "{
-                    is_logical: <true|false>,
-                    rate: <1 to 10>,
-                    is_correct: <true|false>,
-                    answer_analysis: <analysis interviewee's about the answer>
-                    }"]
+                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => json_encode([
+                    'is_logical' => '<true,false>',
+                    'rate' => '1 to 10',
+                    'is_correct' => '<true,false>',
+                    'answer_analysis' => "analysis interviewee's about the answer",
+                ])]
             };
 
-            return PromptMessage::make($this->system_prompt,$replacers);
+            return (string) PromptMessage::make($this->original['system_prompt'], $replacers);
         });
     }
 
     /**
      * @throws \Exception
      */
-    public function contentPrompt(string $answerText): string
+    public function contentPromptMessage(string $answerText): string
     {
         $replacers = match ($this->aiModel->name) {
-            AiModelEnum::Gpt_3_5 =>
-            [
+            AiModelEnum::Gpt_3_5 => [
                 '_QUESTION_TEXT_' => $this->questionVariant->text,
                 '_INTERVIEWEE_ANSWER_' => $answerText,
             ]
         };
 
-        return (string) PromptMessage::make($this->system_prompt,$replacers);
+        return (string) PromptMessage::make($this->system_prompt, $replacers);
     }
 
     public function prompt(string $answer): string

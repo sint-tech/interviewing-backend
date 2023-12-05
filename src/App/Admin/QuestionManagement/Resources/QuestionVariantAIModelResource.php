@@ -14,10 +14,9 @@ class QuestionVariantAIModelResource extends JsonResource
     {
         return [
             'name' => $this->resource->name,
-            'status' =>  $this->resource->prompt_message->status,
+            'status' => $this->resource->prompt_message->status,
             'weight' => $this->resource->prompt_message->weight,
-            'system_prompt' => $this->resource->prompt_message->system_prompt,
-            'content_prompt' => $this->resource->prompt_message->content_prompt,
+            'system_prompt' => $this->resource->prompt_message->system_prompt_content,
         ];
     }
 }

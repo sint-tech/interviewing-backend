@@ -2,8 +2,6 @@
 
 namespace Support\ValueObjects;
 
-use Illuminate\Support\Str;
-
 class PromptMessage
 {
     protected readonly array $replacers;
@@ -13,9 +11,7 @@ class PromptMessage
      */
     public function __construct(protected readonly string $message, array $replacers)
     {
-        $this->validReplacers();
-
-        $this->replacers = array_fill_keys(array_keys($replacers),array_values($replacers));
+        $this->validReplacers($replacers);
     }
 
     /**
@@ -28,32 +24,29 @@ class PromptMessage
 
     public function message(): string
     {
-        return (string) str($this->message)->replace($this->replacers(),$this->replacedValues());
-    }
+        $str = $this->message;
 
-    public function replacedValues(): array
-    {
-        return array_values($this->replacers);
-    }
+        foreach ($this->replacers as $search => $replace) {
+            $str = str_replace($search, $replace, $str);
+        }
 
-    public function replacers(): array
-    {
-        return array_values($this->replacers);
+        return $str;
     }
 
     /**
      * @throws \Exception
      */
-    private function validReplacers(): void
+    private function validReplacers(array $replacers): void
     {
-        foreach (array_keys($this->replacers) as $search => $replaced) {
+        foreach ($replacers as $search => $replaced) {
             if (! is_string($search) && ! str($search)->startsWith('_') && ! str($search)->endsWith('_')) {
-                throw new \Exception(sprintf('this replacer: %s is invalid',$search));
+                throw new \Exception(sprintf('this replacer: %s is invalid', $search));
             }
             if (! is_string($replaced)) {
                 throw new \Exception('replaced value must be string');
             }
         }
+        $this->replacers = $replacers;
     }
 
     public function __toString(): string
