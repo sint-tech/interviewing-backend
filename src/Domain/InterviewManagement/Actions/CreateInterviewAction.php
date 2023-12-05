@@ -20,7 +20,7 @@ class CreateInterviewAction
 
         $interview->save();
 
-        $interview->refresh()->load('questionClusters', 'questionVariants.defaultAiPromptMessage.aiModel');
+        $interview->refresh()->load('questionClusters', 'questionVariants');
 
         $interview
             ->questionClusters

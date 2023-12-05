@@ -113,17 +113,6 @@ class QuestionVariant extends Model
             ->withPivot(['status', 'weight', 'content_prompt', 'system_prompt']);
     }
 
-    public function defaultAiPromptMessage(): HasOne
-    {
-        return $this->hasOne(
-            AiPromptMessage::class,
-            'question_variant_id',
-            'id'
-        )
-            ->where('is_default', true)
-            ->ofMany();
-    }
-
     protected static function newFactory()
     {
         return new QuestionVariantFactory;
