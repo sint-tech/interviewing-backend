@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use Support\Scopes\ForAuthScope;
 
 /**
  * @property Collection<QuestionCluster> $questionClusters
@@ -188,5 +189,14 @@ class Interview extends Model
     public function newEloquentBuilder($query)
     {
         return new InterviewEloquentBuilder($query);
+    }
+
+    protected static function booted(): void
+    {
+        $scope = new ForAuthScope();
+
+        $scope->forCandidate(fn (InterviewEloquentBuilder $builder) => $builder->whereCandidate(auth()->user()));
+
+        static::addGlobalScope($scope);
     }
 }

@@ -13,8 +13,7 @@ class MyInterviewsQuery extends QueryBuilder
 {
     public function __construct(Request $request)
     {
-        $subject = Interview::query()
-            ->whereBelongsTo(auth()->user(), 'candidate');
+        $subject = Interview::query();
 
         parent::__construct($subject, $request);
 

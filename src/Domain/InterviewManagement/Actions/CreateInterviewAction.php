@@ -6,17 +6,19 @@ use Domain\InterviewManagement\DataTransferObjects\InterviewDto;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Exception;
+use Support\Scopes\ForAuthScope;
 
 class CreateInterviewAction
 {
-    public function __construct(
-        public readonly InterviewDto $interviewDto
-    ) {
-    }
-
-    public function execute(): Interview
+    /**
+     * @throws Exception
+     */
+    public function execute(InterviewDto $interviewDto): Interview
     {
-        $interview = (new Interview())->fill($this->interviewDto->toArray());
+        $this->noInterviewsRunningForCandidate($interviewDto->candidate_id);
+
+        $interview = (new Interview())->fill($interviewDto->toArray());
 
         $interview->save();
 
@@ -31,5 +33,22 @@ class CreateInterviewAction
             );
 
         return $interview;
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function noInterviewsRunningForCandidate(int $candidateId): void
+    {
+
+        Interview::query()
+            ->withoutGlobalScope(ForAuthScope::class)
+            ->whereStatusNotInFinalStage()
+            ->whereCandidate($candidateId)
+            ->doesntExistOr(
+                fn () => throw new Exception(
+                    sprintf('can\'t create or start an interview until the running interview for candidate with id: %s is finished', $candidateId)
+                )
+            );
     }
 }

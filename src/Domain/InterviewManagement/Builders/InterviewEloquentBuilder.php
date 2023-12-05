@@ -2,6 +2,7 @@
 
 namespace Domain\InterviewManagement\Builders;
 
+use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Models\Answer;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,14 +31,26 @@ class InterviewEloquentBuilder extends Builder
         return $this->whereIn('status', $values);
     }
 
-    public function whereStatusInFinalStage(string $boolean = 'and'): self
+    public function whereStatusInFinalStage(string $boolean = 'and', bool $not = false): self
     {
-        return $this->whereIn('status', InterviewStatusEnum::endedStatuses());
+        return $this->whereIn('status', InterviewStatusEnum::endedStatuses(), $boolean, $not);
+    }
+
+    public function whereStatusNotInFinalStage(): self
+    {
+        return $this->whereStatusInFinalStage(not: true);
     }
 
     public function whereIsEnded(bool $ended = true, string $boolean = 'and'): self
     {
         return $this->whereNull('ended_at', $boolean, $ended);
+    }
+
+    public function whereCandidate(Candidate|int $candidate): self
+    {
+        return is_int($candidate) ?
+            $this->where('candidate_id', $candidate) :
+            $this->whereBelongsTo($candidate, 'candidate');
     }
 
     public function orderByAvgScore(string $direction = 'ASC'): self

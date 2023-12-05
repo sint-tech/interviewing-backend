@@ -24,7 +24,7 @@ return new class() extends Migration
 
             $table->foreignId('current_job_title_id')
                 ->nullable()
-                ->constrained('candidates')
+                ->constrained('job_titles')
                 ->nullOnDelete();
 
             $table->timestamps();

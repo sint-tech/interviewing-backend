@@ -11,17 +11,14 @@ use Support\Controllers\Controller;
 
 class StartInterviewController extends Controller
 {
-    public function __invoke(StartInterviewRequest $request): StartedInterviewResource
+    public function __invoke(StartInterviewRequest $request, CreateInterviewAction $action): StartedInterviewResource
     {
-
-        $interview = (new CreateInterviewAction(
-            InterviewDto::from([
-                'candidate_id' => auth()->id(),
-                'vacancy_id' => $request->vacancy()->getKey(),
-                'interview_template_id' => $request->interviewTemplate()->getKey(),
-                'started_at' => Carbon::now(),
-            ])
-        ))->execute();
+        $interview = $action->execute(InterviewDto::from([
+            'candidate_id' => auth()->id(),
+            'vacancy_id' => $request->vacancy()->getKey(),
+            'interview_template_id' => $request->interviewTemplate()->getKey(),
+            'started_at' => Carbon::now(),
+        ]));
 
         return StartedInterviewResource::make($interview);
     }
