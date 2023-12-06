@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Domain\AiPromptMessageManagement\Models\AIModel;
 use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\Users\Models\User;

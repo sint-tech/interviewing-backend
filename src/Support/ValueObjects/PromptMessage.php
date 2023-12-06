@@ -22,7 +22,7 @@ class PromptMessage
         return new static($message,$replacers);
     }
 
-    public function message(): string
+    public function promptMessage(): string
     {
         $str = $this->message;
 
@@ -31,6 +31,14 @@ class PromptMessage
         }
 
         return $str;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function replace(string $search, string $replace): self
+    {
+        return new self($this->promptMessage(), [$search => $replace]);
     }
 
     /**
@@ -49,8 +57,13 @@ class PromptMessage
         $this->replacers = $replacers;
     }
 
+    public function toString(): string
+    {
+        return $this->promptMessage();
+    }
+
     public function __toString(): string
     {
-        return $this->message();
+        return $this->toString();
     }
 }

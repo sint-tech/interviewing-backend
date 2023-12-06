@@ -8,13 +8,10 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('ai_prompt_messages', function (Blueprint $table) {
+        Schema::create('ai_prompts', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('ai_model_id')
-                ->nullable()
-                ->constrained('ai_models', 'id')
-                ->nullOnDelete();
+            $table->enum('model',['gpt-3.5-turbo']);
 
             $table->foreignId('question_variant_id')
                 ->nullable()
@@ -27,8 +24,9 @@ return new class extends Migration
                 'enabled_not_used',
             ]);
 
-            $table->longText('system_prompt');
-            $table->longText('content_prompt');
+            $table->longText('system');
+            $table->longText('content');
+
             $table->integer('weight')->comment('total weight group by question variant should equal 100');
 
             $table->timestamps();
@@ -38,6 +36,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('ai_prompt_messages');
+        Schema::dropIfExists('ai_prompts');
     }
 };

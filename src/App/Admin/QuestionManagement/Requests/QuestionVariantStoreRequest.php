@@ -2,9 +2,8 @@
 
 namespace App\Admin\QuestionManagement\Requests;
 
-use App\Admin\QuestionManagement\Requests\Traits\QuestionVariantOwnerTrait;
+use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
 use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
-use Domain\AiPromptMessageManagement\Models\AIModel;
 use Domain\Organization\Models\Organization;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
@@ -15,8 +14,6 @@ use Illuminate\Validation\Validator;
 
 class QuestionVariantStoreRequest extends FormRequest
 {
-    use QuestionVariantOwnerTrait;
-
     public function rules(): array
     {
         return [
@@ -26,22 +23,22 @@ class QuestionVariantStoreRequest extends FormRequest
             'reading_time_in_seconds' => ['required', 'integer', 'min:1'],
             'answering_time_in_seconds' => ['required', 'integer', 'min:1'],
             'organization_id' => ['required', Rule::exists(Organization::class, 'id')->withoutTrashed()],
-            'ai_models' => ['required', 'array', 'min:1'],
-            'ai_models.*' => ['required_with:ai_models', 'array'],
-            'ai_models.*.id' => ['required', 'distinct', Rule::exists(AIModel::class, 'id')],
-            'ai_models.*.weight' => ['required', 'integer'],
-            'ai_models.*.status' => ['required', new Enum(PromptMessageStatus::class)],
-            'ai_models.*.content_prompt' => ['required', 'string',
+            'ai_prompts' => ['required', 'array', 'min:1'],
+            'ai_prompts.*' => ['required_with:ai_prompts', 'array'],
+            'ai_prompts.*.model' => ['required', 'distinct', Rule::enum(AiModelEnum::class)],
+            'ai_prompts.*.weight' => ['required', 'integer'],
+            'ai_prompts.*.status' => ['required', new Enum(PromptMessageStatus::class)],
+            'ai_prompts.*.content' => ['required', 'string',
                 function ($attribute, $value, \Closure $fail) {
-                    if (! Str::containsAll((string) $value, $replacers = ['_QUESTION_TEXT_', '_INTERVIEWEE_ANSWER_'])) {
-                        $fail('string should contains all these terms: '.Arr::join($replacers, ', ', 'and '));
+                    if ($this->aiModelsPlaceholdersMissing($value, $placeholders = ['_QUESTION_TEXT_', '_INTERVIEWEE_ANSWER_'])) {
+                        $fail('string should contains all these terms: '.Arr::join($placeholders, ', ', 'and '));
                     }
                 },
             ],
-            'ai_models.*.system_prompt' => ['string',
+            'ai_prompts.*.system' => ['string',
                 function ($attribute, $value, \Closure $fail) {
-                    if (! str_contains((string) $value, '_RESPONSE_JSON_STRUCTURE_')) {
-                        $fail('string should contain _RESPONSE_JSON_STRUCTURE_');
+                    if ($this->aiModelsPlaceholdersMissing($value, $placeholders = ['_RESPONSE_JSON_STRUCTURE_'])) {
+                        $fail('string should contain'.Arr::join($placeholders, ', ', 'and '));
                     }
                 },
             ],
@@ -61,8 +58,13 @@ class QuestionVariantStoreRequest extends FormRequest
 
     protected function totalWeightNotEqual100(): bool
     {
-        return $this->collect('ai_models')
+        return $this->collect('ai_prompts')
             ->where('status', PromptMessageStatus::Enabled->value)
             ->sum('weight') != 100;
+    }
+
+    private function aiModelsPlaceholdersMissing(string $prompt, array $placeholders): bool
+    {
+        return ! Str::containsAll($prompt, $placeholders);
     }
 }

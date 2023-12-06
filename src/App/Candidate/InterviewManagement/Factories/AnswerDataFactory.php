@@ -4,8 +4,6 @@ namespace App\Candidate\InterviewManagement\Factories;
 
 use App\Candidate\InterviewManagement\Requests\SubmitInterviewQuestionAnswerRequest;
 use Domain\AiPromptMessageManagement\Actions\PromptAnswerAnalyticsAction;
-use Domain\AiPromptMessageManagement\Models\AIModel;
-use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
 use Domain\InterviewManagement\DataTransferObjects\AnswerDto;
 
 class AnswerDataFactory

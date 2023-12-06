@@ -3,7 +3,6 @@
 namespace Tests\Feature\App\Admin\QuestionManagement;
 
 use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
-use Domain\AiPromptMessageManagement\Models\AIModel;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -51,7 +50,7 @@ class QuestionControllerTest extends TestCase
             'description' => $this->faker->realText(100),
             'creator_id' => $this->sintUser->getKey(),
             'creator_type' => $this->sintUser::class,
-            'question_cluster_id' => QuestionCluster::factory()->for($this->sintUser,'creator')->createOne()->getKey(),
+            'question_cluster_id' => QuestionCluster::factory()->for($this->sintUser, 'creator')->createOne()->getKey(),
             'question_type' => 'written',
             'difficult_level' => '10',
             'min_reading_duration_in_seconds' => 120,
@@ -64,6 +63,6 @@ class QuestionControllerTest extends TestCase
             'system_prompt' => 'Im interviewer and asking the next content question, please provide answer as: _RESPONSE_JSON_STRUCTURE_',
         ];
 
-        return array_merge($data,$merged_data);
+        return array_merge($data, $merged_data);
     }
 }

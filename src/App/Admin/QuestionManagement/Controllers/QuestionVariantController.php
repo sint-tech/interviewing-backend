@@ -30,21 +30,19 @@ class QuestionVariantController extends Controller
         return QuestionVariantResource::make(QuestionVariant::query()->findOrFail($question_variant));
     }
 
-    public function store(QuestionVariantStoreRequest $request): QuestionVariantResource
+    public function store(QuestionVariantStoreRequest $request, CreateQuestionVariantAction $action): QuestionVariantResource
     {
         $question_variant_dto = QuestionVariantDataFactory::fromRequest($request);
 
         return QuestionVariantResource::make(
-            (new CreateQuestionVariantAction())->execute($question_variant_dto)->load(['organization', 'aiModels'])
+            $action->execute($question_variant_dto)->load(['organization', 'aiPrompts'])
         );
     }
 
-    public function update(QuestionVariant $questionVariant, QuestionVariantUpdateRequest $request): QuestionVariantResource
+    public function update(QuestionVariant $questionVariant, QuestionVariantUpdateRequest $request, UpdateQuestionVariantAction $action): QuestionVariantResource
     {
         return QuestionVariantResource::make(
-            (new UpdateQuestionVariantAction())->execute(
-                $questionVariant, QuestionVariantDataFactory::fromUpdateRequest($request)
-            )
+            $action->execute($questionVariant, QuestionVariantDataFactory::fromUpdateRequest($request))
         );
     }
 

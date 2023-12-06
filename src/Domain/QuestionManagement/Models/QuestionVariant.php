@@ -3,8 +3,7 @@
 namespace Domain\QuestionManagement\Models;
 
 use Database\Factories\QuestionVariantFactory;
-use Domain\AiPromptMessageManagement\Models\AIModel;
-use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Domain\AnswerManagement\Models\Answer;
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\InterviewManagement\Models\InterviewTemplate;
@@ -24,7 +23,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Support\Scopes\ForAuthScope;
 
 /**
- * @property AiPromptMessage $defaultAiPromptMessage
+ * @property AIPrompt $defaultAiPromptMessage
  * @property Collection<aiModel> $aiModels
  */
 class QuestionVariant extends Model
@@ -94,24 +93,15 @@ class QuestionVariant extends Model
     public function aiPromptMessages(): HasMany
     {
         return $this->hasMany(
-            AiPromptMessage::class,
+            AIPrompt::class,
             'question_variant_id',
             'id'
         );
     }
 
-    public function aiModels(): BelongsToMany
+    public function aiPrompts(): HasMany
     {
-        return $this
-            ->belongsToMany(
-                AIModel::class,
-                table_name(AiPromptMessage::class),
-                'question_variant_id',
-                'ai_model_id',
-            )->withTimestamps()
-            ->using(AiPromptMessage::class)
-            ->as('prompt_message')
-            ->withPivot(['status', 'weight', 'content_prompt', 'system_prompt']);
+        return $this->hasMany(AIPrompt::class, 'question_variant_id');
     }
 
     protected static function newFactory()

@@ -3,7 +3,6 @@
 namespace Domain\QuestionManagement\Models;
 
 use Database\Factories\QuestionFactory;
-use Domain\AiPromptMessageManagement\Models\AIModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,7 +28,7 @@ class Question extends Model
         'difficult_level',
         'min_reading_duration_in_seconds',
         'max_reading_duration_in_seconds',
-        'default_ai_model_id',
+        'default_ai_model',
         'content_prompt',
         'system_prompt',
     ];
@@ -47,11 +46,6 @@ class Question extends Model
     public function questionVariants(): HasMany
     {
         return $this->hasMany(QuestionVariant::class, 'question_id');
-    }
-
-    public function defaultAiModel(): BelongsTo
-    {
-        return $this->belongsTo(AIModel::class, 'default_ai_model_id');
     }
 
     protected static function newFactory()

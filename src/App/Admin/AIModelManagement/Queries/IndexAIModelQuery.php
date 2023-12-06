@@ -2,7 +2,6 @@
 
 namespace App\Admin\AIModelManagement\Queries;
 
-use Domain\AiPromptMessageManagement\Models\AIModel;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 

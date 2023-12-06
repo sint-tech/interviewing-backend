@@ -2,12 +2,12 @@
 
 namespace Domain\AiPromptMessageManagement\Actions;
 
-use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 
 class PromptAnswerAnalyticsAction
 {
     public function __construct(
-        public readonly AiPromptMessage $aiPromptMessage,
+        public readonly AIPrompt $aiPromptMessage,
         public readonly string $answerText
     ) {
     }

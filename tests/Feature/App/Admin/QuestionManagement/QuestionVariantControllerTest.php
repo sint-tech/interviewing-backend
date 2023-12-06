@@ -4,8 +4,7 @@ namespace Tests\Feature\App\Admin\QuestionManagement;
 
 use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
 use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
-use Domain\AiPromptMessageManagement\Models\AIModel;
-use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -44,7 +43,7 @@ class QuestionVariantControllerTest extends TestCase
     {
         $this->assertDatabaseEmpty(QuestionVariant::class);
 
-        $this->assertDatabaseEmpty(AiPromptMessage::class);
+        $this->assertDatabaseEmpty(AIPrompt::class);
 
         $data = $this->validData();
 
@@ -53,7 +52,7 @@ class QuestionVariantControllerTest extends TestCase
 
         $this->assertCount(1, QuestionVariant::query()->get());
 
-        $this->assertCount(1, AiPromptMessage::query()->get());
+        $this->assertCount(1, AIPrompt::query()->get());
     }
 
     protected function validData(): array
@@ -61,17 +60,17 @@ class QuestionVariantControllerTest extends TestCase
         return [
             'text' => $this->faker->text,
             'description' => $this->faker->text,
-            'question_id' => Question::factory()->for($this->sintUser, 'creator')->createOne()->getKey(),
+            'question_id' => Question::factory()->for($this->sintUser, 'creator')->createOne(['system_prompt' => $this->faker->text, 'content_prompt' => $this->faker->text])->getKey(),
             'reading_time_in_seconds' => 120,
             'answering_time_in_seconds' => 340,
             'organization_id' => Organization::factory()->createOne()->getKey(),
-            'ai_models' => [
+            'ai_prompts' => [
                 0 => [
-                    'id' => AIModel::query()->where('name', AiModelEnum::Gpt_3_5->value)->firstOrCreate()->getKey(),
+                    'model' => AiModelEnum::Gpt_3_5->value,
                     'weight' => 100,
                     'status' => PromptMessageStatus::Enabled->value,
-                    'content_prompt' => $this->faker->text.'_QUESTION_TEXT_ and _INTERVIEWEE_ANSWER_',
-                    'system_prompt' => $this->faker->text.'_RESPONSE_JSON_STRUCTURE_',
+                    'content' => $this->faker->text.'_QUESTION_TEXT_ and _INTERVIEWEE_ANSWER_',
+                    'system' => $this->faker->text.'_RESPONSE_JSON_STRUCTURE_',
                 ],
             ],
         ];

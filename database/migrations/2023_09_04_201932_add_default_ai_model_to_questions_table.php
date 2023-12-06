@@ -13,13 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('questions', function (Blueprint $table) {
-            if (! Schema::hasColumn('questions','default_ai_model_id')) {
-                $table->foreignId('default_ai_model_id')
-                    ->nullable()
-                    ->default(DB::table('ai_models')->first()->id)
-                    ->constrained('ai_models', 'id')
-                    ->nullOnDelete();
-            }
+            $table->enum('default_ai_model',['gpt-3.5-turbo']);
 
             $table->longText('system_prompt');
             $table->longText('content_prompt');
@@ -35,7 +29,7 @@ return new class extends Migration
             if (Schema::getConnection()->getName() == 'sqlite') {
                 return;
             }
-            $table->dropConstrainedForeignId('default_ai_model_id');
+            $table->dropColumn(['default_ai_model','system_prompt','content_prompt']);
         });
     }
 };

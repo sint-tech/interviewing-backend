@@ -11,57 +11,50 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OpenAI\Laravel\Facades\OpenAI;
 use Support\ValueObjects\PromptMessage;
 
 /**
- * @property AIModel $aiModel
- * @property string $system_prompt
- * @property string $content_prompt
+ * @property AiModelEnum $model
+ * @property string $system
+ * @property string $content
+ * @property PromptMessage $system_prompt
+ * @property PromptMessage $content_prompt
  * @property PromptMessageStatus $status
  * @property int $weight
  */
-class AiPromptMessage extends Pivot //change the model path to domain questionVariant
+class AIPrompt extends Model //change the model path to domain questionVariant
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = 'ai_prompt_messages';
+    protected $table = 'ai_prompts';
 
     protected $fillable = [
-        'ai_model_id',
+        'model',
         'question_variant_id',
         'status',
-        'system_prompt',
-        'content_prompt',
+        'system',
+        'content',
         'weight',
     ];
 
     protected $casts = [
         'weight' => 'int',
+        'model' => AiModelEnum::class,
         'status' => PromptMessageStatus::class,
     ];
 
     public function questionVariant(): BelongsTo
     {
-        return $this->belongsTo(
-            QuestionVariant::class,
-            'question_variant_id',
-            'id'
-        );
+        return $this->belongsTo(QuestionVariant::class,'question_variant_id');
     }
 
-    public function aiModel(): BelongsTo
-    {
-        return $this->belongsTo(AIModel::class, 'ai_model_id');
-    }
-
-    public function systemPromptMessage(): Attribute
+    public function systemPrompt(): Attribute
     {
         return Attribute::make(get: function () {
 
-            $replacers = match ($this->aiModel->name) {
+            $replacers = match ($this->model) {
                 AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => json_encode([
                     'is_logical' => '<true,false>',
                     'rate' => '1 to 10',
@@ -70,38 +63,38 @@ class AiPromptMessage extends Pivot //change the model path to domain questionVa
                 ])]
             };
 
-            return (string) PromptMessage::make($this->original['system_prompt'], $replacers);
+            return PromptMessage::make($this->system, $replacers);
         });
     }
 
     /**
      * @throws \Exception
      */
-    public function contentPromptMessage(string $answerText): string
+    public function contentPrompt(): Attribute
     {
-        $replacers = match ($this->aiModel->name) {
-            AiModelEnum::Gpt_3_5 => [
-                '_QUESTION_TEXT_' => $this->questionVariant->text,
-                '_INTERVIEWEE_ANSWER_' => $answerText,
-            ]
-        };
-
-        return (string) PromptMessage::make($this->system_prompt, $replacers);
+        return Attribute::make(get: function () {
+            $replacers = match ($this->model) {
+                AiModelEnum::Gpt_3_5 => [
+                    '_QUESTION_TEXT_' => $this->questionVariant->text,
+                ]
+            };
+            return PromptMessage::make($this->content, $replacers);
+        });
     }
 
     public function prompt(string $answer): string
     {
-        return match ($this->aiModel->name) {
+        return match ($this->model) {
             AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
-                'model' => $this->aiModel->name->value,
+                'model' => $this->model->value,
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => $this->system_prompt,
+                        'content' => $this->system_prompt->toString(),
                     ],
                     [
                         'role' => 'user',
-                        'content' => $this->contentPrompt($answer),
+                        'content' => $this->content_prompt->replace('_INTERVIEWEE_ANSWER_',$answer)->toString(),
                     ],
                 ],
             ])[0]->message->content

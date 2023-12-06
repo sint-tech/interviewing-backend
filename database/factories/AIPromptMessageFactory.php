@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use Domain\AiPromptMessageManagement\Models\AiPromptMessage;
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<AiPromptMessage>
+ * @extends Factory<AIPrompt>
  */
 class AIPromptMessageFactory extends Factory
 {
-    protected $model = AiPromptMessage::class;
+    protected $model = AIPrompt::class;
 
     public function definition()
     {

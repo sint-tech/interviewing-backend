@@ -6,6 +6,7 @@ use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Enums\QuestionVariantOwnerEnum;
 use Domain\Users\Models\User;
 
+/** @deprecated  */
 trait QuestionVariantOwnerTrait
 {
     final public function getOwnerInstance(): Organization|User|string

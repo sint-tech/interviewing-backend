@@ -3,7 +3,7 @@
 namespace App\Admin\QuestionManagement\Resources;
 
 use App\Admin\Organization\Resources\OrganizationResource;
-use App\Admin\QuestionManagement\Resources\QuestionVariantAIModelResource as AIModelResource;
+use App\Admin\QuestionManagement\Resources\QuestionVariantAIPromptResource as AIPromptResource;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
@@ -25,7 +25,7 @@ class QuestionVariantResource extends JsonResource
             'answering_time_in_seconds' => (int) $this->answering_time_in_seconds,
             'organization_id' => $this->resource->organization_id,
             'organization' => OrganizationResource::make($this->whenLoaded('organization')),
-            'ai_models' => AIModelResource::collection($this->whenLoaded('aiModels')),
+            'ai_prompts' => AIPromptResource::collection($this->whenLoaded('aiPrompts')),
             'deleted_at' => $this->whenNotNull($this->deleted_at?->format('Y-m-d H:i')),
         ];
     }

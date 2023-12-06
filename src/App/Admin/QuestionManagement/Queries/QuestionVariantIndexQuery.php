@@ -24,7 +24,7 @@ class QuestionVariantIndexQuery extends QueryBuilder
         $this->allowedIncludes(
             'question.questionCluster',
             'questionCluster',
-            'aiModels'
+            'aiPrompts'
         );
     }
 
