@@ -47,7 +47,7 @@ class AIPrompt extends Model //change the model path to domain questionVariant
 
     public function questionVariant(): BelongsTo
     {
-        return $this->belongsTo(QuestionVariant::class,'question_variant_id');
+        return $this->belongsTo(QuestionVariant::class, 'question_variant_id');
     }
 
     public function systemPrompt(): Attribute
@@ -78,6 +78,7 @@ class AIPrompt extends Model //change the model path to domain questionVariant
                     '_QUESTION_TEXT_' => $this->questionVariant->text,
                 ]
             };
+
             return PromptMessage::make($this->content, $replacers);
         });
     }
@@ -94,10 +95,10 @@ class AIPrompt extends Model //change the model path to domain questionVariant
                     ],
                     [
                         'role' => 'user',
-                        'content' => $this->content_prompt->replace('_INTERVIEWEE_ANSWER_',$answer)->toString(),
+                        'content' => $this->content_prompt->replace('_INTERVIEWEE_ANSWER_', $answer)->toString(),
                     ],
                 ],
-            ])[0]->message->content
+            ])->choices[0]->message->content
         };
     }
 

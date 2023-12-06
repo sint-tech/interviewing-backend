@@ -2,6 +2,7 @@
 
 namespace Domain\InterviewManagement\Actions;
 
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Domain\InterviewManagement\DataTransferObjects\AnswerDto;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
@@ -11,9 +12,15 @@ use Domain\QuestionManagement\Models\QuestionVariant;
 
 class SubmitInterviewQuestionAnswerAction
 {
+    protected array $promptResponses;
+
     public function execute(Interview $interview, AnswerDto $answerDto): Answer
     {
-        $data = $answerDto->toArray() + ['score' => $this->calculateAverageScore($answerDto->question_variant_id, $answerDto->answer_text)];
+        $data = $answerDto->toArray() + [
+            'question_cluster_id' => QuestionVariant::query()->find($answerDto->question_variant_id)->questionCluster->getKey(),
+            'ml_text_semantics' => $this->promptResponse($answerDto->question_variant_id, $answerDto->answer_text),
+            'score' => $this->calculateAverageScore($answerDto->question_variant_id, $answerDto->answer_text),
+        ];
 
         $answer = $interview->answers()->create($data)->refresh();
 
@@ -47,10 +54,18 @@ class SubmitInterviewQuestionAnswerAction
 
     protected function calculateAverageScore(int $question_variant_id, string $answer): float
     {
-        $enabled_ai_models = QuestionVariant::query()
-            ->findOrFail($question_variant_id)
-            ->aiModels;
+        return (float) collect($this->promptResponse($question_variant_id, $answer))->avg('rate') ?? 0;
+    }
 
-        dd($enabled_ai_models);
+    protected function promptResponse(int $question_variant_id, string $answer): array
+    {
+        if (isset($this->promptResponses)) {
+            return $this->promptResponses;
+        }
+
+        return $this->promptResponses = QuestionVariant::query()
+            ->findOrFail($question_variant_id)
+            ->aiPrompts
+            ->map(fn (AIPrompt $aiPrompt) => json_decode($aiPrompt->prompt($answer), true))->toArray();
     }
 }

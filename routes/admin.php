@@ -1,6 +1,6 @@
 <?php
 
-use App\Admin\AIModelManagement\Controllers\AIModelController;
+use App\Admin\AIModelManagement\Controllers\ListAIModelsController;
 use App\Admin\AnswerManagement\Controllers\AnswerVariantController;
 use App\Admin\Auth\Controllers\LoginController;
 use App\Admin\Auth\Controllers\LogoutController;
@@ -58,4 +58,4 @@ Route::post('invitations/{invitation}/send-email', SendInvitationController::cla
 
 Route::apiResource('vacancies', VacancyController::class);
 
-Route::apiResource('ai-models', AIModelController::class)->only('index', 'show');
+Route::get('ai-models', ListAIModelsController::class)->name('ai-models.index');

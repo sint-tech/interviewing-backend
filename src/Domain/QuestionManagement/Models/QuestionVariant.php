@@ -23,8 +23,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Support\Scopes\ForAuthScope;
 
 /**
- * @property AIPrompt $defaultAiPromptMessage
- * @property Collection<aiModel> $aiModels
+ * @property Collection<AIPrompt> $aiPrompts
  */
 class QuestionVariant extends Model
 {
@@ -88,15 +87,6 @@ class QuestionVariant extends Model
     public function creator(): MorphTo
     {
         return $this->morphTo('creator');
-    }
-
-    public function aiPromptMessages(): HasMany
-    {
-        return $this->hasMany(
-            AIPrompt::class,
-            'question_variant_id',
-            'id'
-        );
     }
 
     public function aiPrompts(): HasMany
