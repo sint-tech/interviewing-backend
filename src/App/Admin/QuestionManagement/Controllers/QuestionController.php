@@ -25,12 +25,12 @@ class QuestionController extends Controller
         return QuestionResource::make(Question::query()->findOrFail($question));
     }
 
-    public function store(QuestionStoreRequest $request,CreateQuestionAction $action): QuestionResource
+    public function store(QuestionStoreRequest $request, CreateQuestionAction $action): QuestionResource
     {
         $dto = QuestionDataFactory::fromStoreRequest($request);
 
         return QuestionResource::make(
-            $action->execute($dto)
+            $action->execute($dto)->load('defaultAIPrompt')
         );
     }
 

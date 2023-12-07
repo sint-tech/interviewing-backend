@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OpenAI\Laravel\Facades\OpenAI;
 use Support\ValueObjects\PromptMessage;
@@ -32,7 +33,6 @@ class AIPrompt extends Model //change the model path to domain questionVariant
 
     protected $fillable = [
         'model',
-        'question_variant_id',
         'status',
         'system',
         'content',
@@ -48,6 +48,11 @@ class AIPrompt extends Model //change the model path to domain questionVariant
     public function questionVariant(): BelongsTo
     {
         return $this->belongsTo(QuestionVariant::class, 'question_variant_id');
+    }
+
+    public function promptable(): MorphTo
+    {
+        return $this->morphTo('promptable');
     }
 
     public function systemPrompt(): Attribute
@@ -74,16 +79,14 @@ class AIPrompt extends Model //change the model path to domain questionVariant
     {
         return Attribute::make(get: function () {
             $replacers = match ($this->model) {
-                AiModelEnum::Gpt_3_5 => [
-                    '_QUESTION_TEXT_' => $this->questionVariant->text,
-                ]
+                AiModelEnum::Gpt_3_5 => []
             };
 
             return PromptMessage::make($this->content, $replacers);
         });
     }
 
-    public function prompt(string $answer): string
+    public function prompt(string $question, string $answer): string
     {
         return match ($this->model) {
             AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
@@ -95,7 +98,10 @@ class AIPrompt extends Model //change the model path to domain questionVariant
                     ],
                     [
                         'role' => 'user',
-                        'content' => $this->content_prompt->replace('_INTERVIEWEE_ANSWER_', $answer)->toString(),
+                        'content' => $this->content_prompt->replaceMany([
+                            '_QUESTION_TEXT_' => $question,
+                            '_INTERVIEWEE_ANSWER_' => $answer,
+                        ])->toString(),
                     ],
                 ],
             ])->choices[0]->message->content

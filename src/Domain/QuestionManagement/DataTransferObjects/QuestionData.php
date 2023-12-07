@@ -3,9 +3,8 @@
 namespace Domain\QuestionManagement\DataTransferObjects;
 
 use Domain\QuestionManagement\Enums\QuestionTypeEnum;
-use Domain\Users\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
@@ -20,9 +19,7 @@ class QuestionData extends Data
         public readonly int|Optional $difficult_level,
         public readonly int|Optional $min_reading_duration_in_seconds,
         public readonly int|Optional $max_reading_duration_in_seconds,
-        public readonly int $default_ai_model_id,
-        public readonly string $content_prompt,
-        public readonly string $system_prompt,
+        public readonly array $ai_prompt
     ) {
         if ($this->creator instanceof Authenticatable) {
             $this->additional([
@@ -30,5 +27,17 @@ class QuestionData extends Data
                 'creator_type' => $this->creator->getMorphClass(),
             ]);
         }
+
+        $this->aiPromptsKeysExists();
+    }
+
+    private function aiPromptsKeysExists(): void
+    {
+        throw_unless(
+            Arr::has($this->ai_prompt, $required_keys = ['model', 'content', 'system']),
+            sprintf('$ai_prompt must have these keys %s, only passed %s',
+                Arr::join($required_keys, ', ', ' and'),
+                Arr::join(array_keys($this->ai_prompt), ', ', ' and')
+            ));
     }
 }

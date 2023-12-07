@@ -11,12 +11,9 @@ return new class extends Migration
         Schema::create('ai_prompts', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('model',['gpt-3.5-turbo']);
+            $table->enum('model', ['gpt-3.5-turbo']);
 
-            $table->foreignId('question_variant_id')
-                ->nullable()
-                ->constrained('question_variants')
-                ->nullOnDelete();
+            $table->nullableMorphs('promptable');
 
             $table->enum('status', [
                 'enabled',

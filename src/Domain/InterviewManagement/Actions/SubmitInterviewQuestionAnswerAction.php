@@ -63,9 +63,17 @@ class SubmitInterviewQuestionAnswerAction
             return $this->promptResponses;
         }
 
-        return $this->promptResponses = QuestionVariant::query()
-            ->findOrFail($question_variant_id)
+        $question_variant = $this->questionVariant($question_variant_id);
+
+        return $this->promptResponses = $question_variant
             ->aiPrompts
-            ->map(fn (AIPrompt $aiPrompt) => json_decode($aiPrompt->prompt($answer), true))->toArray();
+            ->map(fn (AIPrompt $aiPrompt) => json_decode($aiPrompt->prompt($question_variant->text, $answer), true))
+            ->toArray();
+    }
+
+    protected function questionVariant(int $question_variant_id): QuestionVariant
+    {
+        return QuestionVariant::query()
+            ->findOrFail($question_variant_id);
     }
 }

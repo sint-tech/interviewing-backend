@@ -55,12 +55,11 @@ class QuestionControllerTest extends TestCase
             'difficult_level' => '10',
             'min_reading_duration_in_seconds' => 120,
             'max_reading_duration_in_seconds' => 360,
-            'default_ai_model_id' => AIModel::query()->create([
-                'name' => AiModelEnum::Gpt_3_5,
-                'status' => 'active',
-            ])->getKey(),
-            'content_prompt' => 'question is: _QUESTION_TEXT_ , and the interviewee answer is: _INTERVIEWEE_ANSWER_',
-            'system_prompt' => 'Im interviewer and asking the next content question, please provide answer as: _RESPONSE_JSON_STRUCTURE_',
+            'ai_prompt' => [
+                'model' => AiModelEnum::Gpt_3_5->value,
+                'content' => 'question is: _QUESTION_TEXT_ , and the interviewee answer is: _INTERVIEWEE_ANSWER_',
+                'system' => 'Im interviewer and asking the next content question, please provide answer as: _RESPONSE_JSON_STRUCTURE_',
+            ],
         ];
 
         return array_merge($data, $merged_data);

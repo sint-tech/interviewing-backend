@@ -17,7 +17,7 @@ class PromptMessage
     /**
      * @throws \Exception
      */
-    public static function make(string $message, array $replacers): static
+    public static function make(string $message, array $replacers = []): static
     {
         return new static($message,$replacers);
     }
@@ -39,6 +39,11 @@ class PromptMessage
     public function replace(string $search, string $replace): self
     {
         return new self($this->promptMessage(), [$search => $replace]);
+    }
+
+    public function replaceMany(array $replaces): self
+    {
+        return new self($this->promptMessage(), $replaces);
     }
 
     /**

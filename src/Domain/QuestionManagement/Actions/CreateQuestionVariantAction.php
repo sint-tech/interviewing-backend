@@ -34,21 +34,4 @@ class CreateQuestionVariantAction
             'creator',
         ]);
     }
-
-    private function syncQuestionVariantWithAIModelIds(QuestionVariant $questionVariant): void
-    {
-        $ai_model_ids = is_array($this->questionVariantDto->ai_model_ids) && count($this->questionVariantDto->ai_model_ids) ?
-            $this->questionVariantDto->ai_model_ids : [$questionVariant->question->defaultAiModel->getKey()];
-
-        $ai_model_value = [];
-
-        foreach ($ai_model_ids as $index => $ai_model_id) {
-            $ai_model_value[$ai_model_id] = [
-                'prompt_text' => '',
-                'is_default' => $index === 0,
-            ];
-        }
-
-        $questionVariant->aiModels()->sync($ai_model_value);
-    }
 }

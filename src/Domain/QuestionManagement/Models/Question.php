@@ -3,10 +3,13 @@
 namespace Domain\QuestionManagement\Models;
 
 use Database\Factories\QuestionFactory;
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -36,6 +39,16 @@ class Question extends Model
     public function questionCluster(): BelongsTo
     {
         return $this->belongsTo(QuestionCluster::class, 'question_cluster_id');
+    }
+
+    public function defaultAIPrompt(): MorphOne
+    {
+        return $this->morphOne(AIPrompt::class, 'promptable')->ofMany('created_at');
+    }
+
+    public function aiPrompts(): MorphMany
+    {
+        return $this->morphMany(AIPrompt::class, 'promptable');
     }
 
     public function creator(): MorphTo
