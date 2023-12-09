@@ -7,17 +7,23 @@ use Domain\Candidate\Builders\CandidateBuilder;
 use Domain\Candidate\Enums\CandidateSocialAppEnum;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\JobTitle\Models\JobTitle;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Support\Scopes\ForAuthScope;
 
+/**
+ * @property Interview $latestRunningInterview
+ * @property Collection<Interview> $interviews
+ * @property Collection<Interview> $runningInterviews
+ */
 class Candidate extends Authenticatable implements HasMedia
 {
     use HasFactory;
@@ -66,8 +72,17 @@ class Candidate extends Authenticatable implements HasMedia
 
     public function interviews(): HasMany
     {
-        return $this->hasMany(Interview::class, 'candidate_id')
-            ->withoutGlobalScope(ForAuthScope::class);
+        return $this->hasMany(Interview::class, 'candidate_id');
+    }
+
+    public function runningInterviews(): HasMany
+    {
+        return $this->interviews()->whereRunning();
+    }
+
+    public function latestRunningInterview(): HasOne
+    {
+        return $this->hasOne(Interview::class, 'candidate_id')->whereRunning()->ofMany('id');
     }
 
     public function desireHiringPositions(): BelongsToMany

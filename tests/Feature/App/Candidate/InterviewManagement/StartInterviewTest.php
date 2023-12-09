@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Candidate\InterviewManagement;
 
 use Domain\Candidate\Models\Candidate;
+use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Employee;
@@ -126,6 +127,28 @@ class StartInterviewTest extends TestCase
             ->post(route('candidate.interviews.start'), $data)->assertServerError();
 
         $this->actingAs(Candidate::factory()->createOne(), 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+    }
+
+    /** @test  */
+    public function itShouldAllowAuthCandidateStartNewInterviewAfterFinishingRunningOne()
+    {
+        $data = [
+            'vacancy_id' => $this->vacancy->getKey(),
+            'interview_template_id' => $this->interviewTemplate->getKey(),
+        ];
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertServerError();
+
+        $this->assertCount(1, $this->authCandidate->runningInterviews()->get());
+
+        $this->authCandidate->latestRunningInterview->update(['ended_at' => now(), 'status' => InterviewStatusEnum::Withdrew]);
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
     }
 }

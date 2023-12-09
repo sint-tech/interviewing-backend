@@ -7,7 +7,6 @@ use Domain\InterviewManagement\Models\Interview;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Exception;
-use Support\Scopes\ForAuthScope;
 
 class CreateInterviewAction
 {
@@ -40,15 +39,10 @@ class CreateInterviewAction
      */
     protected function noInterviewsRunningForCandidate(int $candidateId): void
     {
-
-        Interview::query()
-            ->withoutGlobalScope(ForAuthScope::class)
-            ->whereStatusNotInFinalStage()
-            ->whereCandidate($candidateId)
-            ->doesntExistOr(
-                fn () => throw new Exception(
-                    sprintf('can\'t create or start an interview until the running interview for candidate with id: %s is finished', $candidateId)
-                )
+        if (app(HasRunningInterviewsForCandidateAction::class)->execute($candidateId)) {
+            throw new Exception(
+                sprintf('can\'t create or start an interview until the running interview for candidate with id: %s is finished', $candidateId)
             );
+        }
     }
 }
