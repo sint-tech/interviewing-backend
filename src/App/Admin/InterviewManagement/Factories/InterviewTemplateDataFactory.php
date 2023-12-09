@@ -52,6 +52,7 @@ class InterviewTemplateDataFactory
         $request_data = array_merge($request->validated(), [
             'creator' => auth()->user(),
             'question_variant_ids' => $request->questionVariants(),
+            'targeted_job_title_id' => $request->validated('job_profile_id'),
         ]);
 
         return InterviewTemplateDto::from($request_data);

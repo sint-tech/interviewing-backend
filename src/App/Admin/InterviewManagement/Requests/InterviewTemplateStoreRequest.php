@@ -4,6 +4,7 @@ namespace App\Admin\InterviewManagement\Requests;
 
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\JobTitle\Models\JobTitle;
 use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Foundation\Http\FormRequest;
@@ -22,7 +23,8 @@ class InterviewTemplateStoreRequest extends FormRequest
             ],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'availability_status' => ['required', Rule::enum(InterviewTemplateAvailabilityStatusEnum::class)],
-            'organization_id' => ['nullable', Rule::exists(table_name(Organization::class), 'id')->withoutTrashed()],
+            'organization_id' => ['required', Rule::exists(table_name(Organization::class), 'id')->withoutTrashed()],
+            'job_profile_id' => ['required', Rule::exists(JobTitle::class, 'id')->withoutTrashed()],
             'reusable' => ['sometimes', 'boolean'],
             'question_variant_ids' => ['required', 'array'],
             'question_variant_ids.*' => ['required', 'numeric', Rule::exists('question_variants', 'id')->withoutTrashed(), 'distinct'],

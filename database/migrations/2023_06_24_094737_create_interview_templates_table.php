@@ -15,10 +15,15 @@ return new class extends Migration
             $table->enum('availability_status', ['pending', 'available', 'unavailable', 'paused']);
 
             $table->morphs('creator');
+
             $table->foreignId('organization_id')
                 ->nullable()
                 ->constrained('organizations', 'id')
                 ->nullOnDelete();
+            $table->foreignId('targeted_job_title_id')
+                ->nullable()
+                ->comment('the id of job title (job profile) targeted by this interview template')
+                ->constrained('job_titles', 'id')->nullOnDelete();
 
             $table->boolean('reusable')->default(false);
 

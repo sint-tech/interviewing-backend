@@ -11,7 +11,7 @@ class UpdateInterviewTemplateAction
         InterviewTemplate $interviewTemplate,
         InterviewTemplateDto $interviewTemplateDto
     ): InterviewTemplate {
-        $interviewTemplateDto->except('question_variants', 'creator', 'interview_template_settings_dto');
+        $interviewTemplateDto->except('question_variants', 'creator');
 
         $interviewTemplate->update($interviewTemplateDto->toArray());
 

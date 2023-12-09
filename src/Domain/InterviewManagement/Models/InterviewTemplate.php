@@ -4,6 +4,7 @@ namespace Domain\InterviewManagement\Models;
 
 use Database\Factories\InterviewTemplateFactory;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
+use Domain\JobTitle\Models\JobTitle;
 use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,6 +27,7 @@ class InterviewTemplate extends Model
         'description',
         'availability_status',
         'organization_id',
+        'targeted_job_title_id',
         'parent_id',
         'creator_id',
         'creator_type',
@@ -51,6 +53,21 @@ class InterviewTemplate extends Model
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id');
+    }
+
+    public function targetedJobTitle(): BelongsTo
+    {
+        return $this->belongsTo(JobTitle::class, 'targeted_job_title_id');
+    }
+
+    public function jobProfile(): BelongsTo
+    {
+        return $this->targetedJobTitle();
+    }
+
+    public function jobTitle(): BelongsTo
+    {
+        return $this->targetedJobTitle();
     }
 
     public function creator(): MorphTo

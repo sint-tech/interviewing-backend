@@ -17,7 +17,9 @@ class InterviewTemplateDto extends Data
         public readonly string $name,
         public readonly string|Optional|null $description = null,
         public readonly InterviewTemplateAvailabilityStatusEnum $availability_status,
-        public readonly ?int $organization_id,
+        public readonly int $organization_id,
+        #[MapInputName('job_profile_id')]
+        public readonly int $targeted_job_title_id,
         public readonly Authenticatable $creator,
         public readonly ?int $parent_id,
         public readonly bool $reusable,
