@@ -28,6 +28,7 @@ class QuestionIndexQuery extends QueryBuilder
             AllowedInclude::relationship('questionCluster'),
             AllowedInclude::relationship('questionVariants'),
             AllowedInclude::relationship('aiPrompts'),
+            AllowedInclude::relationship('defaultAIPrompt'),
         );
     }
 
