@@ -25,7 +25,7 @@ use Support\ValueObjects\PromptMessage;
  * @property PromptMessageStatus $status
  * @property int $weight
  */
-class AIPrompt extends Model //change the model path to domain questionVariant
+class AIPrompt extends Model
 {
     use HasFactory,SoftDeletes;
 

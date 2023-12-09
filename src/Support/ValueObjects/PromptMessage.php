@@ -4,12 +4,12 @@ namespace Support\ValueObjects;
 
 class PromptMessage
 {
-    protected readonly array $replacers;
+    public readonly array $placeholders;
 
     /**
      * @throws \Exception
      */
-    public function __construct(protected readonly string $message, array $replacers)
+    public function __construct(public readonly string $message, public readonly array $replacers)
     {
         $this->validReplacers($replacers);
     }
@@ -22,11 +22,16 @@ class PromptMessage
         return new static($message,$replacers);
     }
 
+    public static function message(string $message, array $replacers = []): string
+    {
+        return self::make($message, $replacers);
+    }
+
     public function promptMessage(): string
     {
         $str = $this->message;
 
-        foreach ($this->replacers as $search => $replace) {
+        foreach ($this->placeholders as $search => $replace) {
             $str = str_replace($search, $replace, $str);
         }
 
@@ -51,15 +56,18 @@ class PromptMessage
      */
     private function validReplacers(array $replacers): void
     {
+        $result = [];
+
         foreach ($replacers as $search => $replaced) {
-            if (! is_string($search) && ! str($search)->startsWith('_') && ! str($search)->endsWith('_')) {
-                throw new \Exception(sprintf('this replacer: %s is invalid', $search));
+            if (! is_string($search) || ! str($search)->startsWith('_') || ! str($search)->endsWith('_')) {
+                throw new \Exception(sprintf("this replacer: %s must be string, starts with '_' and ends with '_'", $search));
             }
-            if (! is_string($replaced)) {
-                throw new \Exception('replaced value must be string');
-            }
+            $replaced = $this->castReplacedToString($replaced);
+
+            $result[$search] = $replaced;
         }
-        $this->replacers = $replacers;
+
+        $this->placeholders = $result;
     }
 
     public function toString(): string
@@ -70,5 +78,18 @@ class PromptMessage
     public function __toString(): string
     {
         return $this->toString();
+    }
+
+    private function castReplacedToString(mixed $replaced): string
+    {
+        if (is_numeric($replaced)) {
+            $replaced = (string) $replaced;
+        }
+
+        if (is_array($replaced)) {
+            $replaced = collect($replaced)->implode(',');
+        }
+
+        return (string) $replaced;
     }
 }

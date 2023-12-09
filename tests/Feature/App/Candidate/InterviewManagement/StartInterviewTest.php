@@ -15,6 +15,12 @@ class StartInterviewTest extends TestCase
 {
     use DatabaseMigrations,AuthenticationInstallation;
 
+    protected Candidate $authCandidate;
+
+    protected Vacancy $vacancy;
+
+    protected InterviewTemplate $interviewTemplate;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -22,35 +28,37 @@ class StartInterviewTest extends TestCase
         $this->migrateFreshUsing();
 
         $this->installPassport();
+
+        $this->authCandidate = Candidate::factory()->createOne();
+
+        $this->vacancy = Vacancy::factory()
+            ->for($this->interviewTemplate = InterviewTemplate::factory()->createOne(), 'defaultInterviewTemplate')
+            ->for($employee = Employee::factory()->createOne(), 'creator')
+            ->for($employee->organization, 'organization')->createOne();
     }
 
     /** @test */
     public function itShouldStartNewInterviewForPassedVacancyAndInterviewTemplate(): void
     {
-        $vacancy = Vacancy::factory()
-            ->for($interviewTemplate = InterviewTemplate::factory()->createOne(), 'defaultInterviewTemplate')
-            ->for($employee = Employee::factory()->createOne(), 'creator')
-            ->for($employee->organization, 'organization')->createOne();
-
-        $candidate = Candidate::factory()->createOne();
+        $candidate = $this->authCandidate;
 
         $this->assertDatabaseMissing(table_name(Interview::class), [
-            'interview_template_id' => $interviewTemplate->getKey(),
-            'vacancy_id' => $vacancy->getKey(),
+            'interview_template_id' => $this->interviewTemplate->getKey(),
+            'vacancy_id' => $this->vacancy->getKey(),
             'candidate_id' => $candidate->getKey(),
         ]);
 
         $response = $this->actingAs($candidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), [
-                'vacancy_id' => $vacancy->getKey(),
-                'interview_template_id' => $interviewTemplate->getKey(),
+                'vacancy_id' => $this->vacancy->getKey(),
+                'interview_template_id' => $this->interviewTemplate->getKey(),
             ]);
 
         $response->assertSuccessful();
 
         $this->assertDatabaseHas(table_name(Interview::class), [
-            'interview_template_id' => $interviewTemplate->getKey(),
-            'vacancy_id' => $vacancy->getKey(),
+            'interview_template_id' => $this->interviewTemplate->getKey(),
+            'vacancy_id' => $this->vacancy->getKey(),
             'candidate_id' => $candidate->getKey(),
         ]);
     }
@@ -58,46 +66,66 @@ class StartInterviewTest extends TestCase
     /** @test */
     public function itShouldStartInterviewWhenPassOnlyVacancyWhichHasDefaultInterviewTemplate(): void
     {
-
-        $vacancy = Vacancy::factory()
-            ->for(InterviewTemplate::factory()->createOne(), 'defaultInterviewTemplate')
-            ->for($employee = Employee::factory()->createOne(), 'creator')
-            ->for($employee->organization, 'organization')->createOne();
-
-        $candidate = Candidate::factory()->createOne();
-
         $this->assertDatabaseMissing(table_name(Interview::class), [
-            'vacancy_id' => $vacancy->getKey(),
-            'candidate_id' => $candidate->getKey(),
+            'vacancy_id' => $this->vacancy->getKey(),
+            'candidate_id' => $this->authCandidate->getKey(),
         ]);
 
-        $this->actingAs($candidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), [
-                'vacancy_id' => $vacancy->getKey(),
+                'vacancy_id' => $this->vacancy->getKey(),
             ])->assertSuccessful();
 
         $this->assertDatabaseHas(table_name(Interview::class), [
-            'interview_template_id' => $vacancy->defaultInterviewTemplate->getKey(),
-            'vacancy_id' => $vacancy->getKey(),
-            'candidate_id' => $candidate->getKey(),
+            'interview_template_id' => $this->vacancy->defaultInterviewTemplate->getKey(),
+            'vacancy_id' => $this->vacancy->getKey(),
+            'candidate_id' => $this->authCandidate->getKey(),
         ]);
     }
 
     /** @test  */
     public function itShouldThrowValidationExceptionWhenInterviewTemplateDoesntOpenForVacancy(): void
     {
-        $vacancy = Vacancy::factory()
-            ->for(InterviewTemplate::factory()->createOne(), 'defaultInterviewTemplate')
-            ->for($employee = Employee::factory()->createOne(), 'creator')
-            ->for($employee->organization, 'organization')->createOne();
-
         $otherInterviewTemplate = InterviewTemplate::factory()->createOne();
 
-        $this->actingAs(Candidate::factory()->createOne(), 'api-candidate')
+        $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), [
-                'vacancy_id' => $vacancy->getKey(),
+                'vacancy_id' => $this->vacancy->getKey(),
                 'interview_template_id' => $otherInterviewTemplate->getKey(),
             ])->assertUnprocessable()
             ->assertJsonValidationErrorFor('interview_template_id');
+    }
+
+    /** @test  */
+    public function itShouldNotStartNewInterviewWhenHasRunningInterview()
+    {
+        $data = [
+            'vacancy_id' => $this->vacancy->getKey(),
+            'interview_template_id' => $this->interviewTemplate->getKey(),
+        ];
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertServerError();
+    }
+
+    /** @test */
+    public function itShouldStartNewInterviewForCandidateExceptAuthCandidate()
+    {
+        $data = [
+            'vacancy_id' => $this->vacancy->getKey(),
+            'interview_template_id' => $this->interviewTemplate->getKey(),
+        ];
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertServerError();
+
+        $this->actingAs(Candidate::factory()->createOne(), 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
     }
 }

@@ -31,9 +31,6 @@ class Question extends Model
         'difficult_level',
         'min_reading_duration_in_seconds',
         'max_reading_duration_in_seconds',
-        'default_ai_model',
-        'content_prompt',
-        'system_prompt',
     ];
 
     public function questionCluster(): BelongsTo
