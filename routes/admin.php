@@ -12,6 +12,7 @@ use App\Admin\InterviewManagement\Controllers\ScheduleInterviewTemplateDatesCont
 use App\Admin\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Admin\InvitationManagement\Controllers\InvitationController;
 use App\Admin\InvitationManagement\Controllers\SendInvitationController;
+use App\Admin\JobTitle\Controllers\JobTitleController;
 use App\Admin\Organization\Controllers\OrganizationController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterRecommendationController;
@@ -30,6 +31,8 @@ Route::any('/logout', LogoutController::class)->name('logout');
 Route::apiResource('organizations', OrganizationController::class);
 
 Route::post('organizations/{organization}/restore', [OrganizationController::class, 'restore'])->name('organizations.restore');
+
+Route::apiResource('job-titles', JobTitleController::class);
 
 Route::apiResource('skills', SkillController::class);
 
