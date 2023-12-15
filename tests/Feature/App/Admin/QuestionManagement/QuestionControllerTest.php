@@ -3,6 +3,8 @@
 namespace Tests\Feature\App\Admin\QuestionManagement;
 
 use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
+use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
+use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -41,6 +43,26 @@ class QuestionControllerTest extends TestCase
             route('admin.questions.store'),
             $this->requestData()
         )->assertSuccessful();
+    }
+
+    /** @test */
+    public function itShouldUpdateQuestion()
+    {
+        $question = Question::factory()
+            ->for($this->sintUser, 'creator')
+            ->for(QuestionCluster::factory()->for($this->sintUser, 'creator')->createOne())
+            ->createOne();
+
+        $question->defaultAIPrompt()->create([
+            'content' => $this->faker->text(244),
+            'system' => $this->faker->text(244),
+            'weight' => 100,
+            'model' => AiModelEnum::Gpt_3_5,
+            'status' => PromptMessageStatus::Enabled,
+        ]);
+
+        $this->put(route('admin.questions.update', $question))
+            ->assertSuccessful();
     }
 
     protected function requestData(array $merged_data = []): array

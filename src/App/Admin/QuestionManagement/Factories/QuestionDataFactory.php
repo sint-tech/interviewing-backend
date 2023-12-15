@@ -25,11 +25,13 @@ class QuestionDataFactory
     {
         return QuestionData::from(
             array_merge(
+                $request->question()->toArray(),
                 $request->validated(),
                 [
                     'min_reading_duration_in_seconds' => $request->input('min_reading_duration_in_seconds', Optional::create()),
                     'max_reading_duration_in_seconds' => $request->input('max_reading_duration_in_seconds', Optional::create()),
-                ]
+                    'ai_prompt' => $request->question()->load('defaultAIPrompt')->defaultAIPrompt?->only(['model', 'content', 'system']) ?? [],
+                ],
             )
         );
     }

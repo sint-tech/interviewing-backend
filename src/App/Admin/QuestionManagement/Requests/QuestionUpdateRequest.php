@@ -3,6 +3,7 @@
 namespace App\Admin\QuestionManagement\Requests;
 
 use Domain\QuestionManagement\Enums\QuestionTypeEnum;
+use Domain\QuestionManagement\Models\Question;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -19,7 +20,11 @@ class QuestionUpdateRequest extends FormRequest
             'question_type' => ['filled', (new Enum(QuestionTypeEnum::class))],
             'min_reading_duration_in_seconds' => ['filled', 'integer', 'min:1', 'lt:max_reading_duration_in_seconds'],
             'max_reading_duration_in_seconds' => ['filled', 'integer', 'min:1', 'gt:min_reading_duration_in_seconds'],
-            'default_ai_model_id' => ['filled', 'integer', Rule::exists('ai_models', 'id')->where('status', 'active')],
         ];
+    }
+
+    public function question(): Question
+    {
+        return $this->route('question');
     }
 }
