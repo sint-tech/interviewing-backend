@@ -19,7 +19,8 @@ Route::apiResource('employees', EmployeeController::class);
 
 Route::apiResource('vacancies', VacancyController::class);
 
-Route::apiResource('question-variants', QuestionVariantController::class);
+//Route::apiResource('questions',QuestionController::class)->only(['index', 'show']);
+Route::apiResource('questions.question-variants', QuestionVariantController::class);
 
 Route::prefix('interview-management')
     ->group(function () {

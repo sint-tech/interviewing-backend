@@ -6,6 +6,7 @@ use App\Organization\QuestionManagement\Requests\QuestionVariantStoreRequest;
 use App\Organization\QuestionManagement\Resources\QuestionVariantResource;
 use Domain\QuestionManagement\Actions\CreateQuestionVariantAction;
 use Domain\QuestionManagement\DataTransferObjects\QuestionVariantDto;
+use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Support\Controllers\Controller;
@@ -15,14 +16,14 @@ class QuestionVariantController extends Controller
     /**
      * @return AnonymousResourceCollection<QuestionVariantResource>
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Question $question): AnonymousResourceCollection
     {
         return QuestionVariantResource::collection(
-            QuestionVariant::query()->paginate(pagination_per_page())
+            QuestionVariant::query()->whereBelongsTo($question)->paginate(pagination_per_page())
         );
     }
 
-    public function show(int $question_variant): QuestionVariantResource
+    public function show(Question $question,QuestionVariant $question_variant): QuestionVariantResource
     {
         return QuestionVariantResource::make(
             QuestionVariant::query()->findOrFail($question_variant)

@@ -24,9 +24,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('guest:api-candidate')->withoutMiddleware('auth:api-candidate')->group(function () {
+Route::middleware('guest:api-candidate')->withoutMiddleware('auth:api-candidate')->name('auth')->group(function () {
     Route::post('/pre-register/valid-identifier-input', ValidateNewCandidateUniqueInputsController::class);
-    Route::post('/register', RegisterController::class);
+    Route::post('/register/{invitation?}', RegisterController::class)->name('.register');
     Route::post('/login', LoginController::class);
     Route::post('/social-login', SocialLoginController::class);
 });

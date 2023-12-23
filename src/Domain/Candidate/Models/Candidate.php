@@ -7,6 +7,7 @@ use Domain\Candidate\Builders\CandidateBuilder;
 use Domain\Candidate\Enums\CandidateSocialAppEnum;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\JobTitle\Models\JobTitle;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,14 +16,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Arr;
 use Laravel\Passport\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Support\ValueObjects\MobileNumber;
 
 /**
  * @property Interview $latestRunningInterview
  * @property Collection<Interview> $interviews
  * @property Collection<Interview> $runningInterviews
+ * @property MobileNumber $mobile_number
  */
 class Candidate extends Authenticatable implements HasMedia
 {
@@ -38,8 +42,7 @@ class Candidate extends Authenticatable implements HasMedia
         'last_name',
         'full_name',
         'email',
-        'mobile_country',
-        'mobile_country_code',
+        'mobile_dial_code',
         'mobile_number',
         'password',
         'social_driver_name',
@@ -59,6 +62,16 @@ class Candidate extends Authenticatable implements HasMedia
     protected $casts = [
         'social_driver_name' => CandidateSocialAppEnum::class,
     ];
+
+    public function mobileNumber(): Attribute
+    {
+        return Attribute::make(function () {
+            if (Arr::has($this->attributes,['mobile_dial_code','mobile_number'])) {
+                return new MobileNumber($this->attributes['mobile_dial_code'],$this->attributes['mobile_number']);
+            }
+            return null;
+        });
+    }
 
     public function registeredWithSocialApp(): bool
     {

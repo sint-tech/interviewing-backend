@@ -9,7 +9,7 @@ class EgyptMobileNumber extends MobileNumber
         return 'EG';
     }
 
-    public function mobileCode(): string
+    public function dialCode(): string
     {
         return '+20';
     }

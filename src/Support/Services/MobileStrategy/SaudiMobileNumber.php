@@ -9,7 +9,7 @@ class SaudiMobileNumber extends MobileNumber
         return 'SA';
     }
 
-    public function mobileCode(): string
+    public function dialCode(): string
     {
         return '+966';
     }

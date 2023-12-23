@@ -33,11 +33,12 @@ class Invitation extends Model
         'mobile_country_code',
         'mobile_number',
         'batch',
-        'should_be_invited_at',
         'expired_at',
         'interview_template_id',
         'vacancy_id',
+        'should_be_invited_at',
         'last_invited_at',
+        'used_at',
     ];
 
     protected $casts = [

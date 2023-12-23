@@ -17,7 +17,7 @@ abstract class MobileNumber
      * get the country mobile code
      * https://en.wikipedia.org/wiki/List_of_country_calling_codes
      */
-    abstract public function mobileCode(): string;
+    abstract public function dialCode(): string;
 
     public function mobileValidationRule(): Phone
     {

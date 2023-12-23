@@ -19,6 +19,11 @@ class CreateCandidateAction
 
         $data['password'] = Hash::make($data['password']);
 
+        if (array_key_exists('mobile_number', $data)) {
+            $data['mobile_dial_code'] = $this->data->mobile_number->dialCode;
+            $data['mobile_number'] = $this->data->mobile_number->number;
+        }
+
         $candidate = new Candidate($data);
 
         $candidate->save();

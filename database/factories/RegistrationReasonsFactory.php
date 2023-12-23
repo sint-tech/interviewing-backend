@@ -16,7 +16,7 @@ class RegistrationReasonsFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->unique()->jobTitle,
+            'name' => $this->faker->unique()->jobTitle,
             'availability_status' => $this->faker->randomElement([
                 RegistrationReasonsAvailabilityStatusEnum::Active->value,
                 RegistrationReasonsAvailabilityStatusEnum::Inactive->value,

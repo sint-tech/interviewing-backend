@@ -16,9 +16,13 @@ return new class() extends Migration
 
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('full_name')->nullable();
 
             $table->string('email')->unique();
+
+            $table->enum('mobile_dial_code', ['+20','+966'])->nullable();
+            $table->integer('mobile_number')->nullable();
+            $table->unique(['mobile_dial_code', 'mobile_number']);
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
 
