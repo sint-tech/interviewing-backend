@@ -74,6 +74,8 @@ class Invitation extends Model
                     'vacancy_id' => $this->vacancy_id,
                     'invitation_id' => $this->getKey(),
                     'email' => $this->email,
+                    'first_name' => str($this->first_name)->before(' ')->toString(),
+                    'last_name' => str($this->last_name)->afterLast(' ')->toString(),
                 ]
             );
         });

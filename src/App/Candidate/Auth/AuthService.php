@@ -25,12 +25,14 @@ class AuthService
 
         $token = $this->generateToken($candidate);
 
+        $response = [
+            $candidate,
+            $token
+        ];
+
         if ($request->registerUsingInvitation()) {
             //todo bound candidate with the invitation
-            return [
-                $candidate,
-                $token
-            ];
+            return $response;
         }
 
         $commands = [
@@ -43,14 +45,13 @@ class AuthService
             $command->execute();
         }
 
-        return [
-            $candidate->load([
-                'currentJobTitle',
-                'desireHiringPositions',
-                'registrationReasons',
-            ]),
-            $token,
-        ];
+        $response[0]->load([
+            'currentJobTitle',
+            'desireHiringPositions',
+            'registrationReasons',
+        ]);
+
+        return $response;
     }
 
     public function generateToken(Candidate $candidate): string
