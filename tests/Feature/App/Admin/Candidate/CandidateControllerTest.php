@@ -57,6 +57,7 @@ class CandidateControllerTest extends TestCase
 
         $response->assertJsonFragment([
             'id' => $candidate->getKey(),
+            'email' => $candidate->email,
             'mobile_dial_code' => $candidate->mobile_number->dialCode,
             'mobile_number' => (int) $candidate->mobile_number->number,
         ]);

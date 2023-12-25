@@ -6,6 +6,7 @@ use App\Organization\EmployeeManagement\Controllers\EmployeeController;
 use App\Organization\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Organization\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Organization\InvitationManagement\Controllers\InvitationController;
+use App\Organization\QuestionManagement\Controllers\QuestionController;
 use App\Organization\QuestionManagement\Controllers\QuestionVariantController;
 use App\Organization\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
@@ -19,8 +20,8 @@ Route::apiResource('employees', EmployeeController::class);
 
 Route::apiResource('vacancies', VacancyController::class);
 
-//Route::apiResource('questions',QuestionController::class)->only(['index', 'show']);
-Route::apiResource('questions.question-variants', QuestionVariantController::class);
+Route::apiResource('questions', QuestionController::class)->only(['index', 'show']);
+Route::apiResource('question-variants', QuestionVariantController::class);
 
 Route::prefix('interview-management')
     ->group(function () {

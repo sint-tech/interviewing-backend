@@ -4,7 +4,9 @@ namespace Tests\Feature\App\Organization\InterviewManagement;
 
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\JobTitle\Models\JobTitle;
 use Domain\Organization\Models\Employee;
+use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Collection;
@@ -31,8 +33,38 @@ class InterviewTemplateControllerTest extends TestCase
 
         $this->questionVariants = QuestionVariant::factory(5)
             ->for($this->employeeAuth, 'creator')
-            ->for($this->employeeAuth->organization, 'owner')
+            ->for($this->employeeAuth->organization, 'organization')
             ->create();
+
+        $this->actingAs($this->employeeAuth, 'api-employee');
+    }
+
+    /** @test  */
+    public function itShouldShowOnlyInterviewTemplateBelongsToTheAuthOrganization()
+    {
+        InterviewTemplate::factory(25)->create([
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
+        InterviewTemplate::factory(30)->create([
+            'organization_id' => Organization::factory()->createOne()->getKey(),
+        ]);
+
+        $response = $this->get(route('organization.interview-templates.index'), ['per_page' => 1000]);
+        $response->assertSuccessful();
+        $response->assertJsonCount(25, 'data');
+    }
+
+    /** @test  */
+    public function itShouldShowSingleInterviewTemplateBelongsToAuthOrganization()
+    {
+        $organizationInterviewTemplate = InterviewTemplate::factory()->createOne(['organization_id' => $this->employeeAuth->organization_id]);
+        $otherInterviewTemplate = InterviewTemplate::factory()->createOne(['organization_id' => Organization::factory()->createOne()->getKey()]);
+
+        $response = $this->get(route('organization.interview-templates.show', $organizationInterviewTemplate));
+        $response->assertSuccessful();
+
+        $this->get(route('organization.interview-templates.show', $otherInterviewTemplate))->assertNotFound();
     }
 
     /** @test  */
@@ -40,11 +72,12 @@ class InterviewTemplateControllerTest extends TestCase
     {
         $this->assertCount(0, InterviewTemplate::query()->get());
 
-        $this->actingAs($this->employeeAuth, 'api-employee')->post(route('organization.interview-templates.store'), [
+        $this->post(route('organization.interview-templates.store'), [
             'name' => 'testing name',
             'description' => null,
             'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,
             'reusable' => 1,
+            'job_profile_id' => JobTitle::factory()->createOne()->getKey(),
             'question_variants' => [
                 $this->questionVariants->first()->getKey(),
                 $this->questionVariants->last()->getKey(),
@@ -55,13 +88,14 @@ class InterviewTemplateControllerTest extends TestCase
     }
 
     /** @test  */
-    public function itShouldCreateInterviewTemplateForParent(): void
+    public function itShouldCreateInterviewTemplateForParentInterviewTemplate(): void
     {
-        $this->actingAs($this->employeeAuth, 'api-employee')->post(route('organization.interview-templates.store'), [
+        $this->post(route('organization.interview-templates.store'), [
             'name' => 'testing name',
             'description' => null,
             'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,
             'reusable' => 1,
+            'job_profile_id' => JobTitle::factory()->createOne()->getKey(),
             'question_variants' => [
                 $this->questionVariants->first()->getKey(),
                 $this->questionVariants->last()->getKey(),

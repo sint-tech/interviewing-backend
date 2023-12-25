@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
+use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
 use Domain\QuestionManagement\Enums\QuestionTypeEnum;
 use Domain\QuestionManagement\Models\Question;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -42,6 +44,9 @@ class QuestionFactory extends Factory
             return $question->defaultAIPrompt()->create([
                 'content' => 'Interviewer question is: __QUESTION_TEXT__, and the interviewee answer is: __ANSWER_TEXT__',
                 'system' => $this->faker->text(),
+                'model' => AiModelEnum::Gpt_3_5,
+                'status' => PromptMessageStatus::Enabled,
+                'weight' => 100,
             ]);
         });
     }
