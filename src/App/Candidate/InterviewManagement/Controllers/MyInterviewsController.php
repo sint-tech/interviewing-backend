@@ -4,15 +4,19 @@ namespace App\Candidate\InterviewManagement\Controllers;
 
 use App\Candidate\InterviewManagement\Queries\MyInterviewsQuery;
 use App\Candidate\InterviewManagement\Resources\InterviewResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Support\Controllers\Controller;
 
 class MyInterviewsController extends Controller
 {
-    public function __invoke(MyInterviewsQuery $query)
+    /**
+     * @return AnonymousResourceCollection<InterviewResource>
+     */
+    public function __invoke(MyInterviewsQuery $query): AnonymousResourceCollection
     {
         return InterviewResource::collection(
             $query->paginate(
-                request()->integer('per_page', 25)
+                pagination_per_page()
             )
         );
     }

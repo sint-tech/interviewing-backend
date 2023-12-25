@@ -2,6 +2,7 @@
 
 namespace Domain\InterviewManagement\Models;
 
+use Database\Factories\InterviewFactory;
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Builders\InterviewEloquentBuilder;
@@ -198,5 +199,10 @@ class Interview extends Model
         $scope->forCandidate(fn (InterviewEloquentBuilder $builder) => $builder->whereCandidate(auth()->user()));
 
         static::addGlobalScope($scope);
+    }
+
+    protected static function newFactory()
+    {
+        return new InterviewFactory();
     }
 }

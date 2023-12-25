@@ -35,4 +35,14 @@ class QuestionFactory extends Factory
             'max_reading_duration_in_seconds' => $min_reading_duration_in_seconds + $this->faker->numberBetween(10, 60),
         ];
     }
+
+    public function configure(): self
+    {
+        return $this->afterCreating(function (Question $question) {
+            return $question->defaultAIPrompt()->create([
+                'content' => 'Interviewer question is: __QUESTION_TEXT__, and the interviewee answer is: __ANSWER_TEXT__',
+                'system' => $this->faker->text(),
+            ]);
+        });
+    }
 }

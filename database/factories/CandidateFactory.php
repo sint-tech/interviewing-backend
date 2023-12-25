@@ -22,12 +22,11 @@ class CandidateFactory extends Factory
     public function definition(): array
     {
         return [
-            'first_name' => $first_name = $this->faker->firstName,
-            'last_name' => $last_name = $this->faker->lastName,
-            'full_name' => $first_name.$last_name,
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
             'email' => $this->faker->unique()->email,
-            'mobile_country' => 'EG',
-            'mobile_number' => $this->faker->unique()->numberBetween(100_000_000_0, 12_999_999_9),
+            'mobile_dial_code' => '+20',
+            'mobile_number' => $this->faker->unique()->numerify('11########'),
             'password' => Hash::make('password'),
             'email_verified_at' => $this->faker->dateTimeBetween('-30 days'),
             'social_driver_name' => null,

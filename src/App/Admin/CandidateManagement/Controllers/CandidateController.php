@@ -22,19 +22,4 @@ class CandidateController extends Controller
             Candidate::query()->findOrFail($id)
         );
     }
-
-    public function store()
-    {
-        //
-    }
-
-    public function update()
-    {
-        //
-    }
-
-    public function destroy()
-    {
-        //
-    }
 }

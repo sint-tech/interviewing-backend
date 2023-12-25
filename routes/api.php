@@ -38,8 +38,10 @@ Route::middleware('auth:api-candidate')->group(function () {
     Route::any('/logout', LogoutController::class);
 
     Route::prefix('interviews')
+        ->name('interviews')
         ->group(function () {
             Route::get('', MyInterviewsController::class);
+            Route::get('/my-interviews', MyInterviewsController::class)->name('.my-interviews');
             Route::post('/start-interview', StartInterviewController::class)->name('interviews.start');
             Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class);
             Route::get('/{interview}/report', GetInterviewReportController::class);

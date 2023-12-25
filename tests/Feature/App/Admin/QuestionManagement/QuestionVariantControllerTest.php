@@ -39,6 +39,13 @@ class QuestionVariantControllerTest extends TestCase
     }
 
     /** @test */
+    public function itShouldSeeAllQuestionVariants(): void
+    {
+        $this->get(route('admin.question-variants.index'))
+            ->assertSuccessful();
+    }
+
+    /** @test */
     public function itShouldCreateQuestionVariant(): void
     {
         $this->assertDatabaseEmpty(QuestionVariant::class);
@@ -60,7 +67,7 @@ class QuestionVariantControllerTest extends TestCase
         return [
             'text' => $this->faker->text,
             'description' => $this->faker->text,
-            'question_id' => Question::factory()->for($this->sintUser, 'creator')->createOne(['system_prompt' => $this->faker->text, 'content_prompt' => $this->faker->text])->getKey(),
+            'question_id' => Question::factory()->for($this->sintUser, 'creator')->createOne()->getKey(),
             'reading_time_in_seconds' => 120,
             'answering_time_in_seconds' => 340,
             'organization_id' => Organization::factory()->createOne()->getKey(),

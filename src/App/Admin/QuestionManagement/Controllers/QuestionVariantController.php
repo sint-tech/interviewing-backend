@@ -20,7 +20,7 @@ class QuestionVariantController extends Controller
     {
         return QuestionVariantResource::collection(
             $query->paginate(
-                request()->integer('per_page', 25)
+                pagination_per_page()
             )
         );
     }
