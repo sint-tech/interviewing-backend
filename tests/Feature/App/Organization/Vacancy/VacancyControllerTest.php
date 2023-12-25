@@ -106,7 +106,6 @@ class VacancyControllerTest extends TestCase
     /** @test  */
     public function itShouldDeleteVacancy(): void
     {
-
         $employee = Employee::factory()->create();
 
         Vacancy::factory(2)->for($employee, 'creator')->for($employee->organization, 'organization')->create();
@@ -146,6 +145,7 @@ class VacancyControllerTest extends TestCase
             'interview_template_id' => InterviewTemplate::factory()->createOne([
                 'creator_type' => $employee::class,
                 'creator_id' => $employee->getKey(),
+                'organization_id' => $employee->organization_id,
             ])->getKey(),
             'open_positions' => 5,
             'max_reconnection_tries' => 1,

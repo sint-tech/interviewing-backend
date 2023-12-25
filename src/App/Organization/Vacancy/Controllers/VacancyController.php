@@ -43,8 +43,6 @@ class VacancyController extends Controller
 
     public function destroy(Vacancy $vacancy)
     {
-        $vacancy = Vacancy::query()->findOrFail($vacancy);
-
         $vacancy->delete();
 
         return VacancyResource::make($vacancy);

@@ -38,7 +38,7 @@ class InterviewTemplateController extends Controller
         ]));
 
         return InterviewTemplateResource::make(
-            $action->execute($dto)
+            $action->execute($dto)->load(['questionVariants'])
         );
     }
 
