@@ -11,10 +11,7 @@ class OrganizationDataFactory
     public function fromRequest(Request $request): OrganizationData
     {
         if ($request instanceof RegisterRequest) {
-            $data = $request->only([
-                'name',
-                'logo',
-            ]);
+            $data = $request->safe()->except('manager');
 
             return OrganizationData::from($data);
         }

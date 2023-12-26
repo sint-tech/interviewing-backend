@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\App\Organization\Auth;
 
-use Domain\Organization\Models\Employee;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\Feature\Traits\AuthenticationInstallation;
@@ -12,17 +11,23 @@ class RegisterControllerTest extends TestCase
 {
     use DatabaseMigrations,AuthenticationInstallation;
 
-    const REGISTER_ENDPOINT = '/organization-api/register';
-
-    public array $requestData = [
-        'name' => 'organization name',
+    protected array $mainData = [
+        'name' => 'Sint Fintech',
         'manager' => [
-            'first_name' => 'foo',
-            'last_name' => 'baa',
-            'email' => 'foo@gmail.com',
-            'password' => 'pa@ss0rD 123',
-            'password_confirmation' => 'pa@ss0rD 123',
+            'email' => 'ahmed.badawy@sint.com',
+            'first_name' => 'Ahmed',
+            'last_name' => 'Badawy',
+            'password' => 'P@ssoWrd1',
+            'password_confirmation' => 'P@ssoWrd1',
         ],
+    ];
+
+    protected array $optionalData = [
+        'contact_email' => 'foo@sint.com',
+        'website_url' => 'https://foo.sint.com',
+        'address' => '18 Geash Road, Bab sharq, Alexandria',
+        'number_of_employees' => '1-10',
+        'industry' => 'Hiring & HR',
     ];
 
     protected function setUp(): void
@@ -35,34 +40,30 @@ class RegisterControllerTest extends TestCase
 
     }
 
-    public function test_it_should_deny_access_for_auth_employee()
+    /** @test  */
+    public function itShouldRegisterWithTheMainFields()
     {
-        $employee = Employee::factory()->createOne();
-
-        $this->actingAs($employee, 'api-employee')
-            ->post(self::REGISTER_ENDPOINT)
-            ->assertForbidden();
-
-        $this->post(self::REGISTER_ENDPOINT)->assertUnprocessable();
-    }
-
-    public function test_it_should_return_employee_data_including_organization_data()
-    {
-        $response = $this->post(self::REGISTER_ENDPOINT, $this->requestData);
-
+        $response = $this->post(route('organization.auth.register'), $this->mainData);
         $response->assertSuccessful();
 
         $response->assertJson(function (AssertableJson $json) {
-            $json->first(function (AssertableJson $json) {
-                return $json->where('id', 1)
-                    ->where('email', 'foo@gmail.com')
-                    ->where('is_organization_manager', true)
-                    ->missing('password')
-                    ->hasAny('organization.name')
-                    ->etc();
-            });
+            $json->hasAll(['token', 'data.email', 'data.organization.name']);
+        });
+    }
 
-            $json->has('token');
+    /** @test */
+    public function itShouldAcceptTheOrganizationInformation()
+    {
+        $response = $this->post(route('organization.auth.register'), $this->mainData + $this->optionalData);
+
+        $response->assertSuccessful();
+        $response->assertJson(function (AssertableJson $json) {
+            foreach ($this->optionalData as $field => $value) {
+                $json->where("data.organization.$field", $value);
+            }
+            $json->where('data.organization.name', $this->mainData['name']);
+
+            return $json->etc();
         });
     }
 }

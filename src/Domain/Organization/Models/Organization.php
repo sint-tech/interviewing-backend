@@ -3,6 +3,7 @@
 namespace Domain\Organization\Models;
 
 use Database\Factories\OrganizationFactory;
+use Domain\Organization\Enums\OrganizationEmployeesRangeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,12 +15,24 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Support\Interfaces\OwnerInterface;
 
+/**
+ * @property OrganizationEmployeesRangeEnum $number_of_employees
+ */
 class Organization extends Model implements OwnerInterface, HasMedia
 {
     use HasFactory,SoftDeletes,InteractsWithMedia;
 
     protected $fillable = [
         'name',
+        'website_url',
+        'address',
+        'contact_email',
+        'industry',
+        'number_of_employees',
+    ];
+
+    protected $casts = [
+        'number_of_employees' => OrganizationEmployeesRangeEnum::class,
     ];
 
     public function logos(): MorphMany

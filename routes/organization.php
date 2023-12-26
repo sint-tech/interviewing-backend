@@ -11,7 +11,7 @@ use App\Organization\QuestionManagement\Controllers\QuestionVariantController;
 use App\Organization\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
 
-Route::withoutMiddleware('auth:api-employee')->middleware('guest:api-employee')->group(function () {
+Route::withoutMiddleware('auth:api-employee')->middleware('guest:api-employee')->name('auth.')->group(function () {
     Route::post('/login', LoginController::class)->name('login');
     Route::post('/register', RegisterController::class)->name('register');
 });
