@@ -10,13 +10,13 @@ enum OrganizationEmployeesRangeEnum: string
 
     case FiftyOneTo200 = '51-200';
 
-    case TwoHundredTo500 = '200-500';
+    case TwoHundredTo500 = '201-500';
 
-    case FiveHundredTo1000 = '500-1000';
+    case FiveHundredTo1000 = '501-1000';
 
-    case OneThousandTo5000 = '1000-5000';
+    case OneThousandTo5000 = '1001-5000';
 
-    case FiveThousandTo10000 = '5000-10000';
+    case FiveThousandTo10000 = '5001-10000';
 
     case MoreThan10000Thousand = '+10000';
 }
