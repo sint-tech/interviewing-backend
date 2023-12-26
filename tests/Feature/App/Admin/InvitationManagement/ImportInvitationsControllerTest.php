@@ -62,11 +62,7 @@ class ImportInvitationsControllerTest extends TestCase
         Bus::assertDispatched(ImportInvitationsFromExcelJob::class);
     }
 
-    /**
-     * todo:add this test for class \Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob
-     *
-     * @test
-     */
+    /** @test  */
     public function itShouldCreateInvitations(): void
     {
         $vacancy = Vacancy::factory()->createOne();
@@ -77,7 +73,7 @@ class ImportInvitationsControllerTest extends TestCase
             'file' => $this->excelFile,
             'vacancy_id' => $vacancy->getKey(),
             'interview_template_id' => $vacancy->interviewTemplate->getKey(),
-            'should_be_invited_at' => now()->addDays(5)->format('Y-m-h H:i'),
+            'should_be_invited_at' => now()->addDays(5)->format('Y-m-d H:i'),
         ])->assertSuccessful();
 
         $this->assertCount(4, Invitation::query()->get());

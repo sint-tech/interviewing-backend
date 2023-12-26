@@ -2,7 +2,6 @@
 
 namespace App\Admin\InvitationManagement\Resources;
 
-use App\Admin\InterviewManagement\Resources\InterviewTemplateResource;
 use App\Admin\Vacancy\Resources\VacancyResource;
 use Domain\Invitation\Models\Invitation;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,7 +23,6 @@ class InvitationResource extends JsonResource
             'mobile_country_code' => (string) $this->mobile_country_code,
             'should_be_invited_at' => (string) new DateToHumanReadValueObject($this->should_be_invited_at),
             'vacancy' => VacancyResource::make($this->whenLoaded('vacancy')),
-            'interview_template' => InterviewTemplateResource::make($this->whenLoaded('interviewTemplate')),
             'is_sent' => $this->resource->sent,
             'created_at' => (string) new DateToHumanReadValueObject($this->resource->created_at),
             'expired_at' => DateToHumanReadValueObject::format($this->resource->expired_at),

@@ -23,8 +23,10 @@ class InvitationStoreRequest extends FormRequest
             'mobile_number' => ['required', 'integer',
                 (new ValidMobileNumberRule($this->enum('mobile_country_code', MobileCountryCodeEnum::class))),
             ],
-            'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class), 'id')->withoutTrashed()],
-            'interview_template_id' => ['nullable', 'integer', Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed()],
+            'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class), 'id')
+                ->whereNotNull('interview_template_id')
+                ->withoutTrashed()
+            ],
             'should_be_invited_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],
         ];

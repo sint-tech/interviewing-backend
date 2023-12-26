@@ -55,7 +55,6 @@ class ImportInvitationsControllerTest extends TestCase
         $vacancy = Vacancy::factory()->createOne([
             'interview_template_id' => InterviewTemplate::factory()
                 ->for($this->employee, 'creator')
-                ->for($this->employee, 'owner')
                 ->createOne()->getKey(),
         ]);
 

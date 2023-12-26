@@ -28,7 +28,7 @@ class VacancyUpdateRequest extends FormRequest
         return [
             function (Validator $validator) {
                 if ($this->vacancy()->interviews()->exists()) {
-                    $this->validator->errors()->add('vacancy', "You can't update this vacancy, It has interviews running on this vacancy.");
+                    $validator->errors()->add('vacancy', "You can't update this vacancy, It has interviews running on this vacancy.");
                 }
             },
         ];

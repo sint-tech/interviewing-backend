@@ -2,6 +2,7 @@
 
 namespace App\Organization\InvitationManagement\Resources;
 
+use App\Organization\Vacancy\Resources\VacancyResource;
 use Domain\Invitation\Models\Invitation;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,6 +16,7 @@ class InvitationResource extends JsonResource
             'email' => $this->resource->email,
             'batch' => $this->resource->batch,
             'last_invited_at' => $this->resource->last_invited_at?->format('Y-m-d H:i'),
+            'vacancy' => VacancyResource::make($this->whenLoaded('vacancy')),
             'expired_at' => $this->resource->expired_at?->format('Y-m-d H:i'),
             'deleted_at' => $this->whenNotNull($this->resource->deleted_at?->format('Y-m-d H:i')),
         ];

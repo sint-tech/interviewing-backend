@@ -34,7 +34,6 @@ class Invitation extends Model
         'mobile_number',
         'batch',
         'expired_at',
-        'interview_template_id',
         'vacancy_id',
         'should_be_invited_at',
         'last_invited_at',
@@ -48,14 +47,6 @@ class Invitation extends Model
         'last_invited_at' => 'datetime',
         'expired_at' => 'datetime',
     ];
-
-    /**
-     * @deprecated
-     */
-    public function interviewTemplate(): BelongsTo
-    {
-        return $this->belongsTo(InterviewTemplate::class, 'interview_template_id');
-    }
 
     public function vacancy(): BelongsTo
     {
