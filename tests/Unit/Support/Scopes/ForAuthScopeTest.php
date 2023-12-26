@@ -83,7 +83,7 @@ class ForAuthScopeTest extends TestCase
             ->shouldReceive('guest')->andReturn(false);
 
         $this->assertSame($this->applyScope()->toRawSql(),
-            'select * from `users` where `candidate_id` = 1'
+            'select * from "users" where "candidate_id" = 1'
         );
     }
 
@@ -96,7 +96,7 @@ class ForAuthScopeTest extends TestCase
             ->shouldReceive('guest')->andReturn(false);
 
         $this->assertSame($this->applyScope()->toRawSql(),
-            'select * from `users` where `employee_id` = 1');
+            'select * from "users" where "employee_id" = 1');
     }
 
     /** @test  */
@@ -108,7 +108,7 @@ class ForAuthScopeTest extends TestCase
             ->shouldReceive('guest')->andReturn(true);
 
         $this->assertSame($this->applyScope()->toRawSql(),
-            'select * from `users` where `guest_id` = 1'
+            'select * from "users" where "guest_id" = 1'
         );
     }
 
@@ -121,7 +121,7 @@ class ForAuthScopeTest extends TestCase
             ->shouldReceive('guest')->andReturn(false);
 
         $this->assertSame($this->applyScope()->toRawSql(),
-            'select * from `users` where `sint_user_id` = 1'
+            'select * from "users" where "sint_user_id" = 1'
         );
     }
 

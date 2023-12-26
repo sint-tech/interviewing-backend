@@ -107,4 +107,16 @@ class InterviewTemplateControllerTest extends TestCase
 
         $this->assertNotNull(InterviewTemplate::query()->latest('id')->first()->parent_id);
     }
+
+    /** @test  */
+    public function itShouldUpdateVacancy()
+    {
+        $interview_template = InterviewTemplate::factory()->for($this->employeeAuth, 'creator')->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
+        $response = $this->put(route('organization.interview-templates.update', $interview_template));
+
+        $response->assertSuccessful();
+    }
 }

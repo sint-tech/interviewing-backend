@@ -40,6 +40,11 @@ class InvitationDto extends Data
             'mobile_number' => $mobileStrategy->trimToNationalInteger($this->dirty_mobile_number),
         ]);
 
+        $this->additional([
+            'creator_id' => $this->creator->creator_id,
+            'creator_type' => $this->creator->creator_type,
+        ]);
+
         $this->except('dirty_mobile_number');
     }
 

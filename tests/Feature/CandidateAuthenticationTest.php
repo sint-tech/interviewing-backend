@@ -58,7 +58,7 @@ class CandidateAuthenticationTest extends TestCase
                 'email' => 'foo@gmail.com',
                 'password' => 'u2ArHI&mxLwuh2%k',
                 'mobile' => [
-                    'country' => 'EG',
+                    'dial_code' => '+20',
                     'number' => '1114470249',
                 ],
                 'current_job_title_id' => $current_job_title->getKey(),
@@ -78,16 +78,13 @@ class CandidateAuthenticationTest extends TestCase
             'data' => [
                 'first_name',
                 'last_name',
-                'full_name',
                 'email',
                 'mobile' => [
                     'country',
                     'number',
                 ],
             ],
-            'meta' => [
-                'token',
-            ],
+            'token',
         ]);
 
         $candidate_cvs = Candidate::query()

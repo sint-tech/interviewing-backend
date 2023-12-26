@@ -5,6 +5,7 @@ namespace Tests\Feature\App\Organization\InvitationManagement;
 use Domain\Invitation\Models\Invitation;
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
+use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -29,9 +30,9 @@ class InvitationControllerTest extends TestCase
     /** @test  */
     public function itShouldShowAllInvitationsForAuthEmployee(): void
     {
-        Invitation::factory(15)->for(Vacancy::factory()->for($this->employeeAuth->organization)->create())->create();
+        Invitation::factory(15)->for($this->employeeAuth, 'creator')->for(Vacancy::factory()->for($this->employeeAuth, 'creator')->for($this->employeeAuth->organization)->create())->create();
 
-        Invitation::factory(15)->for(Vacancy::factory()->for(Organization::factory(), 'organization')->create())->create();
+        Invitation::factory(15)->for(User::factory(), 'creator')->for(Vacancy::factory()->for(User::factory(), 'creator')->for(Organization::factory(), 'organization')->create())->create();
 
         $this->get(route('organization.invitations.index'))
             ->assertSuccessful()
@@ -41,9 +42,9 @@ class InvitationControllerTest extends TestCase
     /** @test  */
     public function itShouldShowInvitation(): void
     {
-        $scopedInvitations = Invitation::factory(15)->for(Vacancy::factory()->for($this->employeeAuth->organization)->create())->create();
+        $scopedInvitations = Invitation::factory(15)->for($this->employeeAuth, 'creator')->for(Vacancy::factory()->for($this->employeeAuth, 'creator')->for($this->employeeAuth->organization)->create())->create();
 
-        $outOfScopeInvitations = Invitation::factory(15)->for(Vacancy::factory()->for(Organization::factory(), 'organization'))->create();
+        $outOfScopeInvitations = Invitation::factory(15)->for(User::factory(), 'creator')->for(Vacancy::factory()->for(User::factory(), 'creator')->for(Organization::factory(), 'organization'))->create();
 
         $this->get(route('organization.invitations.show', $scopedInvitations->first()))
             ->assertSuccessful();
@@ -60,7 +61,7 @@ class InvitationControllerTest extends TestCase
             'email' => 'ahmedbadawy.fcai@gmail.com',
             'mobile_country_code' => '+20',
             'mobile_number' => '1123456789',
-            'vacancy_id' => Vacancy::factory()->createOne(['organization_id' => $this->employeeAuth->organization->getKey()])->getKey(),
+            'vacancy_id' => Vacancy::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization->getKey()])->getKey(),
             'should_be_invited_at' => now()->addDays(2)->format('Y-m-d H:i'),
             'expired_at' => now()->addDays(5)->format('Y-m-d H:i'),
         ];
@@ -76,7 +77,7 @@ class InvitationControllerTest extends TestCase
     /** @test  */
     public function itShouldDeleteInvitation(): void
     {
-        $invitation = Invitation::factory()->for(Vacancy::factory()->for($this->employeeAuth->organization, 'organization')->createOne())->createOne();
+        $invitation = Invitation::factory()->for($this->employeeAuth, 'creator')->for(Vacancy::factory()->for($this->employeeAuth, 'creator')->for($this->employeeAuth->organization, 'organization')->createOne())->createOne();
 
         $this->delete(route('organization.invitations.destroy', $invitation))
             ->assertSuccessful()

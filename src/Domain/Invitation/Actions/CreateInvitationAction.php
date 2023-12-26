@@ -9,7 +9,7 @@ class CreateInvitationAction
 {
     public function execute(InvitationDto $invitationDto): Invitation
     {
-        $invitation = new Invitation($invitationDto->toArray());
+        $invitation = new Invitation($invitationDto->except('creator')->toArray());
 
         $invitation->save();
 

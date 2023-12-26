@@ -39,6 +39,8 @@ class Invitation extends Model
         'should_be_invited_at',
         'last_invited_at',
         'used_at',
+        'creator_id',
+        'creator_type',
     ];
 
     protected $casts = [

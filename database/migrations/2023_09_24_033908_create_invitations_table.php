@@ -20,6 +20,9 @@ return new class extends Migration
             $table->integer('mobile_number');
 
             $table->integer('batch');
+            $table->foreignId('vacancy_id')->nullable()->constrained('vacancies', 'id')->nullOnDelete();
+            $table->foreignId('interview_template_id')->nullable()->constrained('interview_templates', 'id')->nullOnDelete();
+
             $table->timestamp('should_be_invited_at');
 
             $table->morphs('creator');

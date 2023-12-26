@@ -7,7 +7,6 @@ use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
 use Domain\Vacancy\Builders\VacancyBuilder;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -61,7 +60,7 @@ class Vacancy extends Model
 
     public function interviews(): HasMany
     {
-        return $this->hasMany(Interview::class, 'interview_id');
+        return $this->hasMany(Interview::class, 'vacancy_id');
     }
 
     public function newEloquentBuilder($query): VacancyBuilder
@@ -79,7 +78,7 @@ class Vacancy extends Model
         $scope = new ForAuthScope();
 
         $scope->forOrganizationEmployee(
-            fn (Builder $builder) => $builder->where('organization_id', auth()->user()->organization_id)
+            fn (VacancyBuilder $builder) => $builder->forAuth()
         );
 
         static::addGlobalScope($scope);

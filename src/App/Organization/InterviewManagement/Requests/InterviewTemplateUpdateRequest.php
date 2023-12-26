@@ -4,6 +4,7 @@ namespace App\Organization\InterviewManagement\Requests;
 
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\JobTitle\Models\JobTitle;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -13,10 +14,11 @@ class InterviewTemplateUpdateRequest extends FormRequest
     {
         return [
             'name' => ['filled', 'string', 'min:3', 'max:255', Rule::unique(InterviewTemplate::class)
-                ->where('organization_id',auth()->user()->organization_id)
+                ->where('organization_id', auth()->user()->organization_id)
                 ->withoutTrashed()
-                ->ignore($this->interviewTemplate())
+                ->ignore($this->interviewTemplate()),
             ],
+            'job_profile_id' => ['nullable', Rule::exists(JobTitle::class, 'id')],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'availability_status' => ['filled', Rule::enum(InterviewTemplateAvailabilityStatusEnum::class)],
             'reusable' => ['sometimes', 'boolean'],
@@ -27,6 +29,6 @@ class InterviewTemplateUpdateRequest extends FormRequest
 
     public function interviewTemplate(): InterviewTemplate
     {
-        return InterviewTemplate::query()->findOrFail($this->interview_template);
+        return $this->route('interview_template');
     }
 }

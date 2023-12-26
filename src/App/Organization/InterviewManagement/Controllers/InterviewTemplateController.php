@@ -42,13 +42,20 @@ class InterviewTemplateController extends Controller
         );
     }
 
-    public function update(int $interview_template, InterviewTemplateUpdateRequest $request, UpdateInterviewTemplateAction $action): InterviewTemplateResource
+    public function update(InterviewTemplate $interview_template, InterviewTemplateUpdateRequest $request, UpdateInterviewTemplateAction $action): InterviewTemplateResource
     {
-        $interview_template = InterviewTemplate::query()->findOrFail($interview_template);
+        $data = $interview_template->attributesToArray() +
+            ['creator' => $interview_template->creator] +
+            ['question_variants' => $interview_template->questionVariants];
+
+        $updatedData = $request->validated();
+        if ($request->filled('question_variants')) {
+            $updatedData['question_variants'] = QuestionVariant::query()->whereKey($request->input('question_variants'))->get();
+        }
 
         $dto = InterviewTemplateDto::from(array_merge(
-            $interview_template,
-            $request->validated()
+            $data,
+            $updatedData
         ));
 
         return InterviewTemplateResource::make(

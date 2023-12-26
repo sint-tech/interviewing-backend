@@ -20,6 +20,7 @@ class InterviewTemplateDto extends Data
         public readonly int $organization_id,
         #[MapInputName('job_profile_id')]
         public readonly int $targeted_job_title_id,
+        /** @deprecated  */
         public readonly Authenticatable $creator,
         public readonly ?int $parent_id,
         public readonly bool $reusable,

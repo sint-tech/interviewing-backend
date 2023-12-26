@@ -18,10 +18,10 @@ class VacancyResource extends JsonResource
             'description' => $this->resource->description,
             'max_reconnection_tries' => $this->resource->max_reconnection_tries,
             'open_positions' => $this->resource->open_positions,
-            'started_at' => $this->resource->started_at?->format('Y-m-d H:m'),
-            'ended_at' => $this->resource->ended_at?->format('Y-m-d H:m'),
-            'created_at' => $this->resource->created_at->format('Y-m-d H:m'),
-            'last_updated_at' => $this->resource->updated_at->format('Y-m-d H:m'),
+            'started_at' => $this->resource->started_at?->format('Y-m-d H:i'),
+            'ended_at' => $this->resource->ended_at?->format('Y-m-d H:i'),
+            'created_at' => $this->resource->created_at->format('Y-m-d H:i'),
+            'last_updated_at' => $this->resource->updated_at->format('Y-m-d H:i'),
             'deleted_at' => $this->when(! is_null($this->deleted_at), $this->resource->deleted_at?->format('Y-m-d H:m')),
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Organization\Vacancy;
 
+use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Employee;
 use Domain\Vacancy\Models\Vacancy;
@@ -101,6 +102,53 @@ class VacancyControllerTest extends TestCase
             );
 
         $this->assertEquals($employee->organization->getKey(), Vacancy::query()->latest()->first()->organization->getKey());
+    }
+
+    /** @test  */
+    public function itShouldUpdateVacancy()
+    {
+        $employee = Employee::factory()->create();
+
+        $updatableVacancy = Vacancy::factory()->for($employee->organization, 'organization')->create([
+            'started_at' => now()->subYear()->format('Y-m-d H:i'),
+        ]);
+
+        $url = route('organization.vacancies.update', $updatableVacancy);
+
+        $this->actingAs($employee, 'api-employee');
+
+        $this->put($url)->assertSuccessful();
+
+        $response = $this->put($url, [
+            'started_at' => $startedAt = now()->addDay()->format('Y-m-d H:i'),
+        ]);
+
+        $response->assertSuccessful();
+
+        $response->assertJsonFragment(['started_at' => $startedAt]);
+    }
+
+    /** @test  */
+    public function itShouldNotUpdateVacancyAfterThisVacancyHasAnyInterview()
+    {
+        $employee = Employee::factory()->create();
+
+        $updatableVacancy = Vacancy::factory()->for($employee->organization, 'organization')->create([
+            'started_at' => now()->subYear()->format('Y-m-d H:i'),
+        ]);
+
+        Interview::factory(3)->create([
+            'vacancy_id' => $updatableVacancy->getKey(),
+            'interview_template_id' => $updatableVacancy->interviewTemplate()->value('id'),
+        ]);
+
+        $url = route('organization.vacancies.update', $updatableVacancy);
+
+        $this->actingAs($employee, 'api-employee');
+
+        $res = $this->put($url);
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrorFor('vacancy');
     }
 
     /** @test  */

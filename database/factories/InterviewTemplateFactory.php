@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\JobTitle\Models\JobTitle;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -26,6 +27,7 @@ class InterviewTemplateFactory extends Factory
             'creator_id' => User::factory(),
             'creator_type' => User::class,
             'organization_id' => Organization::factory(),
+            'targeted_job_title_id' => JobTitle::factory(),
         ];
     }
 }
