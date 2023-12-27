@@ -38,4 +38,22 @@ class UpdateOrganizationController extends TestCase
             'contact_email' => 'foo.baa@gmail.com',
         ]);
     }
+
+    /** @test  */
+    public function onlyOrganizationManagerCanUpdateOrganization()
+    {
+        $response = $this->post(route('organization.settings.update-organization'), [
+            'name' => 'new organization name',
+            'contact_email' => 'foo.baa@gmail.com',
+        ]);
+        $response->assertSuccessful();
+        $response->assertJsonFragment([
+            'name' => 'new organization name',
+            'contact_email' => 'foo.baa@gmail.com',
+        ]);
+
+        $this->actingAs(Employee::factory()->for($this->employeeAuth->organization, 'organization')->createOne(), 'api-employee')
+            ->post(route('organization.settings.update-organization'))
+            ->assertForbidden();
+    }
 }

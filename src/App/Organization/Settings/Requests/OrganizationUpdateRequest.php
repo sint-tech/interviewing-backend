@@ -8,6 +8,11 @@ use Illuminate\Validation\Rule;
 
 class OrganizationUpdateRequest extends FormRequest
 {
+    public function authorize()
+    {
+        return auth()->user()->is_organization_manager;
+    }
+
     public function rules(): array
     {
         return [
