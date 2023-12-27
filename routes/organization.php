@@ -6,8 +6,10 @@ use App\Organization\EmployeeManagement\Controllers\EmployeeController;
 use App\Organization\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Organization\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Organization\InvitationManagement\Controllers\InvitationController;
+use App\Organization\QuestionManagement\Controllers\QuestionClusterController;
 use App\Organization\QuestionManagement\Controllers\QuestionController;
 use App\Organization\QuestionManagement\Controllers\QuestionVariantController;
+use App\Organization\SkillManagement\Controllers\SkillController;
 use App\Organization\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +21,9 @@ Route::withoutMiddleware('auth:api-employee')->middleware('guest:api-employee')-
 Route::apiResource('employees', EmployeeController::class);
 
 Route::apiResource('vacancies', VacancyController::class);
+Route::apiResource('skills', SkillController::class)->only(['index', 'show']);
 
+Route::apiResource('question-clusters', QuestionClusterController::class)->only(['index', 'show']);
 Route::apiResource('questions', QuestionController::class)->only(['index', 'show']);
 Route::apiResource('question-variants', QuestionVariantController::class);
 
