@@ -1,6 +1,7 @@
 <?php
 
 use App\Organization\Auth\Controllers\LoginController;
+use App\Organization\Auth\Controllers\MyOrganizationController;
 use App\Organization\Auth\Controllers\MyProfileController;
 use App\Organization\Auth\Controllers\RegisterController;
 use App\Organization\EmployeeManagement\Controllers\EmployeeController;
@@ -19,6 +20,7 @@ Route::name('auth.')->group(function () {
     Route::post('/login', LoginController::class)->withoutMiddleware('auth:api-employee')->name('login');
     Route::post('/register', RegisterController::class)->withoutMiddleware('auth:api-employee')->name('register');
     Route::get('/auth/my-profile', MyProfileController::class)->name('my-profile');
+    Route::get('/auth/my-organization', MyOrganizationController::class)->name('my-organization');
 });
 
 Route::name('settings.')->prefix('settings')->group(function () {
