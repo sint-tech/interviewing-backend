@@ -26,7 +26,12 @@ class InterviewTemplateStoreRequest extends FormRequest
                 ->withoutTrashed(), // todo only show the interview templates in the organization scope
             ],
             'availability_status' => ['required', Rule::enum(InterviewTemplateAvailabilityStatusEnum::class)],
-            'question_variants' => ['required', 'array', 'min:1', Rule::exists(table_name(QuestionVariant::class), 'id')->withoutTrashed()],
+            'question_variants' => [
+                'required', 'array', 'min:1',
+                Rule::exists(table_name(QuestionVariant::class), 'id')
+                    ->where('organization_id', auth()->user()->organization_id)
+                    ->withoutTrashed(),
+            ],
         ];
     }
 }

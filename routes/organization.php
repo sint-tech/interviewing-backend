@@ -8,6 +8,7 @@ use App\Organization\EmployeeManagement\Controllers\EmployeeController;
 use App\Organization\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Organization\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Organization\InvitationManagement\Controllers\InvitationController;
+use App\Organization\JobTitle\Controllers\JobTitleController;
 use App\Organization\QuestionManagement\Controllers\QuestionClusterController;
 use App\Organization\QuestionManagement\Controllers\QuestionController;
 use App\Organization\QuestionManagement\Controllers\QuestionVariantController;
@@ -30,7 +31,9 @@ Route::name('settings.')->prefix('settings')->group(function () {
 Route::apiResource('employees', EmployeeController::class);
 
 Route::apiResource('vacancies', VacancyController::class);
+
 Route::apiResource('skills', SkillController::class)->only(['index', 'show']);
+Route::apiResource('job-titles', JobTitleController::class)->only(['index', 'show']);
 
 Route::apiResource('question-clusters', QuestionClusterController::class)->only(['index', 'show']);
 Route::apiResource('questions', QuestionController::class)->only(['index', 'show']);

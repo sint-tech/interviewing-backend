@@ -2,6 +2,7 @@
 
 namespace App\Organization\Vacancy\Resources;
 
+use App\Organization\InterviewManagement\Resources\InterviewTemplateResource;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,6 +23,8 @@ class VacancyResource extends JsonResource
             'ended_at' => $this->resource->ended_at?->format('Y-m-d H:i'),
             'created_at' => $this->resource->created_at->format('Y-m-d H:i'),
             'last_updated_at' => $this->resource->updated_at->format('Y-m-d H:i'),
+            'interview_template_id' => $this->resource->interview_template_id,
+            'interview_template' => InterviewTemplateResource::make($this->whenLoaded('interviewTemplate')),
             'deleted_at' => $this->when(! is_null($this->deleted_at), $this->resource->deleted_at?->format('Y-m-d H:m')),
         ];
     }
