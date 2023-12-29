@@ -33,6 +33,10 @@ class Employee extends Authenticatable
         'password' => 'hashed',
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id');

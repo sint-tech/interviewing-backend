@@ -15,7 +15,8 @@ class EmployeeResource extends JsonResource
             'email' => (string) $this->email,
             'organization_id' => (int) $this->organization_id,
             'is_manager' => (bool) $this->is_organization_manager,
-            'deleted_at' => $this->whenNotNull((string) $this->deleted_at?->format('Y-m-d H:i')),
+            'created_at' => $this->created_at->format('Y-m-d H:i'),
+            'deleted_at' => $this->whenNotNull($this->deleted_at?->format('Y-m-d H:i')),
         ];
     }
 }

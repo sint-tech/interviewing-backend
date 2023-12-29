@@ -24,7 +24,7 @@ class EmployeeFactory extends Factory
             'email' => $this->faker->unique()->email,
             'password' => Hash::make('password'),
             'is_organization_manager' => $this->faker->boolean(90),
-            'organization_id' => Organization::factory()->create()->getKey(),
+            'organization_id' => Organization::factory(),
         ];
     }
 }

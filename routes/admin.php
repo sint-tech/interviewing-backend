@@ -13,6 +13,7 @@ use App\Admin\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Admin\InvitationManagement\Controllers\InvitationController;
 use App\Admin\InvitationManagement\Controllers\SendInvitationController;
 use App\Admin\JobTitle\Controllers\JobTitleController;
+use App\Admin\Organization\Controllers\EmployeeController;
 use App\Admin\Organization\Controllers\OrganizationController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterController;
 use App\Admin\QuestionManagement\Controllers\QuestionClusterRecommendationController;
@@ -28,7 +29,10 @@ Route::middleware('guest:api')->withoutMiddleware('auth:api')->group(function ()
 
 Route::any('/logout', LogoutController::class)->name('logout');
 
-Route::apiResource('organizations', OrganizationController::class);
+Route::prefix('organization-management')->group(function () {
+    Route::apiResource('organizations', OrganizationController::class);
+    Route::apiResource('employees', EmployeeController::class);
+});
 
 Route::post('organizations/{organization}/restore', [OrganizationController::class, 'restore'])->name('organizations.restore');
 
