@@ -22,7 +22,8 @@ class EmployeeControllerTest extends TestCase
         $this->installPassport();
     }
 
-    public function test_it_should_fetch_only_the_current_employees_organization_for_auth_employee(): void
+    /** @test  */
+    public function itShouldOnlyShowTheEmployeesBelongsToAuthEmployeeOrganization(): void
     {
         $organization = Organization::factory()->createOne(['name' => 'test']);
 
@@ -34,7 +35,7 @@ class EmployeeControllerTest extends TestCase
 
         Employee::factory()->create(['organization_id' => $otherOrganization->getKey()]);
 
-        $response = $this->actingAs(Employee::query()->first(), 'api')->get('/organization-api/employees');
+        $response = $this->actingAs(Employee::query()->first(), 'api-employee')->get(route('organization.employees.index'));
 
         $response->assertOk();
 
@@ -54,10 +55,10 @@ class EmployeeControllerTest extends TestCase
 
         $otherEmployee = Employee::factory()->for($otherOrganization)->createOne();
 
-        $this->actingAs(Employee::query()->first(), 'api')->get('/organization-api/employees/'.Employee::query()->first()->getKey())
+        $this->actingAs(Employee::query()->first(), 'api-employee')->get('/organization-api/employees/'.Employee::query()->first()->getKey())
             ->assertOk();
 
-        $this->actingAs(Employee::query()->first(), 'api')->get('/organization-api/employees/'.$otherEmployee->getKey())
+        $this->actingAs(Employee::query()->first(), 'api-employee')->get('/organization-api/employees/'.$otherEmployee->getKey())
             ->assertNotFound();
     }
 
@@ -76,13 +77,36 @@ class EmployeeControllerTest extends TestCase
             'password_confirmation' => 'password123',
         ];
 
-        $this->actingAs($organizationManager, 'api')
+        $this->actingAs($organizationManager, 'api-employee')
             ->post(route('organization.employees.store'), $request_data)
             ->assertCreated()
             ->assertJson(function (AssertableJson $json) {
                 return $json->hasAll('data.first_name', 'data.last_name', 'data.email')
                     ->where('data.email', 'ahmedbadawy.fcai@gmail.com');
             });
+    }
+
+    /** @test  */
+    public function itShouldUpdateEmployeeOnlyByOrganizationManager()
+    {
+        $organization = Organization::factory()->createOne();
+
+        $employees = Employee::factory(2)->create(['organization_id' => $organization->getKey(), 'is_organization_manager' => false]);
+
+        $manager = Employee::factory()->createOne(['organization_id' => $organization->getKey(), 'is_organization_manager' => true]);
+        $regularEmployee = $employees->first();
+        $updatableEmployee = $employees->last();
+
+        $response = $this->actingAs($manager, 'api-employee')->put(route('organization.employees.update', $updatableEmployee), [
+            'is_organization_manager' => true,
+        ]);
+        $response->assertSuccessful();
+        $this->assertTrue($updatableEmployee->refresh()->is_organization_manager);
+
+        $this->actingAs($regularEmployee, 'api-employee')
+            ->put(route('organization.employees.update', $updatableEmployee), [
+                'is_organization_manager' => false,
+            ])->assertForbidden();
     }
 
     /** @test */

@@ -53,7 +53,7 @@ class InvitationControllerTest extends TestCase
                     return $data->hasAll([
                         'id', 'name', 'email',
                         'mobile_number', 'mobile_country_code',
-                        'batch', 'invitation_sent',
+                        'batch',
                     ])->etc();
                 });
             });

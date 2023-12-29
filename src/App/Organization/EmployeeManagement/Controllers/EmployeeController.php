@@ -4,8 +4,10 @@ namespace App\Organization\EmployeeManagement\Controllers;
 
 use App\Organization\EmployeeManagement\Queries\IndexEmployeesQuery;
 use App\Organization\EmployeeManagement\Requests\EmployeeStoreRequest;
+use App\Organization\EmployeeManagement\Requests\EmployeeUpdateRequest;
 use App\Organization\EmployeeManagement\Resource\EmployeeResource;
 use Domain\Organization\Actions\CreateEmployeeAction;
+use Domain\Organization\Actions\UpdateEmployeeAction;
 use Domain\Organization\DataTransferObjects\EmployeeData;
 use Domain\Organization\Models\Employee;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -43,9 +45,13 @@ class EmployeeController extends Controller
         );
     }
 
-    public function update()
+    public function update(Employee $employee, EmployeeUpdateRequest $request, UpdateEmployeeAction $action): EmployeeResource
     {
-        //
+        $data = EmployeeData::from(array_merge($employee->attributesToArray(), $request->validated()));
+
+        return EmployeeResource::make(
+            $action->execute($employee, $data)
+        );
     }
 
     /**

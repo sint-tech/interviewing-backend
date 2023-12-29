@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\Feature\Traits\AuthenticationInstallation;
-use tests\TestCase;
+use Tests\TestCase;
 
 class SendInvitationControllerTest extends TestCase
 {
@@ -51,6 +51,6 @@ class SendInvitationControllerTest extends TestCase
                 return $json->first(fn (AssertableJson $data) => $data->where('is_sent', true)->etc());
             });
 
-        Mail::assertSent(InterviewInvitation::class);
+        Mail::assertQueued(InterviewInvitation::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Admin\Vacancy;
 
+use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
@@ -142,6 +143,7 @@ class VacancyControllerTest extends TestCase
             'max_reconnection_tries' => $this->faker->numberBetween(1, 5),
             'organization_id' => Organization::factory()->createOne()->getKey(),
             'open_positions' => $this->faker->numberBetween(1, 10),
+            'interview_template_id' => InterviewTemplate::factory()->for($this->sintUser, 'creator')->createOne()->getKey(),
         ];
     }
 }

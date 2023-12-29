@@ -30,7 +30,7 @@ class InvitationController extends Controller
     public function store(InvitationStoreRequest $request, CreateInvitationAction $action, InvitationDtoFactory $dtoFactory): InvitationResource
     {
         return InvitationResource::make(
-            $action->execute($dtoFactory->fromRequest($request))
+            $action->execute($dtoFactory->fromRequest($request))->load('vacancy')
         );
     }
 
