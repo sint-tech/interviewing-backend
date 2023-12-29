@@ -18,8 +18,8 @@ class QuestionClusterResource extends JsonResource
             'name' => (string) $this->resource->name,
             'description' => (string) $this->resource->description,
             'skills' => SkillResource::collection($this->whenLoaded('skills')),
+            'questions' => QuestionResource::collection($this->whenLoaded('questions')),
             'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants')),
-            //todo add skill resource
         ];
     }
 }
