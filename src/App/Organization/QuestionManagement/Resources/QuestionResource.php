@@ -19,6 +19,7 @@ class QuestionResource extends JsonResource
             'difficult_level' => (int) $this->resource->difficult_level,
             'min_reading_duration_in_seconds' => (int) $this->resource->min_reading_duration_in_seconds,
             'max_reading_duration_in_seconds' => (int) $this->resource->max_reading_duration_in_seconds,
+            'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants'))
         ];
     }
 }

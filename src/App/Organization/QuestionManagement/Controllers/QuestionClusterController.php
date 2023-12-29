@@ -15,7 +15,7 @@ class QuestionClusterController extends Controller
         return QuestionClusterResource::collection(
             QueryBuilder::for(QuestionCluster::query())
                 ->allowedFilters(['skills.id'])
-                ->allowedIncludes('skills', 'questionVariants', 'questions')
+                ->allowedIncludes('skills', 'questionVariants', 'questions.questionVariants')
                 ->paginate(pagination_per_page())
         );
     }
