@@ -17,16 +17,17 @@ class CandidateResource extends JsonResource
             'first_name' => (string) $this->resource->first_name,
             'last_name' => (string) $this->resource->last_name,
             'email' => (string) $this->resource->email,
-            $this->mergeWhen($this->resource->mobile_number instanceof MobileNumber,[
+            $this->mergeWhen($this->resource->mobile_number instanceof MobileNumber, [
                 'mobile' => [
-                    'country' => (string) $this->resource->mobile_number?->countryShortCode(),
+                    'country' => (string) $this->resource->mobile_number?->countryShortCode,
                     'dial_code' => (string) $this->resource->mobile_number?->dialCode,
                     'number' => (string) $this->resource->mobile_number?->number,
-                ]
+                ],
             ]),
             'current_job_title' => JobTitleResource::make($this->whenLoaded('currentJobTitle')),
             'desire_hiring_positions' => JobTitleResource::collection($this->whenLoaded('desireHiringPositions')),
         ];
+
         return $data;
     }
 }

@@ -20,12 +20,17 @@ return new class extends Migration
             $table->integer('mobile_number');
 
             $table->integer('batch');
+            $table->foreignId('vacancy_id')->nullable()->constrained('vacancies', 'id')->nullOnDelete();
+
             $table->timestamp('should_be_invited_at');
 
-            $table->morphs('creator');
+            $table->foreignId('candidate_id')->nullable()->constrained('candidates', 'id')->nullOnDelete();
+            $table->timestamp('used_at')->nullable();
 
             $table->timestamp('last_invited_at')->nullable();
             $table->timestamp('expired_at')->nullable();
+
+            $table->morphs('creator');
 
             $table->timestamps();
             $table->softDeletes();

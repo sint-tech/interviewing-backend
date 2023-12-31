@@ -7,26 +7,34 @@ use Support\Services\MobileStrategy\MobileCountryCodeEnum;
 
 class MobileNumber
 {
+    public readonly string $country;
+
+    public readonly string $countryShortCode;
+
     public function __construct(
         public readonly string $dialCode,
-        public readonly int $number)
-    {
+        public readonly int $number
+    ) {
         $this->validDialCode();
+
+        $this->setCountry();
+
+        $this->setCountryShortCode();
 
         $this->validMobileNumber();
     }
 
-    public function country(): string
+    private function setCountry(): void
     {
-        return match ($this->dialCode) {
+        $this->country = match ($this->dialCode) {
             '+20' => 'Egypt',
             '+966' => 'Saudi'
         };
     }
 
-    public function countryShortCode(): string
+    protected function setCountryShortCode(): void
     {
-        return match ($this->dialCode) {
+        $this->countryShortCode = match ($this->dialCode) {
             '+20' => 'EG',
             '+966' => 'KSA'
         };
@@ -34,7 +42,7 @@ class MobileNumber
 
     private function validMobileNumber(): void
     {
-        $valid = (new PhoneNumber($this->number, $this->countryShortCode()))->isValid();
+        $valid = (new PhoneNumber($this->number, $this->countryShortCode))->isValid();
 
         if ($valid) {
             return;

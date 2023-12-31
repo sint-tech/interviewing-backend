@@ -9,6 +9,7 @@ use App\Candidate\InterviewManagement\Controllers\GetInterviewReportController;
 use App\Candidate\InterviewManagement\Controllers\MyInterviewsController;
 use App\Candidate\InterviewManagement\Controllers\StartInterviewController;
 use App\Candidate\InterviewManagement\Controllers\SubmitInterviewQuestionAnswerController;
+use App\Candidate\Invitation\Controllers\MyInvitationsController;
 use App\Candidate\JobTitle\Controllers\JobTitleController;
 use App\Candidate\RegistrationReasons\Controllers\RegistrationReasonsController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,12 @@ Route::middleware('auth:api-candidate')->group(function () {
             Route::post('/start-interview', StartInterviewController::class)->name('.start');
             Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class);
             Route::get('/{interview}/report', GetInterviewReportController::class);
+        });
+
+    Route::prefix('invitations')
+        ->name('invitations')
+        ->group(function () {
+            Route::get('/', MyInvitationsController::class)->name('.my-invitations');
         });
 });
 

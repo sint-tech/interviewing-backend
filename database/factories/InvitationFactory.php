@@ -24,7 +24,7 @@ class InvitationFactory extends Factory
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'mobile_country_code' => '+20',
-            'mobile_number' => $this->faker->numberBetween(100_000_000_0, 199_999_999_9),
+            'mobile_number' => $this->faker->numerify('11########'),
             'should_be_invited_at' => now()->addDays(1),
             'expired_at' => now()->addDays(5),
             'vacancy_id' => Vacancy::factory(),
