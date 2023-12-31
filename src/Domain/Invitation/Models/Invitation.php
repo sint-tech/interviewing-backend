@@ -77,7 +77,7 @@ class Invitation extends Model
     public function isExpired(): Attribute
     {
         return Attribute::get(function () {
-            return $this->used_at || $this->expired_at?->greaterThan(now());
+            return $this->used_at || $this->expired_at?->lessThanOrEqualTo(now());
         });
     }
 
