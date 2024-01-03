@@ -2,7 +2,7 @@
 
 namespace Domain\Candidate\Models;
 
-use Database\Factories\RegistrationReasonsFactory;
+use Database\Seeders\RegistrationReasonsFactory;
 use Domain\Candidate\Enums\RegistrationReasonsAvailabilityStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

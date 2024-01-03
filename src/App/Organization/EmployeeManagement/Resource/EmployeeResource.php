@@ -18,6 +18,7 @@ class EmployeeResource extends JsonResource
             'first_name' => $this->resource->first_name,
             'last_name' => $this->resource->last_name,
             'email' => $this->resource->email,
+            'is_organization_manager' => $this->resource->is_organization_manager,
             'created_at' => $this->resource->created_at->toDateTimeString(),
             'deleted_at' => $this->whenNotNull($this->resource->deleted_at?->toDateTimeString()),
         ];

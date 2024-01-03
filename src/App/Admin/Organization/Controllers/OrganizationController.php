@@ -37,7 +37,7 @@ class OrganizationController extends Controller
 
     public function update()
     {
-        //
+        //todo implement update method
     }
 
     public function destroy(int $organization): OrganizationResource

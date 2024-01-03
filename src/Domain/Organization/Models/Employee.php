@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
+use Support\Scopes\ForAuthScope;
 
 /**
  * @property Organization $organization
@@ -50,5 +51,10 @@ class Employee extends Authenticatable
     public function newEloquentBuilder($query)
     {
         return new EmployeeBuilder($query);
+    }
+
+    protected static function booted()
+    {
+        parent::addGlobalScope(ForAuthScope::make()->forOrganizationEmployee(fn(EmployeeBuilder $builder) => $builder->forAuth()));
     }
 }

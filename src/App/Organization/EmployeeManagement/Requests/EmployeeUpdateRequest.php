@@ -18,7 +18,7 @@ class EmployeeUpdateRequest extends FormRequest
         return [
             'first_name' => ['filled', 'string', 'min:3', 'max:40'],
             'last_name' => ['filled', 'string', 'min:3', 'max:40'],
-            'email' => ['filled', 'email', Rule::unique(table_name(Employee::class), 'email')->ignore($this->route('employee')->getKey())],
+            'email' => ['filled', 'email', Rule::unique(table_name(Employee::class), 'email')->ignore($this->route('employee'))],
             'is_organization_manager' => ['filled', 'boolean'],
         ];
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Seeders;
 
 use Domain\Candidate\Enums\RegistrationReasonsAvailabilityStatusEnum;
 use Domain\Candidate\Models\RegistrationReason;

@@ -45,8 +45,10 @@ class EmployeeController extends Controller
         );
     }
 
-    public function update(Employee $employee, EmployeeUpdateRequest $request, UpdateEmployeeAction $action): EmployeeResource
+    public function update(int $employee, EmployeeUpdateRequest $request, UpdateEmployeeAction $action): EmployeeResource
     {
+        $employee = Employee::query()->findOrFail($employee);
+
         $data = EmployeeData::from(array_merge($employee->attributesToArray(), $request->validated()));
 
         return EmployeeResource::make(
