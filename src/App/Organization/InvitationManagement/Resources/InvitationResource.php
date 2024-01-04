@@ -13,6 +13,7 @@ class InvitationResource extends JsonResource
     {
         return [
             'id' => $this->resource->getKey(),
+            'name' => $this->resource->name,
             'email' => $this->resource->email,
             'batch' => $this->resource->batch,
             'mobile_number' => $this->resource->mobile_number->number,
