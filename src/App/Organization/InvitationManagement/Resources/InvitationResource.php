@@ -23,6 +23,7 @@ class InvitationResource extends JsonResource
             'vacancy' => VacancyResource::make($this->whenLoaded('vacancy')),
             'expired_at' => $this->resource->expired_at?->format('Y-m-d H:i'),
             'deleted_at' => $this->whenNotNull($this->resource->deleted_at?->format('Y-m-d H:i')),
+            'is_sent' => $this->resource->sent,
         ];
     }
 }
