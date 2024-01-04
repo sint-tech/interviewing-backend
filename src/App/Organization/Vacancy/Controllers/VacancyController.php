@@ -17,7 +17,7 @@ class VacancyController extends Controller
     public function index(): AnonymousResourceCollection
     {
         return VacancyResource::collection(
-            Vacancy::query()->paginate(pagination_per_page())
+            Vacancy::query()->with('interviewTemplate')->paginate(pagination_per_page())
         );
     }
 
