@@ -2,7 +2,6 @@
 
 namespace App\Organization\InvitationManagement\Requests;
 
-use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -25,7 +24,8 @@ class InvitationStoreRequest extends FormRequest
             ],
             'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class), 'id')
                 ->whereNotNull('interview_template_id')
-                ->withoutTrashed()
+                ->where('organization_id', auth()->user()->organization_id)
+                ->withoutTrashed(),
             ],
             'should_be_invited_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],

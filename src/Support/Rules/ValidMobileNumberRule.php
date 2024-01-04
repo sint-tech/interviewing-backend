@@ -6,18 +6,18 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Support\Services\MobileStrategy\MobileCountryCodeEnum;
 use Support\Services\MobileStrategy\MobileCountryEnum;
-use Support\Services\MobileStrategy\MobileNumberFactory;
+use Support\ValueObjects\MobileNumber;
 
 class ValidMobileNumberRule implements ValidationRule
 {
     public function __construct(
-        protected MobileCountryCodeEnum|MobileCountryEnum | null $mobileCountryEnum = null
+        protected MobileCountryCodeEnum|MobileCountryEnum|null $mobileCountryEnum = null
     ) {
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (is_null($this->mobileCountryEnum)){
+        if (is_null($this->mobileCountryEnum)) {
             $fail('mobile country code must be filled');
         }
         if ($this->mobileNotValidWithThisCountry($value)) {
@@ -27,8 +27,6 @@ class ValidMobileNumberRule implements ValidationRule
 
     private function mobileNotValidWithThisCountry(mixed $value): bool
     {
-        return ! (new MobileNumberFactory())->createMobileNumberInstance(
-            $this->mobileCountryEnum
-        )->validMobileNumber($value);
+        return ! MobileNumber::validateMobileNumber($this->mobileCountryEnum, $value);
     }
 }

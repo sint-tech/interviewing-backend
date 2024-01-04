@@ -44,6 +44,7 @@ class MyInterviewsQuery extends QueryBuilder
         return [
             AllowedInclude::relationship('answers'),
             AllowedInclude::relationship('answers.questionVariant'),
+            AllowedInclude::relationship('report', 'defaultLastReport'),
         ];
     }
 }

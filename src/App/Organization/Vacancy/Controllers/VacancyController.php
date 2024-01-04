@@ -24,7 +24,7 @@ class VacancyController extends Controller
     public function show(int $vacancy): VacancyResource
     {
         return VacancyResource::make(
-            Vacancy::query()->findOrFail($vacancy)
+            Vacancy::query()->findOrFail($vacancy)->load('interviewTemplate')
         );
     }
 

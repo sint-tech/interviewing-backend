@@ -2,7 +2,6 @@
 
 namespace App\Organization\InvitationManagement\Requests;
 
-use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -15,17 +14,13 @@ class ImportInvitationRequest extends FormRequest
     {
         return [
             'file' => ['required', File::types([
-                    'application/csv', 'application/excel',
-                    'application/vnd.ms-excel', 'application/vnd.msexcel',
-                    'text/csv', 'text/anytext', 'text/plain', 'text/x-c',
-                    'text/comma-separated-values',
-                    'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'csv']
+                'application/csv', 'application/excel',
+                'application/vnd.ms-excel', 'application/vnd.msexcel',
+                'text/csv', 'text/anytext', 'text/plain', 'text/x-c',
+                'text/comma-separated-values',
+                'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'csv']
             )],
             'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class), 'id')->withoutTrashed()],
-            'interview_template_id' => ['nullable',
-                'integer',
-                Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed(),
-            ],
             'should_be_invited_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
         ];
     }
@@ -48,7 +43,7 @@ class ImportInvitationRequest extends FormRequest
         }
 
         return Vacancy::query()->whereKey($this->validated('vacancy_id'))->first()
-                ->defaultInterviewTemplate
-                ->getKey() !== $this->validated('interview_template_id');
+            ->defaultInterviewTemplate
+            ->getKey() !== $this->validated('interview_template_id');
     }
 }

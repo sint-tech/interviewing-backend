@@ -4,6 +4,7 @@ namespace App\Organization\InvitationManagement\Controllers;
 
 use App\Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob;
 use App\Organization\InvitationManagement\Requests\ImportInvitationRequest;
+use Domain\Vacancy\Models\Vacancy;
 use Support\Controllers\Controller;
 
 class ImportInvitationsController extends Controller
@@ -19,7 +20,7 @@ class ImportInvitationsController extends Controller
         dispatch(new ImportInvitationsFromExcelJob(
             storage_path('app/'.$file_path),
             $request->validated('vacancy_id'),
-            $request->validated('interview_template_id'),
+            Vacancy::query()->whereKey($request->validated('vacancy_id'))->value('interview_template_id'),
             $request->date('should_be_invited_at'),
         ));
 

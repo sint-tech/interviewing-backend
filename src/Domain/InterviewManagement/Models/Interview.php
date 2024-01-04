@@ -33,8 +33,6 @@ class Interview extends Model
 {
     use HasFactory,SoftDeletes,HasReport;
 
-    const DEFAULT_REPORT_NAME = '__DEFAULT_REPORT__';
-
     protected $fillable = [
         'vacancy_id',
         'interview_template_id',
@@ -147,7 +145,7 @@ class Interview extends Model
     public function defaultLastReport(): MorphOne
     {
         return $this->morphOne(InterviewReport::class, 'reportable')
-            ->where('name', self::DEFAULT_REPORT_NAME)
+            ->where('name', InterviewReport::DEFAULT_REPORT_NAME)
             ->latest();
     }
 

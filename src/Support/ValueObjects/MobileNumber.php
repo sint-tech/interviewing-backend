@@ -62,6 +62,23 @@ class MobileNumber
         throw new \Exception(sprintf('This dial code: %s is not supported', $this->dialCode));
     }
 
+    public static function validateMobileNumber(string|MobileCountryCodeEnum $mobileDial, string|int $mobileNumber): bool
+    {
+        try {
+            if ($mobileDial instanceof MobileCountryCodeEnum) {
+                $mobileDial = $mobileDial->value;
+            }
+
+            new self($mobileDial, $mobileNumber);
+
+            return true;
+        } catch (\Exception $exception) {
+            dd($exception);
+
+            return false;
+        }
+    }
+
     public function __toString(): string
     {
         return $this->dialCode.$this->number;
