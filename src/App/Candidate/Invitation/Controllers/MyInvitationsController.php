@@ -12,7 +12,10 @@ class MyInvitationsController extends Controller
     public function __invoke(): AnonymousResourceCollection
     {
         return InvitationResource::collection(
-            Invitation::query()->paginate(pagination_per_page())
+            Invitation::query()
+                ->withoutGlobalScopes()
+                ->where('email', auth()->user()->email)
+                ->paginate(pagination_per_page())
         );
     }
 }
