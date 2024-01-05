@@ -51,6 +51,6 @@ class SendInvitationControllerTest extends TestCase
                 return $json->first(fn (AssertableJson $data) => $data->where('is_sent', true)->etc());
             });
 
-        Mail::assertQueued(InterviewInvitation::class);
+        Mail::assertSent(InterviewInvitation::class);
     }
 }

@@ -11,4 +11,8 @@ return [
     'organization' => [
 
     ],
+
+    'candidate' => [
+        'website_url' => env('CANDIDATE_WEBSITE_URL', 'https://sint.com'),
+    ],
 ];

@@ -36,9 +36,7 @@ class InterviewInvitationTest extends TestCase
     {
         Mail::send($this->mail);
 
-        Mail::assertQueued($this->mail::class);
-
-        $this->assertEquals('interview-invitation', $this->mail->queue);
+        Mail::assertSent($this->mail::class);
     }
 
     /** @test  */

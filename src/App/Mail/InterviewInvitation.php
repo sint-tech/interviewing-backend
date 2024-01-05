@@ -3,23 +3,21 @@
 namespace App\Mail;
 
 use Domain\Invitation\Models\Invitation;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InterviewInvitation extends Mailable implements ShouldQueue
+class InterviewInvitation extends Mailable
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
      */
     public function __construct(public Invitation $invitation)
     {
-        $this->onQueue('interview-invitation'); //todo make queue name as enum
+        $this->invitation->load('vacancy.organization');
     }
 
     /**

@@ -37,6 +37,7 @@ class MyInvitationsControllerTest extends TestCase
         Invitation::factory(25)->for(User::query()->first(), 'creator')
             ->create([
                 'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
             ]);
 
         Invitation::factory(100)->for(User::query()->first(), 'creator')->create();
