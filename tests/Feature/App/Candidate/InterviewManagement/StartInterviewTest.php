@@ -35,7 +35,7 @@ class StartInterviewTest extends TestCase
         $this->vacancy = Vacancy::factory()
             ->for($this->interviewTemplate = InterviewTemplate::factory()->createOne(), 'defaultInterviewTemplate')
             ->for($employee = Employee::factory()->createOne(), 'creator')
-            ->for($employee->organization, 'organization')->createOne();
+            ->for($employee->organization, 'organization')->createOne(['max_reconnection_tries' => 0]);
     }
 
     /** @test */
@@ -109,7 +109,7 @@ class StartInterviewTest extends TestCase
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
         $this->actingAs($this->authCandidate, 'api-candidate')
-            ->post(route('candidate.interviews.start'), $data)->assertServerError();
+            ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
     }
 
     /** @test */
@@ -124,7 +124,7 @@ class StartInterviewTest extends TestCase
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
         $this->actingAs($this->authCandidate, 'api-candidate')
-            ->post(route('candidate.interviews.start'), $data)->assertServerError();
+            ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
 
         $this->actingAs(Candidate::factory()->createOne(), 'api-candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
@@ -142,7 +142,7 @@ class StartInterviewTest extends TestCase
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
         $this->actingAs($this->authCandidate, 'api-candidate')
-            ->post(route('candidate.interviews.start'), $data)->assertServerError();
+            ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
 
         $this->assertCount(1, $this->authCandidate->runningInterviews()->get());
 
@@ -150,5 +150,27 @@ class StartInterviewTest extends TestCase
 
         $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+    }
+
+    /** @test  */
+    public function itShouldContinueInterviewWhenConnectionTriesNotReachedTheLimit()
+    {
+        $data = [
+            'vacancy_id' => $this->vacancy->getKey(),
+            'interview_template_id' => $this->interviewTemplate->getKey(),
+        ];
+
+        $limit = 2;
+
+        $this->vacancy->update(['max_reconnection_tries' => $limit]);
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
     }
 }

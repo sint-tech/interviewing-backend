@@ -40,6 +40,7 @@ class Interview extends Model
         'started_at',
         'ended_at',
         'status',
+        'connection_tries',
     ];
 
     protected $casts = [
@@ -196,7 +197,7 @@ class Interview extends Model
 
         $scope->forCandidate(fn (InterviewEloquentBuilder $builder) => $builder->whereCandidate(auth()->user()));
 
-        $scope->forOrganizationEmployee(fn(InterviewEloquentBuilder $builder) => $builder->whereHas('vacancy'));
+        $scope->forOrganizationEmployee(fn (InterviewEloquentBuilder $builder) => $builder->whereHas('vacancy'));
 
         static::addGlobalScope($scope);
     }

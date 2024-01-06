@@ -25,6 +25,7 @@ class VacancyFactory extends Factory
             'open_positions' => $this->faker->numberBetween(1, 15),
             'creator_id' => $employee->getKey(),
             'creator_type' => $employee::class,
+            'max_reconnection_tries' => $this->faker->numberBetween(0, 3),
         ];
     }
 }

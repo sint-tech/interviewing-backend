@@ -43,8 +43,10 @@ class InterviewEloquentBuilder extends Builder
 
     public function whereRunning(): self
     {
-        return $this->whereStatusNotInFinalStage()
-            ->whereNotEnded('OR');
+        return $this->where(function (self $builder) {
+            return $builder->whereStatusNotInFinalStage()
+                ->whereNotEnded('OR');
+        });
     }
 
     public function whereIsEnded(bool $ended = true, string $boolean = 'and'): self
