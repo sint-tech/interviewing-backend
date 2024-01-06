@@ -196,6 +196,8 @@ class Interview extends Model
 
         $scope->forCandidate(fn (InterviewEloquentBuilder $builder) => $builder->whereCandidate(auth()->user()));
 
+        $scope->forOrganizationEmployee(fn(InterviewEloquentBuilder $builder) => $builder->whereHas('vacancy'));
+
         static::addGlobalScope($scope);
     }
 

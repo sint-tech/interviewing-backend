@@ -5,6 +5,7 @@ use App\Organization\Auth\Controllers\MyOrganizationController;
 use App\Organization\Auth\Controllers\MyProfileController;
 use App\Organization\Auth\Controllers\RegisterController;
 use App\Organization\EmployeeManagement\Controllers\EmployeeController;
+use App\Organization\InterviewManagement\Controllers\GetInterviewsReportsController;
 use App\Organization\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Organization\InvitationManagement\Controllers\ImportInvitationsController;
 use App\Organization\InvitationManagement\Controllers\InvitationController;
@@ -42,6 +43,7 @@ Route::apiResource('question-variants', QuestionVariantController::class);
 Route::prefix('interview-management')
     ->group(function () {
         Route::apiResource('interview-templates', InterviewTemplateController::class);
+        Route::get('interviews/reports', GetInterviewsReportsController::class)->name('interviews.reports');
     });
 
 Route::apiResource('invitations', InvitationController::class);
