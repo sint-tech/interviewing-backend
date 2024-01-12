@@ -9,6 +9,7 @@ use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Domain\ReportManagement\Actions\CreateReportAction;
 use Domain\ReportManagement\DataTransferObjects\ReportDto;
 use Domain\ReportManagement\DataTransferObjects\ReportValueDto;
+use Domain\ReportManagement\Models\InterviewReport;
 use Illuminate\Support\Arr;
 use OpenAI\Laravel\Facades\OpenAI;
 
@@ -26,7 +27,7 @@ class GenerateInterviewReport
         }
 
         $reportDto = ReportDto::from([
-            'name' => Interview::DEFAULT_REPORT_NAME,
+            'name' => InterviewReport::DEFAULT_REPORT_NAME,
             'reportable' => $interview,
             'values' => [
                 ReportValueDto::from([
