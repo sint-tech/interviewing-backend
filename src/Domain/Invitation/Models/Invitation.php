@@ -19,6 +19,9 @@ use Support\ValueObjects\MobileNumber;
 use Support\ValueObjects\URL;
 
 /**
+ * @property int $id
+ * @property string $name
+ * @property string $email
  * @property Carbon $should_be_invited_at
  * @property Carbon $last_invited_at
  * @property URL $url
@@ -88,10 +91,9 @@ class Invitation extends Model
                 config('sint.candidate.website_url', 'https://sint.com'),
                 [
                     'vacancy_id' => $this->vacancy_id,
-                    'invitation_id' => $this->getKey(),
+                    'invitation_id' => $this->id,
                     'email' => $this->email,
-                    'first_name' => str($this->first_name)->before(' ')->toString(),
-                    'last_name' => str($this->last_name)->afterLast(' ')->toString(),
+                    'name' => $this->name,
                 ]
             );
         });

@@ -14,7 +14,6 @@ class ContinueInterviewAction
     {
         if (app(InterviewReachedMaxConnectionTriesAction::class)->execute($interview)) {
             throw new InterviewReachedMaxConnectionTriesException();
-            throw new \LogicException('This interview had reached the maximum connection tries!');
         }
 
         Interview::query()->whereKey($interview)->increment('connection_tries');

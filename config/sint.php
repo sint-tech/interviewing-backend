@@ -13,6 +13,6 @@ return [
     ],
 
     'candidate' => [
-        'website_url' => env('CANDIDATE_WEBSITE_URL', 'https://sint.com'),
+        'website_url' => env('CANDIDATE_WEBSITE_URL', 'https://www.usesint.com/invitation'),
     ],
 ];
