@@ -27,7 +27,7 @@ class InterviewReport extends Report
                 ->where(function (Builder $wheres) {
                     return $wheres
                         ->where('reportable_type', (new Interview())->getMorphClass())
-                        ->whereIntegerInRaw('reportable_id', auth()->user()->interviews()->pluch('id'));
+                        ->whereIntegerInRaw('reportable_id', auth()->user()->interviews()->pluck('id'));
                 });
         }));
     }
