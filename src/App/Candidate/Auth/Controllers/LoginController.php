@@ -23,8 +23,6 @@ class LoginController extends Controller
             throw new AuthenticationException('email or password wrong!');
         }
 
-        auth()->setUser($candidate);
-
         $token = (new GenerateCandidateAccessTokenAction($candidate))->execute();
 
         return CandidateResource::make($candidate)->additional([
