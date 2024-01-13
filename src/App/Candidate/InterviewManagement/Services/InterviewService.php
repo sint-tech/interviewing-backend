@@ -41,8 +41,8 @@ class InterviewService
     {
         return $this->createInterviewAction->execute(InterviewDto::from([
             'candidate_id' => auth()->id(),
-            'vacancy_id' => $request->vacancy()->getKey(),
-            'interview_template_id' => $request->interviewTemplate()->getKey(),
+            'vacancy_id' => $request->vacancy()->id,
+            'interview_template_id' => $request->interviewTemplate()->id,
             'started_at' => Carbon::now(),
         ]));
     }
