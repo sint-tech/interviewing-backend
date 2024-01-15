@@ -66,9 +66,10 @@ class Candidate extends Authenticatable implements HasMedia
     public function mobileNumber(): Attribute
     {
         return Attribute::make(function () {
-            if (Arr::has($this->attributes,['mobile_dial_code','mobile_number'])) {
-                return new MobileNumber($this->attributes['mobile_dial_code'],$this->attributes['mobile_number']);
+            if (Arr::has($this->attributes, ['mobile_dial_code', 'mobile_number']) && ! is_null($this->attributes['mobile_dial_code']) && ! is_null($this->attributes['mobile_number'])) {
+                return new MobileNumber($this->attributes['mobile_dial_code'], $this->attributes['mobile_number']);
             }
+
             return null;
         });
     }
