@@ -26,6 +26,7 @@ class ContinueInterviewAction
 
         $interview
             ->questionClusters
+            ->unique('id')
             ->each(fn (QuestionCluster $cluster) => $cluster
                 ->setRelation('questionVariants', $interview->questionVariants
                     ->filter(fn (QuestionVariant $questionVariant) => $questionVariant->pivot->question_cluster_id == $cluster->getKey())
