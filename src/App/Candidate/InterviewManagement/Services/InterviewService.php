@@ -68,7 +68,6 @@ class InterviewService
     {
         $invitation = Invitation::query()->firstWhere([
             'vacancy_id' => $interview->vacancy->id,
-            'interview_template_id' => $interview->interviewTemplate->id,
             'candidate_id' => $interview->candidate->id,
         ]);
 
