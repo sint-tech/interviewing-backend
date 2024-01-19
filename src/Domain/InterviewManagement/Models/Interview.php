@@ -32,6 +32,7 @@ use Support\ValueObjects\URL;
  * @property Collection<QuestionVariant> $questionVariants
  * @property Collection<Answer> $answers
  * @property ?Carbon $candidate_report_sent_at
+ * @method InterviewEloquentBuilder query()
  */
 class Interview extends Model
 {
