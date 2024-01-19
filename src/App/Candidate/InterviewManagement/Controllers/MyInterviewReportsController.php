@@ -11,7 +11,9 @@ class MyInterviewReportsController extends Controller
     public function __invoke()
     {
         return InterviewReportResource::collection(
-            InterviewReport::query()->paginate(pagination_per_page())
+            InterviewReport::query()
+                ->with('reportable.vacancy.organization')
+                ->paginate(pagination_per_page())
         );
     }
 }
