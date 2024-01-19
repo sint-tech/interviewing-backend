@@ -3,14 +3,13 @@
 namespace App\Admin\InterviewManagement\Resources;
 
 use Domain\InterviewManagement\Models\Interview;
-use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Support\ValueObjects\DateToHumanReadValueObject;
 
 /**
  * @property Interview $resource
  */
-class  InterviewReportResource extends JsonResource
+class InterviewReportResource extends JsonResource
 {
     public function toArray($request)
     {

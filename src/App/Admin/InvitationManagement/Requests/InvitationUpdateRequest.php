@@ -25,10 +25,10 @@ class InvitationUpdateRequest extends FormRequest
             'mobile_number' => ['required_with:mobile_country_code', 'integer',
                 function (string $attribute, mixed $value, \Closure $fail) {
                     if (empty($value)) {
-                        return ;
+                        return;
                     }
                     (new ValidMobileNumberRule($this->enum('mobile_country_code', MobileCountryCodeEnum::class)))
-                        ->validate($attribute,$value,$fail);
+                        ->validate($attribute, $value, $fail);
                 },
             ],
             'vacancy_id' => ['filled', 'integer', Rule::exists(table_name(Vacancy::class), 'id')->withoutTrashed()],

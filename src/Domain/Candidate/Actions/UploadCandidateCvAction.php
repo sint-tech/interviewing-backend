@@ -2,7 +2,6 @@
 
 namespace Domain\Candidate\Actions;
 
-use Domain\Candidate\DataTransferObjects\CvData;
 use Domain\Candidate\Models\Candidate;
 use Illuminate\Http\UploadedFile;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;

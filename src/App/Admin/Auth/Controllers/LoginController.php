@@ -4,7 +4,6 @@ namespace App\Admin\Auth\Controllers;
 
 use App\Admin\Auth\Resources\AdminResource;
 use Domain\Users\Actions\GenerateAdminAccessTokenAction;
-use Domain\Users\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Support\Controllers\Controller;
@@ -22,7 +21,7 @@ class LoginController extends Controller
         $accessToken = (new GenerateAdminAccessTokenAction(auth()->user()))->execute();
 
         return AdminResource::make(auth()->user())->additional([
-            'token' => $accessToken
+            'token' => $accessToken,
         ]);
     }
 }

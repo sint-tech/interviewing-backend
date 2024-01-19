@@ -14,20 +14,19 @@ use Domain\Candidate\Models\Candidate;
 class AuthService
 {
     /**
-     * @param RegisterRequest $request
      * @return array <candidate,token>
      */
     public function register(RegisterRequest $request): array
     {
         $candidateDto = CandidateData::from($request->getRegistrationData());
 
-        $candidate =  (new CreateCandidateAction($candidateDto))->execute();
+        $candidate = (new CreateCandidateAction($candidateDto))->execute();
 
         $token = $this->generateToken($candidate);
 
         $response = [
             $candidate,
-            $token
+            $token,
         ];
 
         if ($request->registerUsingInvitation()) {

@@ -15,7 +15,7 @@ class RegisterController extends Controller
 
     public function __invoke(
         RegisterRequest $request,
-        ?int $invitation = null,
+        int $invitation = null,
     ) {
         [$candidate, $token] = $this->authService->register($request);
 

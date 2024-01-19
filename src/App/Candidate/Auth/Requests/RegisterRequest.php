@@ -58,7 +58,7 @@ class RegisterRequest extends FormRequest
 
     public function mobileNumber(): ?MobileNumber
     {
-        if($this->isNotFilled('mobile')) {
+        if ($this->isNotFilled('mobile')) {
             return null;
         }
 
@@ -73,20 +73,20 @@ class RegisterRequest extends FormRequest
     public function getRegistrationData(): array
     {
         if (! $this->registerUsingInvitation()) {
-            return $this->safe()->except(['mobile']) + ['mobile_number' =>$this->mobileNumber()]
-                + ['full_name' => $this->validated('first_name') . ' ' . $this->validated('last_name')];
+            return $this->safe()->except(['mobile']) + ['mobile_number' => $this->mobileNumber()]
+                + ['full_name' => $this->validated('first_name').' '.$this->validated('last_name')];
         }
 
         return $this->safe([
             'first_name',
             'last_name',
             'email',
-            'password'
+            'password',
         ]);
     }
 
     public function invitation(): Invitation
     {
-        return Invitation::query()->where('email',$this->validated('email'))->whereKey($this->route('invitation'))->firstOrFail();
+        return Invitation::query()->where('email', $this->validated('email'))->whereKey($this->route('invitation'))->firstOrFail();
     }
 }

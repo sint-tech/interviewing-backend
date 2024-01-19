@@ -7,7 +7,7 @@ use Domain\Vacancy\Models\Vacancy;
 
 class UpdateVacancyAction
 {
-    public function execute(Vacancy $vacancy,VacancyDto $dto): Vacancy
+    public function execute(Vacancy $vacancy, VacancyDto $dto): Vacancy
     {
         $vacancy->update($dto->except('creator')->toArray());
 

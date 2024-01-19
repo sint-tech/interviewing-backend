@@ -6,7 +6,7 @@ use OpenAI\Laravel\Facades\OpenAI;
 
 class GPT35AiModel extends AiModelClientInterface
 {
-    public function prompt(string $answerText): string|null
+    public function prompt(string $answerText): ?string
     {
         $response = OpenAI::chat()->create([
             'model' => $this->promptMessage->aiModel->name->value,

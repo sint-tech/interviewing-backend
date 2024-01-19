@@ -7,7 +7,6 @@ use Support\Controllers\Controller;
 
 class MyOrganizationController extends Controller
 {
-
     public function __invoke(): OrganizationResource
     {
         return OrganizationResource::make(auth()->user()->organization);

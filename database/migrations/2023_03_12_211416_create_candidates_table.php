@@ -19,7 +19,7 @@ return new class() extends Migration
 
             $table->string('email')->unique();
 
-            $table->enum('mobile_dial_code', ['+20','+966'])->nullable();
+            $table->enum('mobile_dial_code', ['+20', '+966'])->nullable();
             $table->integer('mobile_number')->nullable();
             $table->unique(['mobile_dial_code', 'mobile_number']);
 

@@ -4,7 +4,6 @@ namespace App\Admin\InvitationManagement\Controllers;
 
 use App\Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob;
 use App\Admin\InvitationManagement\Requests\ImportInvitationRequest;
-use Domain\Invitation\Actions\CreateInvitationAction;
 use Illuminate\Http\JsonResponse;
 use Support\Controllers\Controller;
 

@@ -6,7 +6,6 @@ use Domain\InterviewManagement\Models\Interview;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\QueryBuilderRequest;
 
 class InterviewQuery extends QueryBuilder
 {

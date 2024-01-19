@@ -6,7 +6,6 @@ use Domain\InterviewManagement\Models\Interview;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\Exceptions\InvalidFilterQuery;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 

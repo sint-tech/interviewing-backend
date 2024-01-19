@@ -55,6 +55,6 @@ class Employee extends Authenticatable
 
     protected static function booted()
     {
-        parent::addGlobalScope(ForAuthScope::make()->forOrganizationEmployee(fn(EmployeeBuilder $builder) => $builder->forAuth()));
+        parent::addGlobalScope(ForAuthScope::make()->forOrganizationEmployee(fn (EmployeeBuilder $builder) => $builder->forAuth()));
     }
 }

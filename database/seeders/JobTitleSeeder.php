@@ -12,7 +12,7 @@ class JobTitleSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = ['software engineer','ml ops','devops','hr','marketing manager','product owner'];
+        $data = ['software engineer', 'ml ops', 'devops', 'hr', 'marketing manager', 'product owner'];
 
         foreach ($data as $datum) {
             JobTitle::query()->firstOrCreate(['title' => $datum]);
