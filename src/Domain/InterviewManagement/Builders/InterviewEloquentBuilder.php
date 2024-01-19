@@ -106,8 +106,8 @@ class InterviewEloquentBuilder extends Builder
 
     public function whereReachedMaxTries(): self
     {
-            return $this->whereColumn('interviews.vacancy_id', '=', 'vacancies.id')
-                ->whereColumn('interviews.connection_tries', '>=', 'vacancies.max_reconnection_tries')
-                ->limit(1);
+        return $this->whereColumn('interviews.vacancy_id', '=', 'vacancies.id')
+            ->whereColumn('interviews.connection_tries', '>=', 'vacancies.max_reconnection_tries')
+            ->limit(1);
     }
 }
