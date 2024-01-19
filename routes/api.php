@@ -30,7 +30,7 @@ Route::middleware('guest:api-candidate')->withoutMiddleware('auth:api-candidate'
     Route::post('/pre-register/valid-identifier-input', ValidateNewCandidateUniqueInputsController::class);
     Route::post('/register/{invitation?}', RegisterController::class)->name('.register');
     Route::post('/login', LoginController::class)->name('.login');
-    Route::post('/social-login', SocialLoginController::class);
+    Route::post('/social-login', SocialLoginController::class)->name('.social-login');
 });
 
 /*
@@ -40,14 +40,14 @@ Route::middleware('auth:api-candidate')->group(function () {
     Route::any('/logout', LogoutController::class);
 
     Route::prefix('interviews')
-        ->name('interviews')
+        ->name('interviews.')
         ->group(function () {
             Route::get('', MyInterviewsController::class);
-            Route::get('/my-interviews', MyInterviewsController::class)->name('.my-interviews');
-            Route::post('/start-interview', StartInterviewController::class)->name('.start');
-            Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class);
-            Route::get('/{interview}/report', GetInterviewReportController::class);
-            Route::get('/reports', MyInterviewReportsController::class);
+            Route::get('/my-interviews', MyInterviewsController::class)->name('my-interviews');
+            Route::post('/start-interview', StartInterviewController::class)->name('start');
+            Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class)->name('submit-answer');
+            Route::get('/{interview}/report', GetInterviewReportController::class)->name('report');
+            Route::get('/reports', MyInterviewReportsController::class)->name('reports');
         });
 
     Route::prefix('invitations')
