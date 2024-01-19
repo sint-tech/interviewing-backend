@@ -5,6 +5,7 @@ namespace App\Candidate\Invitation\Controllers;
 use App\Candidate\Invitation\Resources\InvitationResource;
 use Domain\Invitation\Models\Invitation;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Spatie\QueryBuilder\QueryBuilder;
 use Support\Controllers\Controller;
 
 class MyInvitationsController extends Controller
@@ -12,10 +13,8 @@ class MyInvitationsController extends Controller
     public function __invoke(): AnonymousResourceCollection
     {
         return InvitationResource::collection(
-            Invitation::query()
-                ->withoutGlobalScopes()
-                ->where('email', auth()->user()->email)
-                ->paginate(pagination_per_page())
-        );
+            QueryBuilder::for(Invitation::query())
+                ->allowedIncludes('vacancy', 'vacancy.organization')
+                ->paginate(pagination_per_page()));
     }
 }

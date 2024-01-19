@@ -113,7 +113,7 @@ class Invitation extends Model
              * the result will be invitations where belongs to vacancy with organization_id = auth->organization_id
              */
             $builder->whereHas('vacancy');
-        })->forCandidate(fn (Builder $builder) => $builder->where('candidate_id', auth()->id()));
+        })->forCandidate(fn (Builder $builder) => $builder->where('email', auth()->user()->email));
 
         static::addGlobalScope($authScope);
     }

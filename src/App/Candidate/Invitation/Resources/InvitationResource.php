@@ -2,6 +2,7 @@
 
 namespace App\Candidate\Invitation\Resources;
 
+use App\Candidate\InterviewManagement\Resources\VacancyResource;
 use Domain\Invitation\Models\Invitation;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,6 +18,7 @@ class InvitationResource extends JsonResource
             'is_expired' => $this->resource->is_expired,
             'vacancy_id' => $this->resource->vacancy_id,
             'last_invited_at' => $this->resource->last_invited_at?->format('Y-m-d H:i'),
+            'vacancy' => VacancyResource::make($this->whenLoaded('vacancy')),
         ];
     }
 }

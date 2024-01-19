@@ -39,12 +39,18 @@ class InterviewService
 
     public function startInterview(StartInterviewRequest $request): Interview
     {
-        return $this->createInterviewAction->execute(InterviewDto::from([
+        $interview = $this->createInterviewAction->execute(InterviewDto::from([
             'candidate_id' => auth()->id(),
             'vacancy_id' => $request->vacancy()->id,
             'interview_template_id' => $request->interviewTemplate()->id,
             'started_at' => Carbon::now(),
         ]));
+
+        if ($this->interviewReachedMaxConnectionTriesAction->execute($interview)) {
+            $this->setInvitationsAsExpired($interview);
+        }
+
+        return $interview;
     }
 
     /**
