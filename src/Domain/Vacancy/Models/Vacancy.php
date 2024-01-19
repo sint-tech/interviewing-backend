@@ -17,6 +17,7 @@ use Support\Traits\Model\HasCreator;
 use Support\Traits\Model\HasOwner;
 
 /**
+ * @method VacancyBuilder query()
  * @property Organization|null $organization
  */
 class Vacancy extends Model

@@ -2,6 +2,7 @@
 
 namespace Domain\InterviewManagement\Models;
 
+use Carbon\Carbon;
 use Database\Factories\InterviewFactory;
 use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\Candidate;
@@ -13,6 +14,7 @@ use Domain\QuestionManagement\Models\QuestionVariant;
 use Domain\ReportManagement\Models\InterviewReport;
 use Domain\ReportManagement\Traits\HasReport;
 use Domain\Vacancy\Models\Vacancy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,11 +25,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Support\Scopes\ForAuthScope;
+use Support\ValueObjects\URL;
 
 /**
  * @property Collection<QuestionCluster> $questionClusters
  * @property Collection<QuestionVariant> $questionVariants
  * @property Collection<Answer> $answers
+ * @property ?Carbon $candidate_report_sent_at
  */
 class Interview extends Model
 {
@@ -41,6 +45,7 @@ class Interview extends Model
         'ended_at',
         'status',
         'connection_tries',
+        'candidate_report_sent_at'
     ];
 
     protected $casts = [
@@ -184,6 +189,13 @@ class Interview extends Model
     public function statusInFinalStage(): bool
     {
         return in_array($this->status, InterviewStatusEnum::endedStatuses());
+    }
+
+    public function candidateReportUrl(): Attribute
+    {
+        return Attribute::get(function () {
+            return URL::make(config('sint.candidate.report_url') . '/');
+        });
     }
 
     public function newEloquentBuilder($query)
