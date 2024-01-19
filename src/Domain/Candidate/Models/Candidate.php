@@ -7,6 +7,8 @@ use Domain\Candidate\Builders\CandidateBuilder;
 use Domain\Candidate\Enums\CandidateSocialAppEnum;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\JobTitle\Models\JobTitle;
+use Domain\Vacancy\Models\Vacancy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +22,7 @@ use Illuminate\Support\Arr;
 use Laravel\Passport\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Support\Scopes\ForAuthScope;
 use Support\ValueObjects\MobileNumber;
 
 /**
@@ -119,5 +122,10 @@ class Candidate extends Authenticatable implements HasMedia
     protected static function newFactory()
     {
         return new CandidateFactory();
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope(ForAuthScope::make()->forOrganizationEmployee(fn(Builder $builder) => $builder->whereIntegerInRaw('id',Interview::query()->pluck('candidate_id'))));
     }
 }
