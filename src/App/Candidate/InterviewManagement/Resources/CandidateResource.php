@@ -2,8 +2,12 @@
 
 namespace App\Candidate\InterviewManagement\Resources;
 
+use Domain\Candidate\Models\Candidate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Candidate $resource
+ */
 class CandidateResource extends JsonResource
 {
     public function toArray($request)
@@ -13,8 +17,9 @@ class CandidateResource extends JsonResource
             'full_name' => (string) $this->full_name,
             'email' => (string) $this->email,
             'mobile' => [
-                'country' => (string) $this->mobile_country,
-                'number' => (string) $this->mobile_number,
+                'dial_code' => $this->resource->mobile_number->dialCode,
+                'country' => $this->resource->mobile_number->countryShortCode,
+                'number' => $this->resource->mobile_number->number,
             ],
         ];
     }

@@ -6,6 +6,7 @@ use App\Candidate\Auth\Controllers\RegisterController;
 use App\Candidate\Auth\Controllers\SocialLoginController;
 use App\Candidate\Auth\Controllers\ValidateNewCandidateUniqueInputsController;
 use App\Candidate\InterviewManagement\Controllers\GetInterviewReportController;
+use App\Candidate\InterviewManagement\Controllers\MyInterviewReportsController;
 use App\Candidate\InterviewManagement\Controllers\MyInterviewsController;
 use App\Candidate\InterviewManagement\Controllers\StartInterviewController;
 use App\Candidate\InterviewManagement\Controllers\SubmitInterviewQuestionAnswerController;
@@ -46,6 +47,7 @@ Route::middleware('auth:api-candidate')->group(function () {
             Route::post('/start-interview', StartInterviewController::class)->name('.start');
             Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class);
             Route::get('/{interview}/report', GetInterviewReportController::class);
+            Route::get('/reports', MyInterviewReportsController::class);
         });
 
     Route::prefix('invitations')

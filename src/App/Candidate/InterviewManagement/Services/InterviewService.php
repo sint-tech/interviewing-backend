@@ -53,28 +53,30 @@ class InterviewService
     public function continueInterview(Interview $interview): Interview
     {
         if ($this->interviewReachedMaxConnectionTriesAction->execute($interview)) {
-            $this->setInvitationAsExpired($interview);
+            $this->setInvitationsAsExpired($interview);
             throw new InterviewReachedMaxConnectionTriesException();
         }
 
         if ($interview->allQuestionsAnswered()) {
-            $this->setInvitationAsExpired($interview);
+            $this->setInvitationsAsExpired($interview);
         }
 
         return $this->continueInterviewAction->execute($interview);
     }
 
-    protected function setInvitationAsExpired(Interview $interview): bool
+    protected function setInvitationsAsExpired(Interview $interview): bool
     {
-        $invitation = Invitation::query()->firstWhere([
+        $invitations = Invitation::query()->where([
             'vacancy_id' => $interview->vacancy->id,
-            'candidate_id' => $interview->candidate->id,
-        ]);
+            'email' => $interview->candidate->email,
+        ])->get();
 
-        if ($invitation) {
-            return $this->markInvitationAsExpiredAction->execute($invitation);
+        if ($invitations->isEmpty()) {
+            return false;
         }
 
-        return false;
+        $invitations->each(fn (Invitation $invitation) => $this->markInvitationAsExpiredAction->execute($invitation));
+
+        return true;
     }
 }
