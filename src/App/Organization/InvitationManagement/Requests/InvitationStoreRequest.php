@@ -2,6 +2,7 @@
 
 namespace App\Organization\InvitationManagement\Requests;
 
+use Domain\Invitation\Models\Invitation;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,6 +27,11 @@ class InvitationStoreRequest extends FormRequest
                 ->whereNotNull('interview_template_id')
                 ->where('organization_id', auth()->user()->organization_id)
                 ->withoutTrashed(),
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (Invitation::query()->where('email', $this->input('email'))->where('vacancy_id', $value)->exists()) {
+                        $fail(__('This invitation had create/sent before'));
+                    }
+                },
             ],
             'should_be_invited_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],

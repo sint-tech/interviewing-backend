@@ -3,6 +3,7 @@
 namespace Domain\Invitation\DataTransferObjects;
 
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Invitation\Models\Invitation;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Support\Optional;
 use Illuminate\Validation\Rule;
@@ -62,7 +63,12 @@ class InvitationDto extends Data
                 function ($attribute, mixed $value, \Closure $closure) use (&$context) {
                 },
             ],
-            'vacancy_id' => ['required', 'integer', Rule::exists(Vacancy::class, 'id')],
+            'vacancy_id' => ['required', 'integer', Rule::exists(Vacancy::class, 'id'),
+                function (string $attribute, mixed $value, \Closure $fail) use ($context) {
+                    if (Invitation::query()->where('email', $context->fullPayload['email'])->where('vacancy_id', $value)->exists()) {
+                        $fail(__('This invitation had been created/sent before'));
+                    }
+                }],
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],
             'should_be_invited_at' => ['required', 'date_format:Y-m-d H:i', 'date', 'after:now'],
         ];

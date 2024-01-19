@@ -75,6 +75,27 @@ class InvitationControllerTest extends TestCase
     }
 
     /** @test  */
+    public function itShouldNotStoreInvitationForExistEmailBeforeInOtherInvitation()
+    {
+        $request_data = [
+            'name' => 'ahmed badawy',
+            'email' => 'ahmedbadawy.fcai@gmail.com',
+            'mobile_country_code' => '+20',
+            'mobile_number' => '1123456789',
+            'vacancy_id' => Vacancy::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization->getKey()])->getKey(),
+            'should_be_invited_at' => now()->addDays(2)->format('Y-m-d H:i'),
+            'expired_at' => now()->addDays(5)->format('Y-m-d H:i'),
+        ];
+
+        $this->post(route('organization.invitations.store'), $request_data)
+            ->assertSuccessful();
+
+        $this->post(route('organization.invitations.store'), $request_data)
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor('vacancy_id');
+    }
+
+    /** @test  */
     public function itShouldDeleteInvitation(): void
     {
         $invitation = Invitation::factory()->for($this->employeeAuth, 'creator')->for(Vacancy::factory()->for($this->employeeAuth, 'creator')->for($this->employeeAuth->organization, 'organization')->createOne())->createOne();

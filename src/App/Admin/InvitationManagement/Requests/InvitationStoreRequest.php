@@ -2,12 +2,11 @@
 
 namespace App\Admin\InvitationManagement\Requests;
 
-use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Invitation\Models\Invitation;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Validation\Validator;
 use Support\Rules\ValidMobileNumberRule;
 use Support\Services\MobileStrategy\MobileCountryCodeEnum;
 
@@ -24,6 +23,11 @@ class InvitationStoreRequest extends FormRequest
             'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class), 'id')
                 ->whereNotNull('interview_template_id')
                 ->withoutTrashed(),
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (Invitation::query()->where('email', $this->input('email'))->where('vacancy_id', $value)->exists()) {
+                        $fail(__('This invitation had create/sent before'));
+                    }
+                },
             ],
             'mobile_number' => ['required', 'integer',
                 (new ValidMobileNumberRule($this->enum('mobile_country_code', MobileCountryCodeEnum::class))),
