@@ -2,7 +2,6 @@
 
 namespace Domain\Invitation\DataTransferObjects;
 
-use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Invitation\Models\Invitation;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Support\Optional;
@@ -26,7 +25,6 @@ class InvitationDto extends Data
         public readonly MobileCountryCodeEnum $mobile_country_code,
         public readonly int $dirty_mobile_number,
         public readonly int $vacancy_id,
-        public readonly int $interview_template_id,
         #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z'])]
         public readonly \DateTime $should_be_invited_at,
         #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z'])]
@@ -57,11 +55,6 @@ class InvitationDto extends Data
             'mobile_country_code' => ['required', new Enum(MobileCountryCodeEnum::class)],
             'dirty_mobile_number' => ['required', 'integer',
                 new ValidMobileNumberRule(MobileCountryCodeEnum::from($context->fullPayload['mobile_country_code'])),
-            ],
-            'interview_template_id' => ['required', 'integer',
-                Rule::exists(InterviewTemplate::class, 'id')->withoutTrashed(),
-                function ($attribute, mixed $value, \Closure $closure) use (&$context) {
-                },
             ],
             'vacancy_id' => ['required', 'integer', Rule::exists(Vacancy::class, 'id'),
                 function (string $attribute, mixed $value, \Closure $fail) use ($context) {
