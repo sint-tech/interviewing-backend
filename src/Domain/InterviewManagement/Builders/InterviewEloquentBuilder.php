@@ -5,7 +5,6 @@ namespace Domain\InterviewManagement\Builders;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Models\Answer;
-use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -104,10 +103,17 @@ class InterviewEloquentBuilder extends Builder
             ->whereStatus(InterviewStatusEnum::Passed);
     }
 
-    public function whereReachedMaxTries(): self
+    public function whereReachedMaxTries(bool $reached_max_tries = true, string $boolean = 'and'): self
     {
-        return $this->whereColumn('interviews.vacancy_id', '=', 'vacancies.id')
-            ->whereColumn('interviews.connection_tries', '>=', 'vacancies.max_reconnection_tries')
-            ->limit(1);
+        $vacancy_builder = function (Builder $builder) use ($reached_max_tries) {
+            return $builder
+                ->whereColumn(
+                    'interviews.connection_tries',
+                    $reached_max_tries ? '>=' : '<',
+                    'vacancies.max_reconnection_tries'
+                )->limit(1);
+        };
+
+        return $boolean == 'and' ? $this->whereHas('vacancy', $vacancy_builder) : $this->orWhereHas('vacancy', $vacancy_builder);
     }
 }

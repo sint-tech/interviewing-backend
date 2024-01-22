@@ -13,7 +13,7 @@ class HasRunningInterviewsForCandidateAction
             ->withoutGlobalScope(ForAuthScope::class)
             ->whereCandidate($candidate_id)
             ->whereRunning()
-            ->whereReachedMaxTries()
+            ->whereReachedMaxTries(false)
             ->exists();
     }
 }

@@ -98,11 +98,31 @@ class StartInterviewTest extends TestCase
     }
 
     /** @test  */
-    public function itShouldNotStartNewInterviewWhenHasRunningInterview()
+    public function itShouldNotContinueSameInterviewWhenHasRunningInterview()
     {
         $data = [
             'vacancy_id' => $this->vacancy->getKey(),
-            'interview_template_id' => $this->interviewTemplate->getKey(),
+        ];
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+
+        $data = [
+            'vacancy_id' => Vacancy::factory()
+                ->for($this->interviewTemplate = InterviewTemplate::factory()->createOne(), 'defaultInterviewTemplate')
+                ->for($employee = Employee::factory()->createOne(), 'creator')
+                ->for($employee->organization, 'organization')->createOne(['max_reconnection_tries' => 0])->id,
+        ];
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
+    }
+
+    /** @test  */
+    public function itShouldStartNewInterviewAndWithdrewPreviousOne()
+    {
+        $data = [
+            'vacancy_id' => $this->vacancy->getKey(),
         ];
 
         $this->actingAs($this->authCandidate, 'api-candidate')
@@ -144,9 +164,7 @@ class StartInterviewTest extends TestCase
         $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
 
-        $this->assertCount(1, $this->authCandidate->runningInterviews()->get());
-
-        $this->authCandidate->latestRunningInterview->update(['ended_at' => now(), 'status' => InterviewStatusEnum::Withdrew]);
+        $this->assertCount(1, $this->authCandidate->interviews()->where('status', InterviewStatusEnum::Withdrew)->get());
 
         $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
