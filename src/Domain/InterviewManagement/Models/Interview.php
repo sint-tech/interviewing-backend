@@ -32,7 +32,6 @@ use Support\ValueObjects\URL;
  * @property Collection<QuestionVariant> $questionVariants
  * @property Collection<Answer> $answers
  * @property ?Carbon $candidate_report_sent_at
- * @method InterviewEloquentBuilder query()
  */
 class Interview extends Model
 {
@@ -46,7 +45,7 @@ class Interview extends Model
         'ended_at',
         'status',
         'connection_tries',
-        'candidate_report_sent_at'
+        'candidate_report_sent_at',
     ];
 
     protected $casts = [
@@ -195,11 +194,11 @@ class Interview extends Model
     public function candidateReportUrl(): Attribute
     {
         return Attribute::get(function () {
-            return URL::make(config('sint.candidate.report_url') . '/');
+            return URL::make(config('sint.candidate.report_url').'/');
         });
     }
 
-    public function newEloquentBuilder($query)
+    public function newEloquentBuilder($query): InterviewEloquentBuilder
     {
         return new InterviewEloquentBuilder($query);
     }

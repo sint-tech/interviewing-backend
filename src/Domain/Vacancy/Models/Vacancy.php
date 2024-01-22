@@ -2,11 +2,13 @@
 
 namespace Domain\Vacancy\Models;
 
+use Carbon\Carbon;
 use Database\Factories\VacancyFactory;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
 use Domain\Vacancy\Builders\VacancyBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +19,8 @@ use Support\Traits\Model\HasCreator;
 use Support\Traits\Model\HasOwner;
 
 /**
- * @method VacancyBuilder query()
+ * @property bool $is_ended
+ * @property Carbon|null $ended_at
  * @property Organization|null $organization
  */
 class Vacancy extends Model
@@ -72,6 +75,11 @@ class Vacancy extends Model
     protected static function newFactory(): VacancyFactory
     {
         return new VacancyFactory();
+    }
+
+    public function isEnded(): Attribute
+    {
+        return Attribute::get(fn () => $this->ended_at?->lessThanOrEqualTo(now()));
     }
 
     protected static function booted(): void

@@ -152,6 +152,26 @@ class VacancyControllerTest extends TestCase
     }
 
     /** @test  */
+    public function itShouldNotUpdateVacancyOnceItsEnded()
+    {
+        $employee = Employee::factory()->create();
+
+        $updatableVacancy = Vacancy::factory()->for($employee->organization, 'organization')->create([
+            'started_at' => now()->subYear()->format('Y-m-d H:i'),
+            'ended_at' => now()->addDay(),
+        ]);
+
+        $this->actingAs($employee, 'api-employee');
+
+        $url = route('organization.vacancies.update', $updatableVacancy);
+
+        $this->put($url)->assertSuccessful();
+
+        $updatableVacancy->update(['ended_at' => now()->subDay()]);
+        $this->put($url)->assertUnprocessable()->assertJsonValidationErrorFor('vacancy');
+    }
+
+    /** @test  */
     public function itShouldDeleteVacancy(): void
     {
         $employee = Employee::factory()->create();

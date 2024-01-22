@@ -35,7 +35,7 @@ Route::name('settings.')->prefix('settings')->group(function () {
 Route::apiResource('employees', EmployeeController::class);
 
 Route::prefix('vacancies')->name('vacancies.')->group(function () {
-    Route::apiResource('/', VacancyController::class);
+    Route::apiResource('/', VacancyController::class)->parameter('', 'vacancy');
     Route::get('count', TotalVacanciesController::class)->name('count');
 });
 
