@@ -4,6 +4,7 @@ use App\Organization\Auth\Controllers\LoginController;
 use App\Organization\Auth\Controllers\MyOrganizationController;
 use App\Organization\Auth\Controllers\MyProfileController;
 use App\Organization\Auth\Controllers\RegisterController;
+use App\Organization\Auth\Controllers\UpdatePersonalInformationController;
 use App\Organization\CandidateManagement\Controllers\TotalCandidatesController;
 use App\Organization\EmployeeManagement\Controllers\EmployeeController;
 use App\Organization\InterviewManagement\Controllers\GetInterviewsReportsController;
@@ -25,6 +26,7 @@ Route::name('auth.')->group(function () {
     Route::post('/login', LoginController::class)->withoutMiddleware('auth:api-employee')->name('login');
     Route::post('/register', RegisterController::class)->withoutMiddleware('auth:api-employee')->name('register');
     Route::get('/auth/my-profile', MyProfileController::class)->name('my-profile');
+    Route::post('/auth/my-profile/update-personal-info', UpdatePersonalInformationController::class)->name('update-personal-info');
     Route::get('/auth/my-organization', MyOrganizationController::class)->name('my-organization');
 });
 
