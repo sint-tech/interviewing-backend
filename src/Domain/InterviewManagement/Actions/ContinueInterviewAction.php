@@ -24,14 +24,16 @@ class ContinueInterviewAction
                     ->whereIntegerNotInRaw('question_variants.id', $interview->answers()->pluck('question_variant_id')),
             ]);
 
-        $interview
+        $uniqueQuestionClusters = $interview
             ->questionClusters
             ->unique('id')
             ->each(fn (QuestionCluster $cluster) => $cluster
                 ->setRelation('questionVariants', $interview->questionVariants
-                    ->filter(fn (QuestionVariant $questionVariant) => $questionVariant->pivot->question_cluster_id == $cluster->getKey())
+                    ->filter(fn (QuestionVariant $questionVariant) => $questionVariant->pivot->question_cluster_id == $cluster->id)
                 )
             );
+
+        $interview->setRelation('questionClusters', $uniqueQuestionClusters);
 
         return $interview;
     }

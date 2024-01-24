@@ -23,7 +23,7 @@ class CreateInterviewAction
 
         $interview->refresh()->load('questionClusters', 'questionVariants');
 
-        $interview
+        $uniqueQuestionClusters = $interview
             ->questionClusters
             ->unique('id')
             ->each(fn (QuestionCluster $cluster) => $cluster
@@ -31,6 +31,8 @@ class CreateInterviewAction
                     ->filter(fn (QuestionVariant $questionVariant) => $questionVariant->pivot->question_cluster_id == $cluster->getKey())
                 )
             );
+
+        $interview->setRelation('questionClusters', $uniqueQuestionClusters);
 
         return $interview;
     }
