@@ -7,10 +7,11 @@ use Domain\QuestionManagement\Models\QuestionCluster;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Support\Traits\Model\PreventDeleteWithRelations;
 
 class Skill extends Model
 {
-    use HasFactory;
+    use PreventDeleteWithRelations, HasFactory;
 
     protected $fillable = [
         'name',
@@ -25,5 +26,12 @@ class Skill extends Model
     public function questionClusters(): BelongsToMany
     {
         return $this->belongsToMany(QuestionCluster::class, 'question_cluster_skill');
+    }
+
+    protected function getPreventDeletionRelations(): array
+    {
+        return [
+            'questionClusters',
+        ];
     }
 }

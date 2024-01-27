@@ -17,10 +17,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Support\Scopes\ForAuthScope;
+use Support\Traits\Model\PreventDeleteWithRelations;
 
 class InterviewTemplate extends Model
 {
-    use HasFactory,SoftDeletes,NodeTrait;
+    use HasFactory,SoftDeletes,NodeTrait,PreventDeleteWithRelations;
 
     protected $fillable = [
         'name',
@@ -83,6 +84,14 @@ class InterviewTemplate extends Model
             'interview_template_id',
             'question_variant_id'
         )->withTimestamps();
+    }
+
+    protected function getPreventDeletionRelations(): array
+    {
+        return [
+            'interviews',
+            'vacancies',
+        ];
     }
 
     protected static function newFactory(): InterviewTemplateFactory

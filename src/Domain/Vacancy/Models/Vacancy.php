@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Support\Scopes\ForAuthScope;
 use Support\Traits\Model\HasCreator;
 use Support\Traits\Model\HasOwner;
+use Support\Traits\Model\PreventDeleteWithRelations;
 
 /**
  * @property bool $is_ended
@@ -25,7 +26,7 @@ use Support\Traits\Model\HasOwner;
  */
 class Vacancy extends Model
 {
-    use HasFactory,HasOwner,HasCreator,SoftDeletes;
+    use HasFactory,HasOwner,HasCreator,SoftDeletes,PreventDeleteWithRelations;
 
     protected $fillable = [
         'title',
@@ -80,6 +81,13 @@ class Vacancy extends Model
     public function isEnded(): Attribute
     {
         return Attribute::get(fn () => $this->ended_at?->lessThanOrEqualTo(now()));
+    }
+
+    protected function getPreventDeletionRelations(): array
+    {
+        return [
+            'interviews',
+        ];
     }
 
     protected static function booted(): void

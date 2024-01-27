@@ -13,10 +13,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Support\Traits\Model\PreventDeleteWithRelations;
 
 class QuestionCluster extends Model
 {
-    use HasFactory,SoftDeletes,HasRelationships;
+    use HasFactory,SoftDeletes,HasRelationships, PreventDeleteWithRelations;
 
     protected $fillable = [
         'name',
@@ -72,5 +73,12 @@ class QuestionCluster extends Model
     protected static function newFactory()
     {
         return new QuestionClusterFactory();
+    }
+
+    protected function getPreventDeletionRelations(): array
+    {
+        return [
+            'questions',
+        ];
     }
 }

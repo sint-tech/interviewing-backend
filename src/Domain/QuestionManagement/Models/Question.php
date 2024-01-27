@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Support\Traits\Model\PreventDeleteWithRelations;
 
 class Question extends Model
 {
@@ -19,7 +20,7 @@ class Question extends Model
 
     const DEFAULT_MAX_READING_DURATION_IN_SECONDS = 120;
 
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes,PreventDeleteWithRelations;
 
     protected $fillable = [
         'title',
@@ -61,5 +62,12 @@ class Question extends Model
     protected static function newFactory()
     {
         return new QuestionFactory;
+    }
+
+    protected function getPreventDeletionRelations(): array
+    {
+        return [
+            'questionVariants',
+        ];
     }
 }
