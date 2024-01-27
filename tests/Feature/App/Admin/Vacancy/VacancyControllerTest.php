@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\App\Admin\Vacancy;
 
+use App\Exceptions\ModelHasRelationsPreventDeleteException;
+use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
@@ -131,6 +133,19 @@ class VacancyControllerTest extends TestCase
             ->delete(route(static::DELETE_ROUTE_NAME, $vacancy->first()));
 
         $this->assertCount(4, Vacancy::query()->get());
+    }
+
+    /** @test  */
+    public function itShouldNotDeleteVacancyWhenHasInterviews()
+    {
+        $vacancy = Vacancy::factory()->for($this->sintUser, 'creator')->createOne();
+
+        Interview::factory()->createOne(['vacancy_id' => $vacancy->id]);
+
+        $response = $this->actingAs($this->sintUser, 'api')
+            ->delete(route(static::DELETE_ROUTE_NAME, $vacancy));
+
+        $response->assertConflict();
     }
 
     protected function vacancyData(): array
