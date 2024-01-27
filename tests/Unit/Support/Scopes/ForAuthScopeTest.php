@@ -65,7 +65,7 @@ class ForAuthScopeTest extends TestCase
             $method->invokeArgs($this->scope, [$closure]);
         }
 
-        $result = $scopeClass->getProperty('buildersBerUser')->getValue($this->scope);
+        $result = $scopeClass->getProperty('builderPerUser')->getValue($this->scope);
 
         $this->assertIsArray($result);
 

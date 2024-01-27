@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Scope;
 
 class ForAuthScope implements Scope
 {
-    protected array $buildersBerUser = [];
+    protected array $builderPerUser = [];
 
     const GUEST_KEY = '__GUEST__';
 
@@ -29,7 +29,7 @@ class ForAuthScope implements Scope
             return;
         }
 
-        if (auth()->guest() && ! isset($this->buildersBerUser[$this->modelKey(self::GUEST_KEY)])) {
+        if (auth()->guest() && ! isset($this->builderPerUser[$this->modelKey(self::GUEST_KEY)])) {
             return;
         }
 
@@ -38,11 +38,11 @@ class ForAuthScope implements Scope
             auth()->user()
         );
 
-        if (! isset($this->buildersBerUser[$key])) {
+        if (! isset($this->builderPerUser[$key])) {
             return;
         }
 
-        $closure = $this->buildersBerUser[$key];
+        $closure = $this->builderPerUser[$key];
 
         $closure($builder);
     }
@@ -86,7 +86,7 @@ class ForAuthScope implements Scope
             $user = $user::class;
         }
 
-        $this->buildersBerUser[$this->modelKey($user)] = $builder;
+        $this->builderPerUser[$this->modelKey($user)] = $builder;
     }
 
     private function modelKey(string|Authenticatable $user): string
