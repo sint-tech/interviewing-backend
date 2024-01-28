@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
 use Domain\InterviewManagement\Listeners\GenerateInterviewReportListener;
+use Domain\Invitation\Listeners\MarkInvitationAsExpiredListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +23,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         InterviewAllQuestionsAnswered::class => [
             GenerateInterviewReportListener::class,
+            MarkInvitationAsExpiredListener::class
         ],
     ];
 

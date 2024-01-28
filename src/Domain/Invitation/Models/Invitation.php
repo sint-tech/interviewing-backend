@@ -64,7 +64,7 @@ class Invitation extends Model
 
     public function candidate(): BelongsTo
     {
-        return $this->belongsTo(Candidate::class, 'candidate_id', 'id');
+        return $this->belongsTo(Candidate::class, 'email', 'email');
     }
 
     public function sent(): Attribute
