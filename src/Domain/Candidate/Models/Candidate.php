@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -92,6 +93,18 @@ class Candidate extends Authenticatable implements HasMedia
         return $this->hasMany(Interview::class, 'candidate_id');
     }
 
+    public function attendedVacancies(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Vacancy::class,
+            Interview::class,
+            'candidate_id',
+            'id',
+            'id',
+            'vacancy_id'
+        );
+    }
+
     public function runningInterviews(): HasMany
     {
         return $this->interviews()->whereRunning();
@@ -126,6 +139,6 @@ class Candidate extends Authenticatable implements HasMedia
 
     protected static function booted()
     {
-        static::addGlobalScope(ForAuthScope::make()->forOrganizationEmployee(fn(Builder $builder) => $builder->whereIntegerInRaw('id',Interview::query()->pluck('candidate_id'))));
+        static::addGlobalScope(ForAuthScope::make()->forOrganizationEmployee(fn (Builder $builder) => $builder->whereIntegerInRaw('id', Interview::query()->pluck('candidate_id'))));
     }
 }

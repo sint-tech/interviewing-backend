@@ -17,7 +17,7 @@ class StartInterviewRequest extends FormRequest
             'interview_template_id' => [
                 'nullable',
                 'int',
-                Rule::exists(table_name(InterviewTemplate::class), 'id')
+                Rule::exists(InterviewTemplate::class, 'id')
                     ->withoutTrashed(),
             ],
         ];

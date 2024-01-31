@@ -4,6 +4,7 @@ namespace App\Candidate\InterviewManagement\Services;
 
 use App\Candidate\InterviewManagement\Requests\StartInterviewRequest;
 use App\Exceptions\InterviewReachedMaxConnectionTriesException;
+use App\Exceptions\TryStartNewInterviewOnTheSameVacancyException;
 use Domain\InterviewManagement\Actions\ContinueInterviewAction;
 use Domain\InterviewManagement\Actions\CreateInterviewAction;
 use Domain\InterviewManagement\Actions\HasRunningInterviewsForCandidateAction;
@@ -40,8 +41,15 @@ class InterviewService
         return $this->startInterview($request);
     }
 
+    /**
+     * @throws TryStartNewInterviewOnTheSameVacancyException
+     */
     public function startInterview(StartInterviewRequest $request): Interview
     {
+        if ($this->candidateAttendedInterviewOnVacancyBefore($request->vacancy()->id)) {
+            TryStartNewInterviewOnTheSameVacancyException::throw($request->vacancy());
+        }
+
         auth()->user()->runningInterviews()
             ->get()->each(function (Interview $interview) {
                 $this->withdrewInterview($interview);
@@ -103,5 +111,10 @@ class InterviewService
             'status' => InterviewStatusEnum::Withdrew,
             'ended_at' => now(),
         ]); //todo make action to change status
+    }
+
+    protected function candidateAttendedInterviewOnVacancyBefore(int $vacancy_id): bool
+    {
+        return auth()->user()->attendedVacancies()->whereKey($vacancy_id)->exists();
     }
 }

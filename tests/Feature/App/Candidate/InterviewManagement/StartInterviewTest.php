@@ -191,4 +191,36 @@ class StartInterviewTest extends TestCase
         $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
     }
+
+    /** @test  */
+    public function itShouldNotStartMoreThanOneInterviewOnTheSameVacancy()
+    {
+        $data = [
+            'vacancy_id' => $this->vacancy->getKey(),
+            'interview_template_id' => $this->interviewTemplate->getKey(),
+        ];
+
+        Interview::factory()->createOne(array_merge($data, [
+            'candidate_id' => $this->authCandidate->id,
+            'status' => InterviewStatusEnum::Withdrew,
+            'ended_at' => now(),
+        ]));
+
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), $data)
+            ->assertConflict();
+
+        //assert can start interview on new vacancy
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), [
+                'vacancy_id' => $new_vacancy_id = Vacancy::factory()->createOne()->id,
+            ])
+            ->assertSuccessful();
+
+        //assert can continue interview on the latest vacancy
+        $this->actingAs($this->authCandidate, 'api-candidate')
+            ->post(route('candidate.interviews.start'), [
+                'vacancy_id' => $new_vacancy_id = Vacancy::factory()->createOne()->id,
+            ])->assertSuccessful();
+    }
 }
