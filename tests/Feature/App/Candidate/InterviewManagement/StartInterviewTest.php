@@ -213,14 +213,16 @@ class StartInterviewTest extends TestCase
         //assert can start interview on new vacancy
         $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), [
-                'vacancy_id' => $new_vacancy_id = Vacancy::factory()->createOne()->id,
+                'vacancy_id' => $new_vacancy_id = Vacancy::factory()->createOne([
+                    'max_reconnection_tries' => 3,
+                ])->id,
             ])
             ->assertSuccessful();
 
         //assert can continue interview on the latest vacancy
         $this->actingAs($this->authCandidate, 'api-candidate')
             ->post(route('candidate.interviews.start'), [
-                'vacancy_id' => $new_vacancy_id = Vacancy::factory()->createOne()->id,
+                'vacancy_id' => $new_vacancy_id,
             ])->assertSuccessful();
     }
 }
