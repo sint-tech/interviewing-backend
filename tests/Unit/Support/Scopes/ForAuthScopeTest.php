@@ -77,7 +77,7 @@ class ForAuthScopeTest extends TestCase
     /** @test  */
     public function itShouldOnlyApplyCandidateBuilderWhenAuthIsCandidate(): void
     {
-        Auth::shouldReceive('api-candidate')->andReturnSelf()
+        Auth::shouldReceive('candidate')->andReturnSelf()
             ->shouldReceive('user')->andReturn(new Candidate(['email' => 'candidate@test.com']))
             ->shouldReceive('check')->andReturn(true)
             ->shouldReceive('guest')->andReturn(false);
@@ -128,7 +128,7 @@ class ForAuthScopeTest extends TestCase
     /** @test  */
     public function itShouldWorkWithChildClass(): void
     {
-        Auth::shouldReceive('api-candidate')->andReturnSelf()
+        Auth::shouldReceive('candidate')->andReturnSelf()
             ->shouldReceive('user')->andReturn(new Employee(['email' => 'employee@test.com', 'organization_id' => 1]))
             ->shouldReceive('check')->andReturn(true)
             ->shouldReceive('guest')->andReturn(false);

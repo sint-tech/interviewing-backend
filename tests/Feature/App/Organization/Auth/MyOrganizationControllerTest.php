@@ -5,12 +5,11 @@ namespace Tests\Feature\App\Organization\Auth;
 use Domain\Organization\Models\Employee;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class MyOrganizationControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     public Employee $employeeAuth;
 
@@ -20,15 +19,13 @@ class MyOrganizationControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
-
         $this->employeeAuth = Employee::factory()->createOne();
     }
 
     /** @test  */
     public function itShouldShowMyOrganizationData()
     {
-        $response = $this->actingAs($this->employeeAuth, 'api-employee')->get(route('organization.auth.my-organization'));
+        $response = $this->actingAs($this->employeeAuth, 'organization')->get(route('organization.auth.my-organization'));
 
         $response->assertSuccessful();
         $response->assertJson(function (AssertableJson $json) {

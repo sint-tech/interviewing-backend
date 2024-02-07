@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use Database\Seeders\SintAdminsSeeder;
 use Domain\Users\Actions\GenerateAdminAccessTokenAction;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class AdminAuthTest extends TestCase
@@ -18,11 +18,7 @@ class AdminAuthTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        Artisan::call('passport:install');
-
-        Artisan::call('db:seed', [
-            '--class' => 'SintAdminsSeeder',
-        ]);
+        $this->seed(SintAdminsSeeder::class);
 
     }
 

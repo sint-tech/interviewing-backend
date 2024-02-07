@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Candidate\InterviewManagement;
 
+use Database\Seeders\SintAdminsSeeder;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Models\Interview;
@@ -9,12 +10,11 @@ use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Employee;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class StartInterviewTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     protected Candidate $authCandidate;
 
@@ -28,7 +28,7 @@ class StartInterviewTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
+        $this->seed(SintAdminsSeeder::class);
 
         $this->authCandidate = Candidate::factory()->createOne();
 
@@ -49,7 +49,7 @@ class StartInterviewTest extends TestCase
             'candidate_id' => $candidate->getKey(),
         ]);
 
-        $response = $this->actingAs($candidate, 'api-candidate')
+        $response = $this->actingAs($candidate, 'candidate')
             ->post(route('candidate.interviews.start'), [
                 'vacancy_id' => $this->vacancy->getKey(),
                 'interview_template_id' => $this->interviewTemplate->getKey(),
@@ -72,7 +72,7 @@ class StartInterviewTest extends TestCase
             'candidate_id' => $this->authCandidate->getKey(),
         ]);
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), [
                 'vacancy_id' => $this->vacancy->getKey(),
             ])->assertSuccessful();
@@ -89,7 +89,7 @@ class StartInterviewTest extends TestCase
     {
         $otherInterviewTemplate = InterviewTemplate::factory()->createOne();
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), [
                 'vacancy_id' => $this->vacancy->getKey(),
                 'interview_template_id' => $otherInterviewTemplate->getKey(),
@@ -104,7 +104,7 @@ class StartInterviewTest extends TestCase
             'vacancy_id' => $this->vacancy->getKey(),
         ];
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
         $data = [
@@ -114,7 +114,7 @@ class StartInterviewTest extends TestCase
                 ->for($employee->organization, 'organization')->createOne(['max_reconnection_tries' => 0])->id,
         ];
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
     }
 
@@ -125,10 +125,10 @@ class StartInterviewTest extends TestCase
             'vacancy_id' => $this->vacancy->getKey(),
         ];
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
     }
 
@@ -140,13 +140,13 @@ class StartInterviewTest extends TestCase
             'interview_template_id' => $this->interviewTemplate->getKey(),
         ];
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
 
-        $this->actingAs(Candidate::factory()->createOne(), 'api-candidate')
+        $this->actingAs(Candidate::factory()->createOne(), 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
     }
 
@@ -155,18 +155,21 @@ class StartInterviewTest extends TestCase
     {
         $data = [
             'vacancy_id' => $this->vacancy->getKey(),
-            'interview_template_id' => $this->interviewTemplate->getKey(),
         ];
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
 
         $this->assertCount(1, $this->authCandidate->interviews()->where('status', InterviewStatusEnum::Withdrew)->get());
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $data = [
+            'vacancy_id' => Vacancy::factory()->createOne()->id,
+        ];
+
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
     }
 
@@ -182,13 +185,13 @@ class StartInterviewTest extends TestCase
 
         $this->vacancy->update(['max_reconnection_tries' => $limit]);
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertSuccessful();
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)->assertUnprocessable();
     }
 
@@ -206,12 +209,12 @@ class StartInterviewTest extends TestCase
             'ended_at' => now(),
         ]));
 
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), $data)
             ->assertConflict();
 
         //assert can start interview on new vacancy
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), [
                 'vacancy_id' => $new_vacancy_id = Vacancy::factory()->createOne([
                     'max_reconnection_tries' => 3,
@@ -220,7 +223,7 @@ class StartInterviewTest extends TestCase
             ->assertSuccessful();
 
         //assert can continue interview on the latest vacancy
-        $this->actingAs($this->authCandidate, 'api-candidate')
+        $this->actingAs($this->authCandidate, 'candidate')
             ->post(route('candidate.interviews.start'), [
                 'vacancy_id' => $new_vacancy_id,
             ])->assertSuccessful();

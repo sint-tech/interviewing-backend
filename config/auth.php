@@ -51,14 +51,12 @@ return [
             'provider' => 'users',
         ],
 
-        /** @deprecated **/
         'candidate' => [
             'driver' => 'sanctum',
             'provider' => 'candidates',
         ],
 
-        /** @deprecated **/
-        'organization-employee' => [
+        'organization' => [
             'driver' => 'sanctum',
             'provider' => 'organization_employee',
         ],

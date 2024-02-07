@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Candidate\InterviewManagement;
 
+use Database\Seeders\SintAdminsSeeder;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
@@ -9,12 +10,11 @@ use Domain\Organization\Models\Employee;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class MyInterviewsControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     protected Candidate $authCandidate;
 
@@ -28,7 +28,7 @@ class MyInterviewsControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
+        $this->seed(SintAdminsSeeder::class);
 
         $this->authCandidate = Candidate::factory()->createOne();
 
@@ -37,7 +37,7 @@ class MyInterviewsControllerTest extends TestCase
             ->for($employee = Employee::factory()->createOne(), 'creator')
             ->for($employee->organization, 'organization')->createOne();
 
-        $this->actingAs($this->authCandidate, 'api-candidate');
+        $this->actingAs($this->authCandidate, 'candidate');
     }
 
     /** @test  */

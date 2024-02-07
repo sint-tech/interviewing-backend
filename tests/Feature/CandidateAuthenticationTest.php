@@ -2,14 +2,12 @@
 
 namespace Tests\Feature;
 
-use Domain\Candidate\Actions\GenerateCandidateAccessTokenAction;
 use Domain\Candidate\Enums\CandidateSocialAppEnum;
 use Domain\Candidate\Models\Candidate;
 use Domain\Candidate\Models\RegistrationReason;
 use Domain\JobTitle\Models\JobTitle;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -24,14 +22,6 @@ class CandidateAuthenticationTest extends TestCase
         parent::setUp();
 
         $this->migrateFreshUsing();
-
-        Artisan::call('passport:install');
-
-        Artisan::call('passport:client', [
-            '--password' => 1,
-            '--name' => 'Laravel Password Grant Client FOR CANDIDATE',
-            '--provider' => 'candidates',
-        ]);
     }
 
     /**
@@ -39,7 +29,7 @@ class CandidateAuthenticationTest extends TestCase
      *
      * @test
      */
-    public function candidate_should_be_auth_after_register(): void
+    public function candidateCanRegisterToTheSystem(): void
     {
         Storage::fake();
 
@@ -103,7 +93,7 @@ class CandidateAuthenticationTest extends TestCase
      *
      * @test
      */
-    public function registered_candidate_can_login()
+    public function candidateCanLogin()
     {
         Candidate::factory()->create([
             'email' => 'foo@gmail.com',
@@ -128,7 +118,7 @@ class CandidateAuthenticationTest extends TestCase
      *
      * @test
      */
-    public function candidate_can_login_using_google()
+    public function candidateCanLoginUsingSocialLoginGoogle()
     {
         Candidate::factory()->registeredWithSocialApp()->create([
             'social_driver_id' => $driver_id = Str::uuid()->toString(),
@@ -152,17 +142,14 @@ class CandidateAuthenticationTest extends TestCase
      *
      * @test
      */
-    public function candidate_should_logout()
+    public function candidateShouldLogout()
     {
         $candidate = Candidate::factory()->create([
             'email' => 'foo@gmail.com',
             'password' => 'u2ArHI&mxLwuh2%k',
         ]);
 
-        $token = (new GenerateCandidateAccessTokenAction($candidate))->execute();
-
         $response = $this->actingAs($candidate)
-            ->withToken($token)
             ->post('/api/logout');
 
         $response->assertSuccessful();

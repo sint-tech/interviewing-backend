@@ -7,12 +7,11 @@ use Domain\Organization\Models\Employee;
 use Domain\QuestionManagement\Models\Question;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class QuestionControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     public Employee $employeeAuth;
 
@@ -24,7 +23,7 @@ class QuestionControllerTest extends TestCase
 
         $this->seed(SintAdminsSeeder::class);
 
-        $this->actingAs($this->employeeAuth, 'api-employee');
+        $this->actingAs($this->employeeAuth, 'organization');
     }
 
     /** @test  */

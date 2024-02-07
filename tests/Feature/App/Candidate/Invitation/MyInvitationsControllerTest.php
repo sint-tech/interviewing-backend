@@ -7,12 +7,11 @@ use Domain\Candidate\Models\Candidate;
 use Domain\Invitation\Models\Invitation;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class MyInvitationsControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     protected Candidate $authCandidate;
 
@@ -22,13 +21,11 @@ class MyInvitationsControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
-
         $this->seed(SintAdminsSeeder::class);
 
         $this->authCandidate = Candidate::factory()->createOne();
 
-        $this->actingAs($this->authCandidate, 'api-candidate');
+        $this->actingAs($this->authCandidate, 'candidate');
     }
 
     /** @test  */

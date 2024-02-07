@@ -6,12 +6,11 @@ use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
 use Domain\Skill\Models\Skill;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class SkillControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     public Employee $employeeAuth;
 
@@ -23,7 +22,7 @@ class SkillControllerTest extends TestCase
 
         $this->seed(SintAdminsSeeder::class);
 
-        $this->actingAs($this->employeeAuth, 'api-employee');
+        $this->actingAs($this->employeeAuth, 'organization');
     }
 
     /** @test  */

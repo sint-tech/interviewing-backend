@@ -2,18 +2,17 @@
 
 namespace Tests\Feature\App\Admin\InvitationManagement;
 
+use Database\Seeders\SintAdminsSeeder;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class InvitationControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation,WithFaker;
+    use DatabaseMigrations,WithFaker;
 
     public User $sintUser;
 
@@ -23,11 +22,7 @@ class InvitationControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
-
-        Artisan::call('db:seed', [
-            '--class' => 'SintAdminsSeeder',
-        ]);
+        $this->seed(SintAdminsSeeder::class);
 
         $this->sintUser = User::query()->first();
     }
@@ -45,7 +40,7 @@ class InvitationControllerTest extends TestCase
             'expired_at' => now()->addDays(5)->format('Y-m-d H:i'),
         ];
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->post(route('admin.invitations.store'), $request_data)
             ->assertSuccessful()
             ->assertJson(function (AssertableJson $json) {

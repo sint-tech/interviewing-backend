@@ -10,12 +10,11 @@ use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Collection;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class InterviewTemplateControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     public Employee $employeeAuth;
 
@@ -27,8 +26,6 @@ class InterviewTemplateControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
-
         $this->employeeAuth = Employee::factory()->createOne();
 
         $this->questionVariants = QuestionVariant::factory(5)
@@ -36,7 +33,7 @@ class InterviewTemplateControllerTest extends TestCase
             ->for($this->employeeAuth->organization, 'organization')
             ->create();
 
-        $this->actingAs($this->employeeAuth, 'api-employee');
+        $this->actingAs($this->employeeAuth, 'organization');
     }
 
     /** @test  */

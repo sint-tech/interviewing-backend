@@ -3,20 +3,19 @@
 namespace Tests\Feature\App\Organization\InvitationManagement;
 
 use App\Admin\InvitationManagement\Jobs\ImportInvitationsFromExcelJob;
+use Database\Seeders\SintAdminsSeeder;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Employee;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Bus;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class ImportInvitationsControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation,WithFaker;
+    use DatabaseMigrations,WithFaker;
 
     protected Employee $employee;
 
@@ -28,11 +27,7 @@ class ImportInvitationsControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
-
-        Artisan::call('db:seed', [
-            '--class' => 'SintAdminsSeeder',
-        ]);
+        $this->seed(SintAdminsSeeder::class);
 
         $this->employee = Employee::factory()->createOne();
 
@@ -44,7 +39,7 @@ class ImportInvitationsControllerTest extends TestCase
             true
         ));
 
-        $this->actingAs($this->employee, 'api-employee');
+        $this->actingAs($this->employee, 'organization');
     }
 
     /** @test  */

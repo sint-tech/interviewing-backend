@@ -5,12 +5,11 @@ namespace Tests\Feature\App\Organization\Settings;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class UpdateOrganizationController extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     public Employee $employeeAuth;
 
@@ -22,7 +21,7 @@ class UpdateOrganizationController extends TestCase
 
         $this->seed(SintAdminsSeeder::class);
 
-        $this->actingAs($this->employeeAuth, 'api-employee');
+        $this->actingAs($this->employeeAuth, 'organization');
     }
 
     /** @test */
@@ -52,7 +51,7 @@ class UpdateOrganizationController extends TestCase
             'contact_email' => 'foo.baa@gmail.com',
         ]);
 
-        $this->actingAs(Employee::factory()->for($this->employeeAuth->organization, 'organization')->createOne(), 'api-employee')
+        $this->actingAs(Employee::factory()->for($this->employeeAuth->organization, 'organization')->createOne(), 'organization')
             ->post(route('organization.settings.update-organization'))
             ->assertForbidden();
     }

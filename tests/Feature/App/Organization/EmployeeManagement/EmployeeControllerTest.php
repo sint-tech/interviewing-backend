@@ -6,12 +6,11 @@ use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class EmployeeControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     protected function setUp(): void
     {
@@ -19,7 +18,6 @@ class EmployeeControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
     }
 
     /** @test  */
@@ -35,7 +33,7 @@ class EmployeeControllerTest extends TestCase
 
         Employee::factory()->create(['organization_id' => $otherOrganization->getKey()]);
 
-        $response = $this->actingAs(Employee::query()->first(), 'api-employee')->get(route('organization.employees.index'));
+        $response = $this->actingAs(Employee::query()->first(), 'organization')->get(route('organization.employees.index'));
 
         $response->assertOk();
 
@@ -55,10 +53,10 @@ class EmployeeControllerTest extends TestCase
 
         $otherEmployee = Employee::factory()->for($otherOrganization)->createOne();
 
-        $this->actingAs(Employee::query()->first(), 'api-employee')->get('/organization-api/employees/'.Employee::query()->first()->getKey())
+        $this->actingAs(Employee::query()->first(), 'organization')->get('/organization-api/employees/'.Employee::query()->first()->getKey())
             ->assertOk();
 
-        $this->actingAs(Employee::query()->first(), 'api-employee')->get('/organization-api/employees/'.$otherEmployee->getKey())
+        $this->actingAs(Employee::query()->first(), 'organization')->get('/organization-api/employees/'.$otherEmployee->getKey())
             ->assertNotFound();
     }
 
@@ -77,7 +75,7 @@ class EmployeeControllerTest extends TestCase
             'password_confirmation' => 'password123',
         ];
 
-        $this->actingAs($organizationManager, 'api-employee')
+        $this->actingAs($organizationManager, 'organization')
             ->post(route('organization.employees.store'), $request_data)
             ->assertCreated()
             ->assertJson(function (AssertableJson $json) {
@@ -97,13 +95,13 @@ class EmployeeControllerTest extends TestCase
         $regularEmployee = $employees->first();
         $updatableEmployee = $employees->last();
 
-        $response = $this->actingAs($manager, 'api-employee')->put(route('organization.employees.update', $updatableEmployee), [
+        $response = $this->actingAs($manager, 'organization')->put(route('organization.employees.update', $updatableEmployee), [
             'is_organization_manager' => true,
         ]);
         $response->assertSuccessful();
         $this->assertTrue($updatableEmployee->refresh()->is_organization_manager);
 
-        $this->actingAs($regularEmployee, 'api-employee')
+        $this->actingAs($regularEmployee, 'organization')
             ->put(route('organization.employees.update', $updatableEmployee), [
                 'is_organization_manager' => false,
             ])->assertForbidden();
@@ -114,7 +112,7 @@ class EmployeeControllerTest extends TestCase
     {
         $employee = Employee::factory()->for(Organization::factory())->createOne(['is_organization_manager' => true]);
 
-        $this->actingAs($employee, 'api-employee')->delete(route('organization.employees.destroy', ['employee' => $employee->getKey()]))
+        $this->actingAs($employee, 'organization')->delete(route('organization.employees.destroy', ['employee' => $employee->getKey()]))
             ->assertForbidden();
     }
 
@@ -125,14 +123,14 @@ class EmployeeControllerTest extends TestCase
 
         $outside_employee = Employee::factory()->for(Organization::factory())->createOne(['is_organization_manager' => true]);
 
-        $this->actingAs($employee, 'api-employee')->delete(route('organization.employees.destroy',
+        $this->actingAs($employee, 'organization')->delete(route('organization.employees.destroy',
             [
                 'employee' => Employee::query()->whereKey(2)->first()->getKey(),
             ]))
             ->assertSuccessful()
             ->assertJson(fn (AssertableJson $json) => $json->has('data.deleted_at')->whereType('data.deleted_at', 'string'));
 
-        $this->actingAs($employee, 'api-employee')->delete(route('organization.employees.destroy', ['employee' => $outside_employee->getKey()]))
+        $this->actingAs($employee, 'organization')->delete(route('organization.employees.destroy', ['employee' => $outside_employee->getKey()]))
             ->assertNotFound();
 
     }

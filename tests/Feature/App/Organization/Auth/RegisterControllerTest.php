@@ -4,12 +4,11 @@ namespace Tests\Feature\App\Organization\Auth;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class RegisterControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     protected array $mainData = [
         'name' => 'Sint Fintech',
@@ -35,8 +34,6 @@ class RegisterControllerTest extends TestCase
         parent::setUp();
 
         $this->migrateFreshUsing();
-
-        $this->installPassport();
 
     }
 

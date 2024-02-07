@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Candidate\Auth;
 
+use Database\Seeders\SintAdminsSeeder;
 use Domain\Candidate\Models\Candidate;
 use Domain\Candidate\Models\RegistrationReason;
 use Domain\Invitation\Models\Invitation;
@@ -10,12 +11,11 @@ use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class RegisterControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     public function setUp(): void
     {
@@ -23,9 +23,7 @@ class RegisterControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
-
-        $this->seedSuperAdminAccounts();
+        $this->seed(SintAdminsSeeder::class);
     }
 
     /** @test  */

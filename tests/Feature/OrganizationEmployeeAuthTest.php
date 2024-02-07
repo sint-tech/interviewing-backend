@@ -6,22 +6,17 @@ use Domain\Organization\Models\Employee;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Hash;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class OrganizationEmployeeAuthTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->migrateFreshUsing();
-
-        $this->installPassport();
-
-        $this->seedSuperAdminAccounts();
 
         $this->superAdmin = User::query()->first();
     }

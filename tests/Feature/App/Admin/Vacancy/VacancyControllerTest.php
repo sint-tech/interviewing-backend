@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\App\Admin\Vacancy;
 
-use App\Exceptions\ModelHasRelationsPreventDeleteException;
+use Database\Seeders\SintAdminsSeeder;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
@@ -10,13 +10,11 @@ use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class VacancyControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation,WithFaker;
+    use DatabaseMigrations,WithFaker;
 
     const INDEX_ROUTE_NAME = 'admin.vacancies.index';
 
@@ -36,11 +34,7 @@ class VacancyControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
-
-        Artisan::call('db:seed', [
-            '--class' => 'SintAdminsSeeder',
-        ]);
+        $this->seed(SintAdminsSeeder::class);
 
         $this->sintUser = User::query()->first();
     }
@@ -50,7 +44,7 @@ class VacancyControllerTest extends TestCase
     {
         Vacancy::factory(15)->for($this->sintUser, 'creator')->create();
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->get(route(self::INDEX_ROUTE_NAME))
             ->assertSuccessful()
             ->assertJsonCount(15, 'data');
@@ -63,7 +57,7 @@ class VacancyControllerTest extends TestCase
         Vacancy::factory(5)->for($this->sintUser, 'creator')->create(['organization_id' => Organization::factory()->create()->getKey()]);
         Vacancy::factory(5)->for($this->sintUser, 'creator')->create(['organization_id' => Organization::factory()->create()->getKey()]);
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->get(route(self::INDEX_ROUTE_NAME))
             ->assertSuccessful()
             ->assertJsonCount(15, 'data');
@@ -76,7 +70,7 @@ class VacancyControllerTest extends TestCase
         Vacancy::factory(5)->for($this->sintUser, 'creator')->create(['organization_id' => Organization::factory()->create()->getKey()]);
         Vacancy::factory(5)->for($this->sintUser, 'creator')->create(['organization_id' => null]);
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->get(route(self::INDEX_ROUTE_NAME))
             ->assertSuccessful()
             ->assertJsonCount(15, 'data');
@@ -87,7 +81,7 @@ class VacancyControllerTest extends TestCase
     {
         $vacancy = Vacancy::factory()->for($this->sintUser, 'creator')->create();
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->get(route(self::SHOW_ROUTE_NAME, $vacancy))
             ->assertSuccessful();
     }
@@ -97,7 +91,7 @@ class VacancyControllerTest extends TestCase
     {
         $vacancy = Vacancy::factory()->for($this->sintUser, 'creator')->create(['organization_id' => Organization::factory()->createOne()->getKey()]);
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->get(route(self::SHOW_ROUTE_NAME, $vacancy))
             ->assertSuccessful();
     }
@@ -107,7 +101,7 @@ class VacancyControllerTest extends TestCase
     {
         $vacancy = Vacancy::factory()->for($this->sintUser, 'creator')->create();
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->get(route(self::SHOW_ROUTE_NAME, $vacancy))
             ->assertSuccessful();
     }
@@ -117,7 +111,7 @@ class VacancyControllerTest extends TestCase
     {
         $data = $this->vacancyData();
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->post(route(static::STORE_ROUTE_NAME), $data)
             ->assertSuccessful();
     }
@@ -129,7 +123,7 @@ class VacancyControllerTest extends TestCase
 
         $this->assertCount(5, Vacancy::query()->get());
 
-        $this->actingAs($this->sintUser, 'api')
+        $this->actingAs($this->sintUser, 'admin')
             ->delete(route(static::DELETE_ROUTE_NAME, $vacancy->first()));
 
         $this->assertCount(4, Vacancy::query()->get());
@@ -142,7 +136,7 @@ class VacancyControllerTest extends TestCase
 
         Interview::factory()->createOne(['vacancy_id' => $vacancy->id]);
 
-        $response = $this->actingAs($this->sintUser, 'api')
+        $response = $this->actingAs($this->sintUser, 'admin')
             ->delete(route(static::DELETE_ROUTE_NAME, $vacancy));
 
         $response->assertConflict();

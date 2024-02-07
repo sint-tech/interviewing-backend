@@ -9,18 +9,15 @@ use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class VacancyControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->installPassport();
     }
 
     /** @test */
@@ -30,7 +27,7 @@ class VacancyControllerTest extends TestCase
 
         Vacancy::factory(15)->for($employee->organization, 'organization')->for($employee, 'creator')->create();
 
-        $response = $this->actingAs($employee, 'api-employee')->get(route('organization.vacancies.index'));
+        $response = $this->actingAs($employee, 'organization')->get(route('organization.vacancies.index'));
 
         $response->assertSuccessful();
 
@@ -51,7 +48,7 @@ class VacancyControllerTest extends TestCase
 
         Vacancy::factory(10)->for($employee, 'creator')->for($employee->organization, 'organization')->create();
 
-        $this->actingAs($authEmployee, 'api-employee')
+        $this->actingAs($authEmployee, 'organization')
             ->get(route('organization.vacancies.index'))
             ->assertSuccessful()
             ->assertJsonCount(5, 'data');
@@ -67,7 +64,7 @@ class VacancyControllerTest extends TestCase
             ->for($employee, 'creator')
             ->createOne();
 
-        $response = $this->actingAs($employee, 'api-employee')->get(route('organization.vacancies.show', $jobOpportunity));
+        $response = $this->actingAs($employee, 'organization')->get(route('organization.vacancies.show', $jobOpportunity));
 
         $response->assertSuccessful();
 
@@ -81,7 +78,7 @@ class VacancyControllerTest extends TestCase
     {
         $this->assertEquals(0, Vacancy::query()->count());
 
-        $response = $this->actingAs($employee = Employee::factory()->create(), 'api-employee')
+        $response = $this->actingAs($employee = Employee::factory()->create(), 'organization')
             ->post(
                 route('organization.vacancies.store'),
                 $this->getRequestData($employee)
@@ -95,7 +92,7 @@ class VacancyControllerTest extends TestCase
     /** @test */
     public function createdJobOpportunityShouldBelongsToTheAuthEmployeeOrganization()
     {
-        $this->actingAs($employee = Employee::factory()->create(), 'api-employee')
+        $this->actingAs($employee = Employee::factory()->create(), 'organization')
             ->post(
                 route('organization.vacancies.store'),
                 $this->getRequestData($employee)
@@ -115,7 +112,7 @@ class VacancyControllerTest extends TestCase
 
         $url = route('organization.vacancies.update', $updatableVacancy);
 
-        $this->actingAs($employee, 'api-employee');
+        $this->actingAs($employee, 'organization');
 
         $this->put($url)->assertSuccessful();
 
@@ -144,7 +141,7 @@ class VacancyControllerTest extends TestCase
 
         $url = route('organization.vacancies.update', $updatableVacancy);
 
-        $this->actingAs($employee, 'api-employee');
+        $this->actingAs($employee, 'organization');
 
         $res = $this->put($url);
         $res->assertUnprocessable();
@@ -161,7 +158,7 @@ class VacancyControllerTest extends TestCase
             'ended_at' => now()->addDay(),
         ]);
 
-        $this->actingAs($employee, 'api-employee');
+        $this->actingAs($employee, 'organization');
 
         $url = route('organization.vacancies.update', $updatableVacancy);
 
@@ -179,7 +176,7 @@ class VacancyControllerTest extends TestCase
         Vacancy::factory(2)->for($employee, 'creator')->for($employee->organization, 'organization')->create();
 
         $this->freezeTime(function (Carbon $carbon) use (&$employee) {
-            $this->actingAs($employee, 'api-employee')
+            $this->actingAs($employee, 'organization')
                 ->delete(route('organization.vacancies.destroy', Vacancy::query()->first()))
                 ->assertSuccessful()
                 ->assertJson(fn (AssertableJson $json) => $json->has('data.deleted_at')
@@ -200,7 +197,7 @@ class VacancyControllerTest extends TestCase
 
         $outOfScopeVacancy = Vacancy::factory()->for($otherEmployee = Employee::factory()->create(), 'creator')->for($otherEmployee->organization)->create();
 
-        $this->actingAs($employee, 'api-employee')
+        $this->actingAs($employee, 'organization')
             ->delete(route('organization.vacancies.destroy', $outOfScopeVacancy))
             ->assertNotFound();
     }

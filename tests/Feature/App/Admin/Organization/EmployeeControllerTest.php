@@ -2,18 +2,17 @@
 
 namespace Tests\Feature\App\Admin\Organization;
 
+use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class EmployeeControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation,WithFaker;
+    use DatabaseMigrations,WithFaker;
 
     protected User $sintUser;
 
@@ -23,15 +22,11 @@ class EmployeeControllerTest extends TestCase
 
         $this->migrateFreshUsing();
 
-        $this->installPassport();
-
-        Artisan::call('db:seed', [
-            '--class' => 'SintAdminsSeeder',
-        ]);
+        $this->seed(SintAdminsSeeder::class);
 
         $this->sintUser = User::query()->first();
 
-        $this->actingAs($this->sintUser, 'api');
+        $this->actingAs($this->sintUser, 'admin');
     }
 
     /** @test  */

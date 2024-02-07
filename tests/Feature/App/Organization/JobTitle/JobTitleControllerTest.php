@@ -7,12 +7,11 @@ use Domain\JobTitle\Enums\AvailabilityStatusEnum;
 use Domain\JobTitle\Models\JobTitle;
 use Domain\Organization\Models\Employee;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Feature\Traits\AuthenticationInstallation;
 use Tests\TestCase;
 
 class JobTitleControllerTest extends TestCase
 {
-    use DatabaseMigrations,AuthenticationInstallation;
+    use DatabaseMigrations;
 
     public Employee $employeeAuth;
 
@@ -24,7 +23,7 @@ class JobTitleControllerTest extends TestCase
 
         $this->seed(SintAdminsSeeder::class);
 
-        $this->actingAs($this->employeeAuth, 'api-employee');
+        $this->actingAs($this->employeeAuth, 'organization');
     }
 
     /** @test */
