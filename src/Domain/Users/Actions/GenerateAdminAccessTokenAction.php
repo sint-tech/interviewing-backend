@@ -6,7 +6,7 @@ use Domain\Users\Models\User;
 
 class GenerateAdminAccessTokenAction
 {
-    public const CLIENT_NAME = 'Laravel Password Grant Client';
+    public const CLIENT_NAME = 'adminToken';
 
     public function __construct(
         protected User $admin
@@ -16,6 +16,6 @@ class GenerateAdminAccessTokenAction
 
     public function execute(): string
     {
-        return $this->admin->createToken(self::CLIENT_NAME)->accessToken;
+        return $this->admin->createToken(self::CLIENT_NAME)->plainTextToken;
     }
 }

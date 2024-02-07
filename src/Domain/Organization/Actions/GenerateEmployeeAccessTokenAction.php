@@ -10,6 +10,6 @@ class GenerateEmployeeAccessTokenAction
 
     public function execute(Employee $employee): string
     {
-        return $employee->createToken(self::TOKEN_NAME)->accessToken;
+        return $employee->createToken(self::TOKEN_NAME)->plainTextToken;
     }
 }

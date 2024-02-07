@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('guest:api-candidate')->withoutMiddleware('auth:api-candidate')->name('auth')->group(function () {
+Route::middleware('guest:candidate')->withoutMiddleware('auth:candidate')->name('auth')->group(function () {
     Route::post('/pre-register/valid-identifier-input', ValidateNewCandidateUniqueInputsController::class);
     Route::post('/register/{invitation?}', RegisterController::class)->name('.register');
     Route::post('/login', LoginController::class)->name('.login');
@@ -36,7 +36,7 @@ Route::middleware('guest:api-candidate')->withoutMiddleware('auth:api-candidate'
 /*
  * group all APIs
  */
-Route::middleware('auth:api-candidate')->group(function () {
+Route::middleware('auth:candidate')->group(function () {
     Route::any('/logout', LogoutController::class);
 
     Route::prefix('interviews')
@@ -57,7 +57,7 @@ Route::middleware('auth:api-candidate')->group(function () {
         });
 });
 
-Route::withoutMiddleware('auth:api-candidate')
+Route::withoutMiddleware('auth:candidate')
     ->group(function () {
         Route::apiResource('job-titles', JobTitleController::class)
             ->only(['index', 'show']);

@@ -46,15 +46,20 @@ return [
             'provider' => 'users',
         ],
 
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
+
         /** @deprecated **/
-        'api-candidate' => [
-            'driver' => 'passport',
+        'candidate' => [
+            'driver' => 'sanctum',
             'provider' => 'candidates',
         ],
 
         /** @deprecated **/
-        'api-employee' => [
-            'driver' => 'passport',
+        'organization-employee' => [
+            'driver' => 'sanctum',
             'provider' => 'organization_employee',
         ],
     ],

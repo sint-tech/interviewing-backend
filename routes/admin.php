@@ -23,7 +23,7 @@ use App\Admin\Skill\Controllers\SkillController;
 use App\Admin\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest:api')->withoutMiddleware('auth:api')->group(function () {
+Route::middleware('guest:admin')->withoutMiddleware('auth:admin')->group(function () {
     Route::post('/login', LoginController::class)->name('login');
 });
 

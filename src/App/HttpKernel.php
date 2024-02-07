@@ -45,20 +45,6 @@ class HttpKernel extends Kernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             ForceJsonRequest::class,
         ],
-
-        'admin' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api-admin',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            ForceJsonRequest::class,
-        ],
-
-        'organization' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api-employee',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            ForceJsonRequest::class,
-        ],
     ];
 
     /**

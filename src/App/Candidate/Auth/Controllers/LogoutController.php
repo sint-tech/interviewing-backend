@@ -10,7 +10,7 @@ class LogoutController extends Controller
     {
         $candidate = auth()->user();
 
-        $candidate->token()->revoke();
+        $candidate->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'logout successfully',

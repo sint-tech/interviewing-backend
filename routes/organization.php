@@ -23,8 +23,8 @@ use App\Organization\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('auth.')->group(function () {
-    Route::post('/login', LoginController::class)->withoutMiddleware('auth:api-employee')->name('login');
-    Route::post('/register', RegisterController::class)->withoutMiddleware('auth:api-employee')->name('register');
+    Route::post('/login', LoginController::class)->withoutMiddleware('auth:organization-employee')->middleware('guest:organization-employee')->name('login');
+    Route::post('/register', RegisterController::class)->withoutMiddleware('auth:organization-employee')->name('register');
     Route::get('/auth/my-profile', MyProfileController::class)->name('my-profile');
     Route::post('/auth/my-profile/update-personal-info', UpdatePersonalInformationController::class)->name('update-personal-info');
     Route::get('/auth/my-organization', MyOrganizationController::class)->name('my-organization');
