@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Domain\Candidate\Actions\GenerateCandidateAccessTokenAction;
 use Domain\Candidate\Enums\CandidateSocialAppEnum;
 use Domain\Candidate\Models\Candidate;
 use Domain\Candidate\Models\RegistrationReason;
@@ -144,14 +145,14 @@ class CandidateAuthenticationTest extends TestCase
      */
     public function candidateShouldLogout()
     {
-        $candidate = Candidate::factory()->create([
+        $candidate = Candidate::factory()->createOne([
             'email' => 'foo@gmail.com',
             'password' => 'u2ArHI&mxLwuh2%k',
         ]);
 
-        $response = $this->actingAs($candidate)
-            ->post('/api/logout');
-
-        $response->assertSuccessful();
+        $this
+            ->withToken((new GenerateCandidateAccessTokenAction($candidate))->execute())
+            ->get('/api/logout')
+            ->assertSuccessful();
     }
 }

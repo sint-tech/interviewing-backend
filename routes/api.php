@@ -26,36 +26,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('guest:candidate')->withoutMiddleware('auth:candidate')->name('auth')->group(function () {
-    Route::post('/pre-register/valid-identifier-input', ValidateNewCandidateUniqueInputsController::class);
-    Route::post('/register/{invitation?}', RegisterController::class)->name('.register');
-    Route::post('/login', LoginController::class)->name('.login');
-    Route::post('/social-login', SocialLoginController::class)->name('.social-login');
-});
+Route::middleware('guest:candidate')
+    ->withoutMiddleware('auth:candidate')
+    ->name('auth')
+    ->group(function () {
+        Route::post('/pre-register/valid-identifier-input', ValidateNewCandidateUniqueInputsController::class);
+        Route::post('/register/{invitation?}', RegisterController::class)->name('.register');
+        Route::post('/login', LoginController::class)->name('.login');
+        Route::post('/social-login', SocialLoginController::class)->name('.social-login');
+    });
 
-/*
- * group all APIs
- */
-Route::middleware('auth:candidate')->group(function () {
-    Route::any('/logout', LogoutController::class);
+Route::any('/logout', LogoutController::class);
 
-    Route::prefix('interviews')
-        ->name('interviews.')
-        ->group(function () {
-            Route::get('', MyInterviewsController::class);
-            Route::get('/my-interviews', MyInterviewsController::class)->name('my-interviews');
-            Route::post('/start-interview', StartInterviewController::class)->name('start');
-            Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class)->name('submit-answer');
-            Route::get('/{interview}/report', GetInterviewReportController::class)->name('report');
-            Route::get('/reports', MyInterviewReportsController::class)->name('reports');
-        });
+Route::prefix('interviews')
+    ->name('interviews.')
+    ->group(function () {
+        Route::get('', MyInterviewsController::class);
+        Route::get('/my-interviews', MyInterviewsController::class)->name('my-interviews');
+        Route::post('/start-interview', StartInterviewController::class)->name('start');
+        Route::post('/{interview}/submit-answer', SubmitInterviewQuestionAnswerController::class)->name('submit-answer');
+        Route::get('/{interview}/report', GetInterviewReportController::class)->name('report');
+        Route::get('/reports', MyInterviewReportsController::class)->name('reports');
+    });
 
-    Route::prefix('invitations')
-        ->name('invitations')
-        ->group(function () {
-            Route::get('/', MyInvitationsController::class)->name('.my-invitations');
-        });
-});
+Route::prefix('invitations')
+    ->name('invitations')
+    ->group(function () {
+        Route::get('/', MyInvitationsController::class)->name('.my-invitations');
+    });
 
 Route::withoutMiddleware('auth:candidate')
     ->group(function () {
