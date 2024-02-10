@@ -42,9 +42,10 @@ php artisan serve
 ```
 
 ---
-> #### **_NOTE:_**
+> [!NOTE]
 > when run the serve command will register the server to the localhost and the port **8000**.\
 > to change it you can pass the **`--port`** option to the command\
 > Example:
-> ``php artisan serve --port=7070``
+> ```php
+> php artisan serve --port=7070
 ---
