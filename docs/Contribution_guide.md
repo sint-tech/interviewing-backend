@@ -26,3 +26,11 @@
 > u may use the regular ``merge`` command when there are conflicts between the two branches (development, and your branch)
 
 Now, once the `current branch` is ready for merging into the development. U should [squash](https://www.git-tower.com/learn/git/faq/git-squash)https://www.git-tower.com/learn/git/faq/git-squash the commits into development branch 🚀
+> [!IMPORTANT]
+> If your changes are hotfixes, and need to be merged also on **production**.
+> You have also to follow these steps
+> ```git
+> git checkout master
+> git checkout -b #new-branch-from-master
+> git cherry-pick #commit-hash #commit merged to development
+> ```
