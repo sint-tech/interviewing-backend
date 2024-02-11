@@ -14,7 +14,7 @@
 ---
 ### Merging changes to development
    After approving the PR, you must rebase your code with the **Development branch**, So you may do it on your local machine or the GitHub website.
- - For using the GitHub application check this [URL](https://docs.github.com/en/desktop/managing-commits/squashing-commits-in-github-desktop)https://docs.github.com/en/desktop/managing-commits/squashing-commits-in-github-desktop
+ - For using the GitHub application check this [URL](https://docs.github.com/en/desktop/managing-commits/squashing-commits-in-github-desktop)
  - Using CLI
   ```git
 git checkout development
@@ -28,7 +28,7 @@ git push --force
 > [!WARNING]
 > u may use the regular ``merge`` command when there are conflicts between the two branches (development, and your branch)
 
-Now, once the `current branch` is ready for merging into the development. U should [squash](https://www.git-tower.com/learn/git/faq/git-squash)https://www.git-tower.com/learn/git/faq/git-squash the commits into development branch 🚀
+Now, once the `current branch` is ready for merging into the development. U should [squash](https://www.git-tower.com/learn/git/faq/git-squash) the commits into development branch 🚀
 > [!IMPORTANT]
 > If your changes are hotfixes, and need to be merged also on **production**.
 > You have also to follow these steps
