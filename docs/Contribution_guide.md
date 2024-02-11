@@ -11,3 +11,18 @@
 3. all test cases had passed.
 4. if there are change requests, fill it with review comments and request new changes.
 
+---
+### Merging changes to development
+   After approving the PR, you must rebase your code with the **Development branch**, So you may do it on your local machine or the GitHub website.
+ - For using the GitHub application check this [URL](https://docs.github.com/en/desktop/managing-commits/squashing-commits-in-github-desktop)https://docs.github.com/en/desktop/managing-commits/squashing-commits-in-github-desktop
+ - Using CLI
+   - ``git checkout development``
+   - ``git pull origin development``
+   - ``git checkout __feature branch name__``
+   - ``git rebase development``
+   - ``git push --force``
+- Using Github, you will see a button called **Update your branch** just ensure to select rebase instead of merge
+> [!WARNING]
+> u may use the regular ``merge`` command when there are conflicts between the two branches (development, and your branch)
+
+Now, once the `current branch` is ready for merging into the development. U should [squash](https://www.git-tower.com/learn/git/faq/git-squash)https://www.git-tower.com/learn/git/faq/git-squash the commits into development branch 🚀
