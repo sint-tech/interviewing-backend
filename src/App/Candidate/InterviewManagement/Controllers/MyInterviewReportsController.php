@@ -12,7 +12,7 @@ class MyInterviewReportsController extends Controller
     {
         return InterviewReportResource::collection(
             InterviewReport::query()
-                ->with('reportable.vacancy.organization')
+                ->with(['reportable.vacancy.organization', 'reportable.candidate'])
                 ->paginate(pagination_per_page())
         );
     }

@@ -14,11 +14,11 @@ class InterviewReportResource extends JsonResource
     {
         return [
             'interview_id' => $this->resource->reportable_id,
-            'average_score' => (float) $this->avg_score,
-            'advices' => (array) $this->advices,
-            'impacts' => (array) $this->impacts,
-            'question_clusters_scores' => $this->question_clusters_stats,
-            'candidate' => CandidateResource::make(auth()->user()),
+            'average_score' => (float) $this->resource->avg_score,
+            'advices' => (array) $this->resource->advices,
+            'impacts' => (array) $this->resource->impacts,
+            'question_clusters_scores' => $this->resource->question_clusters_stats,
+            'candidate' => CandidateResource::make($this->resource->reportable->candidate),
             'vacancy' => VacancyResource::make($this->resource->reportable->vacancy),
             //creation_at
             //interview_id
