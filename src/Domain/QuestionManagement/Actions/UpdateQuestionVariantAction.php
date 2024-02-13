@@ -13,7 +13,12 @@ class UpdateQuestionVariantAction
 
     public function execute(QuestionVariant $questionVariant, QuestionVariantDto $questionVariantDto): QuestionVariant
     {
-        $questionVariant->update($questionVariantDto->except('creator')->toArray());
+        if ($questionVariant->question_id != $questionVariantDto->question_id) {
+            $questionVariant->aiPrompts()->delete();
+            $questionVariant->aiPrompts()->createMany($questionVariantDto->ai_prompts);
+        }
+
+        $questionVariant->update($questionVariantDto->except('ai_prompts')->toArray());
 
         return $questionVariant->refresh();
     }

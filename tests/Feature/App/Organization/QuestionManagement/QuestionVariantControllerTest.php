@@ -65,4 +65,18 @@ class QuestionVariantControllerTest extends TestCase
             'answering_time_in_seconds' => 60 * 10, // 10 minutes
         ])->assertSuccessful();
     }
+
+    /** @test  */
+    public function itShouldUpdateQuestionVariant(): void
+    {
+        $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id, 'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey()]);
+
+        $this->put(route('organization.question-variants.update', $questionVariant->id),[
+            'text' => 'this is text updated',
+            'description' => 'this is description updated',
+            'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey(),
+            'reading_time_in_seconds' => 40 * 3, // 2 minutes
+            'answering_time_in_seconds' => 60 * 3, // 3 minutes
+        ])->assertSuccessful();
+    }
 }
