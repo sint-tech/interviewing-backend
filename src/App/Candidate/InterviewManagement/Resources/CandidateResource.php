@@ -14,13 +14,8 @@ class CandidateResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'full_name' => (string) $this->full_name,
-            'email' => (string) $this->email,
-            'mobile' => [
-                'dial_code' => $this->resource->mobile_number->dialCode,
-                'country' => $this->resource->mobile_number->countryShortCode,
-                'number' => $this->resource->mobile_number->number,
-            ],
+            'full_name' => (string) $this->resource->full_name,
+            'email' => (string) $this->resource->email,
         ];
     }
 }
