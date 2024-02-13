@@ -5,6 +5,7 @@ namespace Tests\Feature\App\Organization\QuestionManagement;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Domain\Users\Models\User;
@@ -71,12 +72,19 @@ class QuestionVariantControllerTest extends TestCase
     {
         $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id, 'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey()]);
 
-        $this->put(route('organization.question-variants.update', $questionVariant->id),[
+        $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
+        $this->put(route('organization.question-variants.update', $questionVariant),[
             'text' => 'this is text updated',
             'description' => 'this is description updated',
-            'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey(),
+            'question_id' => $newQuestion->getKey(),
             'reading_time_in_seconds' => 40 * 3, // 2 minutes
             'answering_time_in_seconds' => 60 * 3, // 3 minutes
-        ])->assertSuccessful();
+        ])->assertSuccessful()->assertJson(function (AssertableJson $json) use ($newQuestion) {
+            $json->where('data.text', 'this is text updated')
+                ->where('data.description', 'this is description updated')
+                ->where('data.reading_time_in_seconds', 40 * 3)
+                ->where('data.answering_time_in_seconds', 60 * 3)
+                ->where('data.question_id', $newQuestion->getKey());
+        });
     }
 }
