@@ -3,8 +3,10 @@
 namespace App\Organization\QuestionManagement\Controllers;
 
 use App\Organization\QuestionManagement\Requests\QuestionVariantStoreRequest;
+use App\Organization\QuestionManagement\Requests\QuestionVariantUpdateRequest;
 use App\Organization\QuestionManagement\Resources\QuestionVariantResource;
 use Domain\QuestionManagement\Actions\CreateQuestionVariantAction;
+use Domain\QuestionManagement\Actions\UpdateQuestionVariantAction;
 use Domain\QuestionManagement\DataTransferObjects\QuestionVariantDto;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -44,9 +46,15 @@ class QuestionVariantController extends Controller
         );
     }
 
-    public function update()
+    public function update(QuestionVariantUpdateRequest $request, QuestionVariant $question_variant, UpdateQuestionVariantAction $action): QuestionVariantResource
     {
-        //
+        $data = QuestionVariantDto::from(
+            array_merge($question_variant->attributesToArray(), $request->validated() + [
+                'ai_prompts' => [$request->question()->defaultAIPrompt->toArray()],
+            ])
+        );
+
+        return QuestionVariantResource::make($action->execute($question_variant, $data));
     }
 
     public function destroy(int $question_variant): QuestionVariantResource
