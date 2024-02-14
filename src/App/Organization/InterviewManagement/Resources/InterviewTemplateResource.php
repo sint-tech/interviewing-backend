@@ -3,6 +3,7 @@
 namespace App\Organization\InterviewManagement\Resources;
 
 use App\Organization\QuestionManagement\Resources\QuestionVariantResource;
+use App\Organization\QuestionManagement\Resources\QuestionClusterResource;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
@@ -24,6 +25,7 @@ class InterviewTemplateResource extends JsonResource
             'created_at' => $this->resource->created_at->format('Y-m-d H:i'),
             'deleted_at' => $this->when(! is_null($this->resource->deleted_at), $this->resource->deleted_at?->format('Y-m-d H:i'), new MissingValue()),
             'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants')),
+            'question_clusters' => QuestionClusterResource::collection($this->whenLoaded('questionClusters')),
         ];
     }
 }
