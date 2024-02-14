@@ -17,4 +17,10 @@ class QuestionVariantBuilder extends Builder
     {
         return $this;
     }
+    public function forInterviewTemplateId(int $interviewTemplateId): self
+    {
+        return $this->whereHas('interviewTemplates', function ($query) use ($interviewTemplateId) {
+            $query->where('interview_templates.id', $interviewTemplateId);
+        });
+    }
 }
