@@ -22,6 +22,6 @@ class QuestionClusterController extends Controller
 
     public function show(QuestionCluster $questionCluster): QuestionClusterResource
     {
-        return QuestionClusterResource::make($questionCluster);
+        return QuestionClusterResource::make($questionCluster->load('skills'));
     }
 }
