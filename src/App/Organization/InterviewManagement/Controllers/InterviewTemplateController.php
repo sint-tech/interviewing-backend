@@ -25,7 +25,14 @@ class InterviewTemplateController extends Controller
     public function show(int $interview_template): InterviewTemplateResource
     {
         return InterviewTemplateResource::make(
-            InterviewTemplate::query()->findOrFail($interview_template)->load(['questionVariants'])
+            InterviewTemplate::query()->findOrFail($interview_template)->load([
+                'questionClusters.skills',
+                'questionClusters.questions' => function ($query) use ($interview_template) {
+                    $query->withWhereHas('questionVariants', function ($query) use ($interview_template) {
+                        $query->forInterviewTemplateId($interview_template);
+                    });
+                },
+            ])
         );
     }
 
