@@ -12,7 +12,7 @@ class QuestionClusterResource extends JsonResource
             'id' => (int) $this->id,
             'name' => (string) $this->name,
             'description' => (string) $this->description,
-            'created_at' => (string) $this->created_at?->format('y-m-d H:m'),
+            'created_at' => (string) $this->created_at?->format('Y-m-d H:m'),
             'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants')),
         ];
     }
