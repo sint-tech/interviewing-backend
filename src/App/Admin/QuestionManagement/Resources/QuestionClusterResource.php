@@ -13,11 +13,11 @@ class QuestionClusterResource extends JsonResource
             'id' => (int) $this->id,
             'name' => (string) $this->name,
             'description' => (string) $this->description,
-            'created_at' => (string) $this->created_at?->format('y-m-d H:m'),
+            'created_at' => (string) $this->created_at?->format('Y-m-d H:m'),
             'questions' => QuestionResource::collection($this->whenLoaded('questions')),
             'question_variants' => QuestionVariantResource::collection($this->whenLoaded('questionVariants')),
             'skills' => SkillResource::collection($this->whenLoaded('skills')),
-            'deleted_at' => $this->whenNotNull($this->deleted_at?->format('y-m-d H:m')),
+            'deleted_at' => $this->whenNotNull($this->deleted_at?->format('Y-m-d H:m')),
         ];
     }
 }
