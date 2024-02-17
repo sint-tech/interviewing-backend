@@ -79,6 +79,36 @@ class InterviewTemplateControllerTest extends TestCase
             'organization_id' => $this->employeeAuth->organization_id,
         ]);
 
+        $response = $this->get(route('organization.interview-templates.show', [
+            'interview_template' => $interviewTemplate->getKey(),
+            'include' => 'questionVariants,questionClusters,questionClusters.skills,questionClusters.questions',
+        ]));
+
+        $response->assertSuccessful();
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'question_variants',
+                'question_clusters' => [
+                    '*' => [
+                        'skills',
+                        'questions' => [
+                            '*' => [
+                                'question_variants',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+    /** @test  */
+    public function itShouldMatchQuestionVariantIds(): void
+    {
+        $interviewTemplate = InterviewTemplate::factory()->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
         $questionClusters = QuestionCluster::factory(3)->create([
             'creator_type' => 'admin',
             'creator_id' => $this->sintUser->getKey(),
@@ -115,24 +145,6 @@ class InterviewTemplateControllerTest extends TestCase
             'interview_template' => $interviewTemplate->getKey(),
             'include' => 'questionVariants,questionClusters,questionClusters.skills,questionClusters.questions',
         ]));
-
-        $response->assertSuccessful();
-        $response->assertJsonStructure([
-            'data' => [
-                'id',
-                'question_variants',
-                'question_clusters' => [
-                    '*' => [
-                        'skills',
-                        'questions' => [
-                            '*' => [
-                                'question_variants',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ]);
 
         $this->assertEquals(
             $interviewTemplate->questionVariants->pluck('id')->toArray(),
