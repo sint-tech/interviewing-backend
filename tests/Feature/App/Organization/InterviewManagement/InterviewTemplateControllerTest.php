@@ -39,9 +39,6 @@ class InterviewTemplateControllerTest extends TestCase
             ->create();
 
         $this->actingAs($this->employeeAuth, 'organization');
-
-        $this->sintUser = User::factory()->createOne();
-        $this->actingAs($this->sintUser, 'admin');
     }
 
     /** @test  */
@@ -110,15 +107,15 @@ class InterviewTemplateControllerTest extends TestCase
         ]);
 
         $questionClusters = QuestionCluster::factory(3)->create([
-            'creator_type' => 'admin',
-            'creator_id' => $this->sintUser->getKey(),
+            'creator_type' => 'organization',
+            'creator_id' => $this->employeeAuth->organization_id,
         ]);
 
         $questionClusters->each(function (QuestionCluster $questionCluster) {
             Question::factory(1)->create([
                 'question_cluster_id' => $questionCluster->getKey(),
-                'creator_type' => 'admin',
-                'creator_id' => $this->sintUser->getKey(),
+                'creator_type' => 'organization',
+                'creator_id' => $this->employeeAuth->organization_id,
             ]);
         });
 
