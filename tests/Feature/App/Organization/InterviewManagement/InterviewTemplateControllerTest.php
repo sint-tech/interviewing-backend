@@ -7,7 +7,10 @@ use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\JobTitle\Models\JobTitle;
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
+use Domain\QuestionManagement\Models\Question;
+use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
@@ -19,6 +22,8 @@ class InterviewTemplateControllerTest extends TestCase
     public Employee $employeeAuth;
 
     public Collection $questionVariants;
+
+    protected User $sintUser;
 
     protected function setUp(): void
     {
@@ -34,6 +39,9 @@ class InterviewTemplateControllerTest extends TestCase
             ->create();
 
         $this->actingAs($this->employeeAuth, 'organization');
+
+        $this->sintUser = User::factory()->createOne();
+        $this->actingAs($this->sintUser, 'admin');
     }
 
     /** @test  */
@@ -70,6 +78,38 @@ class InterviewTemplateControllerTest extends TestCase
         $interviewTemplate = InterviewTemplate::factory()->createOne([
             'organization_id' => $this->employeeAuth->organization_id,
         ]);
+
+        $questionClusters = QuestionCluster::factory(3)->create([
+            'creator_type' => 'admin',
+            'creator_id' => $this->sintUser->getKey(),
+        ]);
+
+        $questionClusters->each(function (QuestionCluster $questionCluster) {
+            Question::factory(1)->create([
+                'question_cluster_id' => $questionCluster->getKey(),
+                'creator_type' => 'admin',
+                'creator_id' => $this->sintUser->getKey(),
+            ]);
+        });
+
+        $questions = Question::query()->get();
+
+        $questions->each(function (Question $question) {
+            QuestionVariant::factory(1)->create([
+                'question_id' => $question->getKey(),
+                'creator_type' => 'organization',
+                'creator_id' => $this->employeeAuth->getKey(),
+                'organization_id' => $this->employeeAuth->organization_id,
+            ]);
+        });
+
+        $questionVariants = QuestionVariant::whereNotNull('question_id')->get();
+
+        $questionVariants->each(function (QuestionVariant $questionVariant) use ($interviewTemplate) {
+            $interviewTemplate->questionVariants()->attach($questionVariant, [
+                'question_cluster_id' => $questionVariant->question->questionCluster->getKey(),
+            ]);
+        });
 
         $response = $this->get(route('organization.interview-templates.show', [
             'interview_template' => $interviewTemplate->getKey(),
