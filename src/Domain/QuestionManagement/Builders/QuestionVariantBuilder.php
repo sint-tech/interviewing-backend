@@ -5,6 +5,7 @@ namespace Domain\QuestionManagement\Builders;
 use Domain\Organization\Models\Employee;
 use Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Domain\InterviewManagement\Models\InterviewTemplate;
 
 class QuestionVariantBuilder extends Builder
 {
@@ -17,8 +18,10 @@ class QuestionVariantBuilder extends Builder
     {
         return $this;
     }
-    public function forInterviewTemplateId(int $interviewTemplateId): self
+    public function whereInterviewTemplate(int|InterviewTemplate $interviewTemplate): self
     {
+        $interviewTemplateId = $interviewTemplate instanceof InterviewTemplate ? $interviewTemplate->id : $interviewTemplate;
+
         return $this->whereHas('interviewTemplates', function ($query) use ($interviewTemplateId) {
             $query->where('interview_templates.id', $interviewTemplateId);
         });
