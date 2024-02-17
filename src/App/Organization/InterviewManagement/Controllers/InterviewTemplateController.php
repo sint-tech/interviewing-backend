@@ -11,6 +11,8 @@ use Domain\InterviewManagement\DataTransferObjects\InterviewTemplateDto;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Spatie\QueryBuilder\AllowedInclude;
+use Spatie\QueryBuilder\QueryBuilder;
 use Support\Controllers\Controller;
 
 class InterviewTemplateController extends Controller
@@ -25,14 +27,18 @@ class InterviewTemplateController extends Controller
     public function show(int $interview_template): InterviewTemplateResource
     {
         return InterviewTemplateResource::make(
-            InterviewTemplate::query()->findOrFail($interview_template)->load([
-                'questionClusters.skills',
-                'questionClusters.questions' => function ($query) use ($interview_template) {
-                    $query->withWhereHas('questionVariants', function ($query) use ($interview_template) {
-                        $query->forInterviewTemplateId($interview_template);
-                    });
-                },
-            ])
+            QueryBuilder::for(InterviewTemplate::findOrFail($interview_template))
+                ->allowedIncludes([
+                    AllowedInclude::relationship('questionVariants'),
+                    AllowedInclude::relationship('questionClusters'),
+                    AllowedInclude::relationship('questionClusters.skills'),
+                    AllowedInclude::callback('questionClusters.questions', function ($query) use ($interview_template) {
+                        $query->withWhereHas('questionVariants', function ($query) use ($interview_template) {
+                            $query->whereInterviewTemplate($interview_template);
+                        });
+                    }),
+                ])
+                ->first()
         );
     }
 
