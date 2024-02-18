@@ -7,6 +7,7 @@ use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\JobTitle\Models\JobTitle;
 use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Domain\QuestionManagement\Models\QuestionCluster;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -86,6 +87,15 @@ class InterviewTemplate extends Model
         )->withTimestamps();
     }
 
+    public function questionClusters(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            QuestionCluster::class,
+            'interview_template_questions',
+            'interview_template_id',
+            'question_cluster_id'
+        )->withTimestamps()->distinct();
+    }
     protected function getPreventDeletionRelations(): array
     {
         return [
