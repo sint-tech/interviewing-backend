@@ -14,11 +14,14 @@ class SubmitInterviewQuestionAnswerAction
 {
     protected array $promptResponses;
 
+    protected string $rawPromptResponse;
+
     public function execute(Interview $interview, AnswerDto $answerDto): Answer
     {
+        $this->promptResponse($answerDto->question_variant_id, $answerDto->answer_text);
         $data = $answerDto->toArray() + [
             'question_cluster_id' => QuestionVariant::query()->find($answerDto->question_variant_id)->questionCluster->getKey(),
-            'ml_text_semantics' => $this->promptResponse($answerDto->question_variant_id, $answerDto->answer_text),
+            'ml_text_semantics' => $this->rawPromptResponse,
             'score' => $this->calculateAverageScore($answerDto->question_variant_id, $answerDto->answer_text),
         ];
 
@@ -65,9 +68,12 @@ class SubmitInterviewQuestionAnswerAction
 
         $question_variant = $this->questionVariant($question_variant_id);
 
-        return $this->promptResponses = $question_variant
-            ->aiPrompts
-            ->map(fn (AIPrompt $aiPrompt) => json_decode($aiPrompt->prompt($question_variant->text, $answer), true))
+        $rawPromptResponses = $question_variant->aiPrompts->map(fn (AIPrompt $AIPrompt) => $AIPrompt->prompt($question_variant->text, $answer));
+
+        $this->rawPromptResponse = $rawPromptResponses->join(', ');
+
+        return $this->promptResponses = $rawPromptResponses
+            ->map(fn (string $response) => json_decode($response, true))
             ->toArray();
     }
 
