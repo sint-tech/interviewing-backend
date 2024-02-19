@@ -32,19 +32,15 @@ class SendInterviewReportCommand extends Command
     public function handle()
     {
         Interview::query()
-            ->whereHas('vacancy', function (Builder $builder) {
+            ->whereHas('vacancy',function (Builder $builder) {
                 return $builder
-                    ->when($this->argument('vacancy'), fn (Builder $builder) => $builder->where('id', $this->argument('vacancy')))
+                    ->when($this->argument('vacancy'), fn(Builder $builder) => $builder->where('id', $this->argument('vacancy')))
                     ->whereEnded();
             })
             ->has('defaultLastReport')
-            ->when($this->argument('candidate'), fn (VacancyBuilder $builder) => $builder->where('candidate_id', $this->argument('candidate')))
-            ->whereNull('candidate_report_sent_at')
+            ->when($this->argument('candidate'), fn(VacancyBuilder $builder) => $builder->where('candidate_id', $this->argument('candidate')))
             ->get()
             ->each(function (Interview $interview) {
-                if ($interview->candidate_report_sent_at) {
-                    return;
-                }
                 (new SendInterviewReportAction())->execute($interview);
             });
     }
