@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Database\Factories\VacancyFactory;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\Invitation\Models\Invitation;
 use Domain\Organization\Models\Organization;
 use Domain\Vacancy\Builders\VacancyBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -18,6 +19,7 @@ use Support\Scopes\ForAuthScope;
 use Support\Traits\Model\HasCreator;
 use Support\Traits\Model\HasOwner;
 use Support\Traits\Model\PreventDeleteWithRelations;
+use DateTimeInterface;
 
 /**
  * @property bool $is_ended
@@ -26,7 +28,7 @@ use Support\Traits\Model\PreventDeleteWithRelations;
  */
 class Vacancy extends Model
 {
-    use HasFactory,HasOwner,HasCreator,SoftDeletes,PreventDeleteWithRelations;
+    use HasFactory, HasOwner, HasCreator, SoftDeletes, PreventDeleteWithRelations;
 
     protected $fillable = [
         'title',
@@ -68,6 +70,11 @@ class Vacancy extends Model
         return $this->hasMany(Interview::class, 'vacancy_id');
     }
 
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class, 'vacancy_id');
+    }
+
     public function newEloquentBuilder($query): VacancyBuilder
     {
         return new VacancyBuilder($query);
@@ -99,5 +106,10 @@ class Vacancy extends Model
         );
 
         static::addGlobalScope($scope);
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }
