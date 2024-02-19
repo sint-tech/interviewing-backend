@@ -34,6 +34,7 @@ use Support\ValueObjects\URL;
  * @property Collection<QuestionVariant> $questionVariants
  * @property Collection<Answer> $answers
  * @property ?Carbon $candidate_report_sent_at
+ * @property ?Carbon $candidate_rejected_mail_sent_at
  */
 class Interview extends Model
 {

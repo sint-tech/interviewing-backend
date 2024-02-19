@@ -103,6 +103,11 @@ class InterviewEloquentBuilder extends Builder
             ->whereStatus(InterviewStatusEnum::Passed);
     }
 
+    public function whereRejected(string $boolean = 'and'): self
+    {
+        return $this->whereStatus(InterviewStatusEnum::Rejected, boolean: $boolean);
+    }
+
     public function whereReachedMaxTries(bool $reached_max_tries = true, string $boolean = 'and'): self
     {
         $vacancy_builder = function (Builder $builder) use ($reached_max_tries) {
