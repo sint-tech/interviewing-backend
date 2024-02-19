@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Organization\Vacancy;
 
+use Domain\Invitation\Models\Invitation;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Employee;
@@ -126,6 +127,34 @@ class VacancyControllerTest extends TestCase
     }
 
     /** @test  */
+    public function itShouldUpdateInvitationsWhenVacancyStartedAtChanged()
+    {
+        $employee = Employee::factory()->create();
+
+        $updatableVacancy = Vacancy::factory()
+            ->for($employee->organization, 'organization')
+            ->for($employee, 'creator')->create([
+                'started_at' => now()->subDays(4)->format('Y-m-d H:i'),
+            ]);
+
+        $invitation = Invitation::factory()
+            ->for($updatableVacancy, 'vacancy')
+            ->for($employee, 'creator')
+            ->create([
+                'should_be_invited_at' => now()->subDay(),
+            ]);
+
+        $this->actingAs($employee, 'organization');
+
+        $this->put(route('organization.vacancies.update', $updatableVacancy), ['started_at' => $newVacancyStartedAt = now()->addDay()->format('Y-m-d H:i')]);
+
+        $this->assertDatabaseHas('invitations', [
+            'id' => $invitation->getKey(),
+            'should_be_invited_at' => Carbon::parse($newVacancyStartedAt)->toDateTimeString(),
+        ]);
+    }
+
+    /** @test  */
     public function itShouldNotUpdateVacancyAfterThisVacancyHasAnyInterview()
     {
         $employee = Employee::factory()->create();
@@ -179,9 +208,10 @@ class VacancyControllerTest extends TestCase
             $this->actingAs($employee, 'organization')
                 ->delete(route('organization.vacancies.destroy', Vacancy::query()->first()))
                 ->assertSuccessful()
-                ->assertJson(fn (AssertableJson $json) => $json->has('data.deleted_at')
-                    ->where('data.deleted_at', $carbon->format('Y-m-d H:m'))
-                    ->etc()
+                ->assertJson(
+                    fn (AssertableJson $json) => $json->has('data.deleted_at')
+                        ->where('data.deleted_at', $carbon->format('Y-m-d H:m'))
+                        ->etc()
                 );
         });
 
