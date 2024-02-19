@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Mail\Candidate\CandidateRejectedMail;
-use Domain\InterviewManagement\Builders\InterviewEloquentBuilder;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\Vacancy\Builders\VacancyBuilder;
 use Illuminate\Console\Command;
@@ -42,9 +41,8 @@ class SendRejectionsCommand extends Command
                     ->whereEnded();
             })
             ->when($this->argument('candidate'), fn (VacancyBuilder $builder) => $builder->where('candidate_id', $this->argument('candidate')))
-            ->where(function (InterviewEloquentBuilder $builder) {
-                return $builder->whereRejected();
-            })
+            ->whereRejected()
+            ->whereNull('candidate_rejected_mail_sent_at')
             ->get();
     }
 }

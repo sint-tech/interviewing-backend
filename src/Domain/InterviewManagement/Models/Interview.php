@@ -49,6 +49,7 @@ class Interview extends Model
         'status',
         'connection_tries',
         'candidate_report_sent_at',
+        'candidate_rejected_mail_sent_at',
     ];
 
     protected $casts = [

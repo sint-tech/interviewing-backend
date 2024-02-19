@@ -50,7 +50,7 @@ class SendRejectionsCommandTest extends TestCase
     }
 
     /** @test  */
-    public function itShouldOnlySendMailsForNotTopCandidates()
+    public function itShouldOnlySendMailsForRejectedCandidates()
     {
         //top interviews
         Interview::factory()->count(5)
@@ -124,7 +124,16 @@ class SendRejectionsCommandTest extends TestCase
         $this->artisan(SendRejectionsCommand::class)
             ->assertSuccessful();
 
-        Mail::assertSent(CandidateRejectedMail::class);
+        Mail::assertSent(CandidateRejectedMail::class, function (CandidateRejectedMail $mail) {
+            $mail->assertSeeInHtml($this->vacancy->organization->name);
+
+            return true;
+        });
+
+        Mail::assertSentCount(5);
+
+        $this->artisan(SendRejectionsCommand::class)
+            ->assertSuccessful();
 
         Mail::assertSentCount(5);
     }
