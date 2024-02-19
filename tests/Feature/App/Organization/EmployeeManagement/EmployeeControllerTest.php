@@ -65,7 +65,7 @@ class EmployeeControllerTest extends TestCase
     {
         $organization = Organization::factory()->createOne();
 
-        $organizationManager = Employee::factory()->createOne(['organization_id' => $organization->getKey(), 'is_organization_manager' => true]);
+        $organizationManager = Employee::factory()->createOne(['organization_id' => $organization->getKey()]);
 
         $request_data = [
             'first_name' => 'ahmed',

@@ -93,6 +93,7 @@ class Invitation extends Model
                     'vacancy_id' => $this->vacancy_id,
                     'invitation_id' => $this->id,
                     'email' => $this->email,
+                    'name' => $this->name,
                 ]
             );
         });

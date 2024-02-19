@@ -8,7 +8,6 @@ use Domain\AnswerManagement\Models\AnswerVariant;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Builders\InterviewEloquentBuilder;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
-use Domain\Organization\Models\Organization;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionClusterRecommendation;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -21,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -64,18 +62,6 @@ class Interview extends Model
     public function vacancy(): BelongsTo
     {
         return $this->belongsTo(Vacancy::class, 'vacancy_id');
-    }
-
-    public function organization(): HasOneThrough
-    {
-        return $this->hasOneThrough(
-            Organization::class,
-            Vacancy::class,
-            'id',
-            'id',
-            'vacancy_id',
-            'organization_id'
-        );
     }
 
     public function candidate(): BelongsTo
