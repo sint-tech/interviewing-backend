@@ -14,13 +14,13 @@
                 <tr>
                     <td><img  alt="sint" src="{{secure_asset('assets/BlueLogo.png')}}" width="85" height="37" style="display:block;outline:none;border:none;text-decoration:none" />
                         <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
-                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">Dear {{$this->interview->candidate->full_name}},</p>
-                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">We appreciate your interest in joining our company {{$this->interview->organization->name}} and appreciate your time for taking this interview.</p>
+                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">Dear {{sprintf("%s %s", $interview->candidate->first_name, $interview->candidate->last_name)}},</p>
+                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">We appreciate your interest in joining our company {{$interview->organization->name}} and appreciate your time for taking this interview.</p>
                         <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">This email is to let you know that, while we choose to move on with other candidates, it does not imply that your qualifications are insufficient. We hope you will give us a look for any upcoming roles.</p>
                         <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">Check your feedback for future improvement</p><a href="https://usesint.com"  target="_blank" style="background-color:#0036ce;border-radius:5px;color:#fff;font-size:16px;font-weight:bold;text-decoration:none;text-align:center;display:inline-block;width:100%;line-height:100%;max-width:100%;padding:10px 10px"><span><!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%;mso-text-raise:15" hidden>&nbsp;</i><![endif]--></span><span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:7.5px">Check Feedback</span><span><!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
                         <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
                         <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">Thanks,
-                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">{{$this->interview->organization->name}}</p>
+                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">{{$interview->organization->name}}</p>
                         </p>
                         <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">Powered by Sint </p>
                     </td>
