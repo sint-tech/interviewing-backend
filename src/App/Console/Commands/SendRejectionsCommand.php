@@ -2,34 +2,22 @@
 
 namespace App\Console\Commands;
 
-use Domain\InterviewManagement\Actions\SendInterviewReportAction;
+use App\Mail\Candidate\CandidateRejectedMail;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\Vacancy\Builders\VacancyBuilder;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail;
 
-class SendInterviewReportCommand extends Command
+class SendRejectionsCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'reports:send
-                            {vacancy? The vacancy ID}
-                            {candidate? The candidate ID}';
+    protected $signature = 'rejections:send
+                            {vacancy? : The ID of the vacancy}
+                            {candidate? : The candidate ID}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'send interview report for candidate';
+    protected $description = 'Send rejection mail to candidates not passed the vacancy interview.';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): void
     {
         Interview::query()
             ->whereHas('vacancy', function (Builder $builder) {
@@ -37,15 +25,13 @@ class SendInterviewReportCommand extends Command
                     ->when($this->argument('vacancy'), fn (Builder $builder) => $builder->where('id', $this->argument('vacancy')))
                     ->whereEnded();
             })
-            ->has('defaultLastReport')
             ->when($this->argument('candidate'), fn (VacancyBuilder $builder) => $builder->where('candidate_id', $this->argument('candidate')))
-            ->whereNull('candidate_report_sent_at')
             ->get()
             ->each(function (Interview $interview) {
                 if ($interview->candidate_report_sent_at) {
                     return;
                 }
-                (new SendInterviewReportAction())->execute($interview);
+                Mail::send(new CandidateRejectedMail($interview->id));
             });
     }
 }
