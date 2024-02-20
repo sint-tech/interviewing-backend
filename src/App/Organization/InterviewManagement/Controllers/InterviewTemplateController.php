@@ -27,7 +27,7 @@ class InterviewTemplateController extends Controller
     public function show(int $interview_template): InterviewTemplateResource
     {
         return InterviewTemplateResource::make(
-            QueryBuilder::for(InterviewTemplate::findOrFail($interview_template))
+            QueryBuilder::for(InterviewTemplate::class)
                 ->allowedIncludes([
                     AllowedInclude::relationship('questionVariants'),
                     AllowedInclude::relationship('questionClusters'),
@@ -38,7 +38,7 @@ class InterviewTemplateController extends Controller
                         });
                     }),
                 ])
-                ->first()
+                ->findOrFail($interview_template)
         );
     }
 
