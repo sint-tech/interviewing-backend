@@ -18,7 +18,7 @@ class InterviewReportResource extends JsonResource
             'advices' => (array) $this->resource->advices,
             'impacts' => (array) $this->resource->impacts,
             'question_clusters_scores' => $this->resource->question_clusters_stats,
-            'candidate' => CandidateResource::make($this->resource->reportable->candidate),
+            'candidate' => CandidateResource::make(auth()->user()),
             'vacancy' => VacancyResource::make($this->resource->reportable->vacancy),
             //creation_at
             //interview_id
