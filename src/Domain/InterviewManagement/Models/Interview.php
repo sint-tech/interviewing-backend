@@ -164,7 +164,7 @@ class Interview extends Model
             ->withTimestamps();
     }
 
-    public function defaultLastReport(): MorphOne
+        public function defaultLastReport(): MorphOne
     {
         return $this->morphOne(InterviewReport::class, 'reportable')
             ->where('name', InterviewReport::DEFAULT_REPORT_NAME)
