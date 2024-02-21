@@ -57,5 +57,7 @@ class SendInvitationsCommand extends Command
                     logger()->error($exception->getMessage());
                 }
             });
+
+        $this->info("total sent invitation is $total");
     }
 }
