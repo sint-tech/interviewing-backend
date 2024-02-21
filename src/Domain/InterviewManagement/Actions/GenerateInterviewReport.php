@@ -3,7 +3,6 @@
 namespace Domain\InterviewManagement\Actions;
 
 use Domain\InterviewManagement\Exceptions\InterviewNotFinishedException;
-use Domain\InterviewManagement\Models\Answer;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Domain\ReportManagement\Actions\CreateReportAction;
@@ -15,6 +14,8 @@ use OpenAI\Laravel\Facades\OpenAI;
 
 class GenerateInterviewReport
 {
+    protected Interview $interview;
+
     public function __construct(
     ) {
     }
@@ -25,6 +26,8 @@ class GenerateInterviewReport
         if ($this->interviewStillRunning($interview)) {
             throw new InterviewNotFinishedException();
         }
+
+        $this->interview = $interview;
 
         $reportDto = ReportDto::from([
             'name' => InterviewReport::DEFAULT_REPORT_NAME,
@@ -62,7 +65,7 @@ class GenerateInterviewReport
     private function getRecommendations(Interview $interview, string $recommendation_type = 'advices' | 'impacts'): array
     {
         return match ($recommendation_type) {
-            'advices' => $interview->answers->map(fn (Answer $answer) => $answer->advice_statement)->filter()->toArray(),
+            'advices' => Arr::wrap($this->getAdvices($this->getQuestionClustersStats($interview))),
             'impacts' => Arr::wrap($this->getImpacts($this->getQuestionClustersStats($interview))),
         };
     }
@@ -93,21 +96,47 @@ class GenerateInterviewReport
 
     private function getImpacts(array $questionClusters): string
     {
-        $userContent = 'I got \\n';
+        $userContent = "You are an HR Expert, and an interviewee gave you the report they got from, you are explaining to the interviewee ther impacts of his scores based on his job profile and the scores from interviewee's report. \n
+                        Generate 3 or 4 impacts in bullet point based on the scores in a professional manner.\n
+                        The interviewee is applying for {$this->interview->vacancy->interviewTemplate->jobTitle->title}, take that into consideration while generating the impacts based on the scores from interviewee's report.\n
+                        from interviewee's report scores";
 
         foreach ($questionClusters as $questionClustersStat) {
-            $userContent .= "{$questionClustersStat['avg_score']} In {$questionClustersStat['name']} \\n";
+            $userContent .= "you got {$questionClustersStat['avg_score']} at {$questionClustersStat['name']} \n";
         }
 
-        $userContent .= 'please demonstrate the impact of these scores on my career and professional life in 4 lines, without mentioning my the scores';
+        $userContent .= ' HR Expert Advices:';
 
         $response = OpenAI::chat()->create([
             'model' => 'gpt-3.5-turbo',
             'messages' => [
                 [
-                    'role' => 'system',
-                    'content' => "I'm in an interview, and I was asked the about some questions about my behavior, then I was rated from 1 to 100 percent, in multiple fields based on my answers",
+                    'role' => 'user',
+                    'content' => $userContent,
                 ],
+            ],
+        ]);
+
+        return (string) ($response->choices[0])->message->content;
+    }
+
+    protected function getAdvices(array $questionClusters): string
+    {
+        $userContent = "You are an HR Expert, and an interviewee gave you the report they got from, you are giving advices based the scores from interviewee's report. \n
+        Generate 3 or 4 Advices in bullet point based on the scores in a professional manner. \n
+        The interviewee is applying for {$this->interview->vacancy->interviewTemplate->jobTitle->title}, take that into consideration while evaluating the scores from interviewee's report.\n
+        \n from interviewee's report scores
+        \n ------------------------------";
+
+        foreach ($questionClusters as $questionClustersStat) {
+            $userContent .= "you got {$questionClustersStat['avg_score']} at {$questionClustersStat['name']} \n";
+        }
+
+        $userContent .= ' HR Expert Advices:';
+
+        $response = OpenAI::chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
                 [
                     'role' => 'user',
                     'content' => $userContent,
