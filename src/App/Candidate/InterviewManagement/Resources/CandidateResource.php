@@ -14,7 +14,7 @@ class CandidateResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'full_name' => (string) $this->resource->full_name,
+            'full_name' => $this->resource->full_name,
             'email' => (string) $this->resource->email,
         ];
     }

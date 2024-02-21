@@ -31,6 +31,7 @@ use Support\ValueObjects\MobileNumber;
  * @property Collection<Interview> $interviews
  * @property Collection<Interview> $runningInterviews
  * @property MobileNumber $mobile_number
+ * @property string $full_name
  */
 class Candidate extends Authenticatable implements HasMedia
 {
@@ -125,6 +126,11 @@ class Candidate extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(RegistrationReason::class, CandidateRegistrationReason::class, 'candidate_id')
             ->withTimestamps();
+    }
+
+    public function fullName(): Attribute
+    {
+        return Attribute::get(fn() => "$this->first_name $this->last_name");
     }
 
     public function newEloquentBuilder($query): CandidateBuilder
