@@ -41,7 +41,7 @@ class SendInvitationsCommand extends Command
                     ->orWhereNull('expired_at');
             })
             ->whereNull('last_invited_at')
-            ->whereDate('should_be_invited_at', '>=', now()->format('Y-m-d H:i'))
+            ->whereDate('should_be_invited_at', '>=', now())
             ->orderByDesc('created_at')
             ->cursor()
             ->each(function (Invitation $invitation) use(&$total){
