@@ -97,15 +97,15 @@ class GenerateInterviewReport
     private function getImpacts(array $questionClusters): string
     {
         $userContent = "You are an HR Expert, and an interviewee gave you the report they got from, you are explaining to the interviewee ther impacts of his scores based on his job profile and the scores from interviewee's report. \n
-                        Generate 3 or 4 impacts in bullet point based on the scores in a professional manner.\n
+                        Generate 3 or 4 impacts in bullet points in html format based on the scores in a professional manner.\n
                         The interviewee is applying for {$this->interview->vacancy->interviewTemplate->jobTitle->title}, take that into consideration while generating the impacts based on the scores from interviewee's report.\n
                         from interviewee's report scores";
 
         foreach ($questionClusters as $questionClustersStat) {
-            $userContent .= "you got {$questionClustersStat['avg_score']} at {$questionClustersStat['name']} \n";
+            $userContent .= "you got {$questionClustersStat['avg_score']}% at {$questionClustersStat['name']} \n";
         }
 
-        $userContent .= ' HR Expert Advices:';
+        $userContent .= 'impacts in bullets point in html format:';
 
         $response = OpenAI::chat()->create([
             'model' => 'gpt-3.5-turbo',
@@ -123,16 +123,16 @@ class GenerateInterviewReport
     protected function getAdvices(array $questionClusters): string
     {
         $userContent = "You are an HR Expert, and an interviewee gave you the report they got from, you are giving advices based the scores from interviewee's report. \n
-        Generate 3 or 4 Advices in bullet point based on the scores in a professional manner. \n
+        Generate 3 or 4 Advices in bullet points in html format based on the scores in a professional manner. \n
         The interviewee is applying for {$this->interview->vacancy->interviewTemplate->jobTitle->title}, take that into consideration while evaluating the scores from interviewee's report.\n
         \n from interviewee's report scores
         \n ------------------------------";
 
         foreach ($questionClusters as $questionClustersStat) {
-            $userContent .= "you got {$questionClustersStat['avg_score']} at {$questionClustersStat['name']} \n";
+            $userContent .= "you got {$questionClustersStat['avg_score']}% at {$questionClustersStat['name']} \n";
         }
 
-        $userContent .= ' HR Expert Advices:';
+        $userContent .= 'HR Expert Advices in html format:';
 
         $response = OpenAI::chat()->create([
             'model' => 'gpt-3.5-turbo',
