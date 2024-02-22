@@ -2,12 +2,14 @@
 
 namespace Domain\Organization\Models;
 
+use App\Organization\Auth\Notifications\ResetPasswordNotification;
 use Database\Factories\EmployeeFactory;
 use Domain\Organization\Builders\EmployeeBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Support\Scopes\ForAuthScope;
 
@@ -16,7 +18,7 @@ use Support\Scopes\ForAuthScope;
  */
 class Employee extends Authenticatable
 {
-    use HasFactory,SoftDeletes,HasApiTokens;
+    use HasFactory,SoftDeletes,HasApiTokens, Notifiable;
 
     protected $fillable = [
         'first_name',
@@ -57,4 +59,11 @@ class Employee extends Authenticatable
     {
         parent::addGlobalScope(ForAuthScope::make()->forOrganizationEmployee(fn (EmployeeBuilder $builder) => $builder->forAuth()));
     }
+
+    public function sendPasswordResetNotification($token): void
+{
+    $url = url(config('app.organization_website_url') . '/reset-password?token=' . $token . '&email=' . $this->getEmailForPasswordReset());
+
+    $this->notify(new ResetPasswordNotification(urldecode($url)));
+}
 }
