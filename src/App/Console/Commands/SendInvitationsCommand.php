@@ -42,7 +42,7 @@ class SendInvitationsCommand extends Command
             })
             ->whereNull('last_invited_at')
             ->where(function (Builder $builder) {
-                return $builder->whereDate('should_be_invited_at', '>=', now())
+                return $builder->whereDate('should_be_invited_at', '=', now())
                     ->whereTime('should_be_invited_at', '>=', now());
             })
             ->orderByDesc('created_at')
