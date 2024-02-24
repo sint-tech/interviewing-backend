@@ -64,6 +64,6 @@ class Employee extends Authenticatable
 {
     $url = url(config('app.organization_website_url') . '/reset-password?token=' . $token . '&email=' . $this->getEmailForPasswordReset());
 
-    $this->notify(new ResetPasswordNotification(urldecode($url)));
+    $this->notify(new ResetPasswordNotification(urldecode($url), $token));
 }
 }
