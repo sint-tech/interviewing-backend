@@ -19,6 +19,6 @@ class ForgotPasswordLinkController extends Controller
 
         return $status === Password::RESET_LINK_SENT
             ? response()->json(['message' => __($status)])
-            : response()->json(['message' => __($status)], 500);
+            : response()->json(['message' => __($status)], 400);
     }
 }
