@@ -18,7 +18,7 @@ class ResetPasswordMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        private string $url
+        public string $url
     ) {
         //
     }
