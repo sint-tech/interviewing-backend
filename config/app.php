@@ -56,6 +56,12 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'candidate_website_url' => env('CANDIDATE_WEBSITE_URL', 'http://localhost/candidate'),
+
+    'admin_website_url' => env('ADMIN_WEBSITE_URL', 'http://localhost/admin'),
+
+    'organization_website_url' => env('ORGANIZATION_WEBSITE_URL', 'http://localhost/organization'),
+
     'asset_url' => env('ASSET_URL', '/'),
 
     /*
