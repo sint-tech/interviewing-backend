@@ -2,6 +2,8 @@
 
 use App\Organization\Auth\Controllers\LoginController;
 use App\Organization\Auth\Controllers\MyOrganizationController;
+use App\Organization\Auth\Controllers\ForgotPasswordLinkController;
+use App\Organization\Auth\Controllers\ResetPasswordController;
 use App\Organization\Auth\Controllers\MyProfileController;
 use App\Organization\Auth\Controllers\RegisterController;
 use App\Organization\Auth\Controllers\UpdatePersonalInformationController;
@@ -28,6 +30,9 @@ Route::name('auth.')->group(function () {
     Route::get('/auth/my-profile', MyProfileController::class)->name('my-profile');
     Route::post('/auth/my-profile/update-personal-info', UpdatePersonalInformationController::class)->name('update-personal-info');
     Route::get('/auth/my-organization', MyOrganizationController::class)->name('my-organization');
+
+    Route::post('/forgot-password', ForgotPasswordLinkController::class)->withoutMiddleware('auth:organization')->name('password.forgot');
+    Route::post('/reset-password', ResetPasswordController::class)->withoutMiddleware('auth:organization')->name('password.reset');
 });
 
 Route::name('settings.')->prefix('settings')->group(function () {
