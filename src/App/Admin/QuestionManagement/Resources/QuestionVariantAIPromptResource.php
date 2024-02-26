@@ -16,8 +16,8 @@ class QuestionVariantAIPromptResource extends JsonResource
             'name' => $this->resource->model,
             'status' => $this->resource->status,
             'weight' => $this->resource->weight,
-            'system_prompt' => (string) $this->resource->system_prompt,
-            'content_prompt' => (string) $this->resource->content_prompt,
+            'system_prompt' => (string) $this->resource->system,
+            'content_prompt' => (string) $this->resource->content,
         ];
     }
 }

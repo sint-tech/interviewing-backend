@@ -56,8 +56,33 @@ class QuestionControllerTest extends TestCase
             'status' => PromptMessageStatus::Enabled,
         ]);
 
-        $this->put(route('admin.questions.update', $question))
+        $questionUpdated = $this->requestData([
+            'ai_prompt' => [
+                'model' => AiModelEnum::Gpt_3_5->value,
+                'content' => 'question is: _QUESTION_TEXT_ , and the interviewee answer is: _INTERVIEWEE_ANSWER_ Updated',
+                'system' => 'Im interviewer and asking the next content question, please provide answer as: _RESPONSE_JSON_STRUCTURE_ Updated',
+            ],
+        ]);
+
+        $this->put(route('admin.questions.update', $question->getKey()), $questionUpdated)
             ->assertSuccessful();
+
+        $this->assertDatabaseHas('questions', [
+            'id' => $question->getKey(),
+            'title' => $questionUpdated['title'],
+            'description' => $questionUpdated['description'],
+            'question_cluster_id' => $questionUpdated['question_cluster_id'],
+            'question_type' => $questionUpdated['question_type'],
+            'difficult_level' => $questionUpdated['difficult_level'],
+            'min_reading_duration_in_seconds' => $questionUpdated['min_reading_duration_in_seconds'],
+            'max_reading_duration_in_seconds' => $questionUpdated['max_reading_duration_in_seconds'],
+        ]);
+
+        $this->assertEquals($questionUpdated['ai_prompt'], [
+            'model' => $question->defaultAIPrompt->model->value,
+            'content' => $question->defaultAIPrompt->content,
+            'system' => $question->defaultAIPrompt->system,
+        ]);
     }
 
     protected function requestData(array $merged_data = []): array
