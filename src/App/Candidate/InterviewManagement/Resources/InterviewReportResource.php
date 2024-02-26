@@ -15,7 +15,7 @@ class InterviewReportResource extends JsonResource
         return [
             'interview_id' => $this->resource->reportable_id,
             'average_score' => (float) $this->resource->avg_score,
-            'advices' => (array) $this->resource->advices,
+            'advices' => (array) $this->resource->candidate_advices,
             'impacts' => (array) $this->resource->impacts,
             'question_clusters_scores' => $this->resource->question_clusters_stats,
             'candidate' => CandidateResource::make(auth()->user()),

@@ -42,20 +42,20 @@ class GenerateInterviewReport
                     'value' => $this->getRecommendations($interview, 'impacts'),
                 ]),
                 ReportValueDto::from([
-                    'key' => 'advices',
-                    'value' => $this->getRecommendations($interview, 'advices'),
+                    'key' => 'candidate_advices',
+                    'value' => $this->getRecommendations($interview, 'candidate_advices'),
                 ]),
                 ReportValueDto::from([
                     'key' => 'question_clusters_stats',
                     'value' => $this->getQuestionClustersStats($interview),
                 ]),
                 ReportValueDto::from([
-                    'key' => 'language_fluency',
+                    'key' => 'language_fluency_score',
                     'value' => $interview->answers->avg(fn ($answer) => $answer->english_score / 10) * 100,
                 ]),
                 ReportValueDto::from([
                     'key' => 'recruiter_advices',
-                    'value' => $this->recruiterAdvices($this->getQuestionClustersStats($interview)),
+                    'value' => $this->getRecommendations($interview, 'recruiter_advices'),
                 ]),
             ],
         ]);
@@ -73,8 +73,9 @@ class GenerateInterviewReport
     private function getRecommendations(Interview $interview, string $recommendation_type = 'advices' | 'impacts'): array
     {
         return match ($recommendation_type) {
-            'advices' => Arr::wrap($this->getAdvices($this->getQuestionClustersStats($interview))),
+            'candidate_advices' => Arr::wrap($this->getCandidateAdvices($this->getQuestionClustersStats($interview))),
             'impacts' => Arr::wrap($this->getImpacts($this->getQuestionClustersStats($interview))),
+            'recruiter_advices' => Arr::wrap($this->getRecruiterAdvices($this->getQuestionClustersStats($interview))),
         };
     }
 
@@ -128,7 +129,7 @@ class GenerateInterviewReport
         return (string) ($response->choices[0])->message->content;
     }
 
-    protected function getAdvices(array $questionClusters): string
+    protected function getCandidateAdvices(array $questionClusters): string
     {
         $userContent = "You are an HR Expert, and an interviewee gave you the report they got from, you are giving advices based the scores from interviewee's report.
         Generate 3 or 4 Advices in bullet points in html format based on the scores in a professional manner.
@@ -155,7 +156,7 @@ class GenerateInterviewReport
         return (string) ($response->choices[0])->message->content;
     }
 
-    protected function recruiterAdvices(array $questionClusters): string
+    protected function getRecruiterAdvices(array $questionClusters): string
     {
         $userContent = "You are an HR Expert, you are giving advices to junior recruiter about a candidate the junior recruiter wants to hire.
         give advices based the candidate scores report.
