@@ -14,9 +14,11 @@ class InterviewReport extends Report
     {
         return [
             'avg_score' => 0,
-            'advices' => [],
+            'candidate_advices' => [],
             'impacts' => [],
             'question_clusters_stats' => [],
+            'language_fluency_score' => 0,
+            'recruiter_advices' => [],
         ];
     }
 

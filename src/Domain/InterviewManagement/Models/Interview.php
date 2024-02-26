@@ -35,6 +35,8 @@ use Support\ValueObjects\URL;
  * @property Collection<Answer> $answers
  * @property ?Carbon $candidate_report_sent_at
  * @property ?Carbon $candidate_rejected_mail_sent_at
+ * @property InterviewReport $defaultLastReport
+ * @property Candidate $candidate
  */
 class Interview extends Model
 {
@@ -164,7 +166,7 @@ class Interview extends Model
             ->withTimestamps();
     }
 
-        public function defaultLastReport(): MorphOne
+    public function defaultLastReport(): MorphOne
     {
         return $this->morphOne(InterviewReport::class, 'reportable')
             ->where('name', InterviewReport::DEFAULT_REPORT_NAME)
