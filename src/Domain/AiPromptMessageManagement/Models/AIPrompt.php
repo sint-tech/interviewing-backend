@@ -60,12 +60,7 @@ class AIPrompt extends Model
         return Attribute::make(get: function () {
 
             $replacers = match ($this->model) {
-                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => json_encode([
-                    'is_logical' => '<true,false>',
-                    'rate' => '1 to 10',
-                    'is_correct' => '<true,false>',
-                    'answer_analysis' => "analysis interviewee's about the answer",
-                ])]
+                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => config('aimodel.models.gpt-3-5-turbo.system_prompt')]
             };
 
             return PromptMessage::make($this->system, $replacers);

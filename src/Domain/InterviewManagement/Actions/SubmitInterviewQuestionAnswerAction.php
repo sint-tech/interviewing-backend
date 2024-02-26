@@ -57,7 +57,7 @@ class SubmitInterviewQuestionAnswerAction
 
     protected function calculateAverageScore(int $question_variant_id, string $answer): float
     {
-        return (float) collect($this->promptResponse($question_variant_id, $answer))->avg('rate') ?? 0;
+        return (float) collect($this->promptResponse($question_variant_id, $answer))->avg('correctness_rate') ?? 0;
     }
 
     protected function promptResponse(int $question_variant_id, string $answer): array
@@ -74,7 +74,7 @@ class SubmitInterviewQuestionAnswerAction
 
         return $this->promptResponses = $rawPromptResponses
             //todo start by "{" when missing
-            ->map(fn (string $response) => json_decode(str($response)->start("{")->toString(), true))
+            ->map(fn (string $response) => json_decode(str($response)->start('{')->toString(), true))
             ->toArray();
     }
 
