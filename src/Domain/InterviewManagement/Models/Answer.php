@@ -28,6 +28,7 @@ class Answer extends Pivot
         'question_occurrence_reason',
         'answer_text',
         'score',
+        'english_score',
         'min_score',
         'max_score',
         'interview_id',
@@ -36,6 +37,8 @@ class Answer extends Pivot
         'ml_video_semantics',
         'ml_audio_semantics',
         'ml_text_semantics',
+        'raw_response',
+        'raw_prompt_request',
     ];
 
     protected $casts = [
