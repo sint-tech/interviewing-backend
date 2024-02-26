@@ -23,6 +23,9 @@ class SubmitInterviewQuestionAnswerAction
             'question_cluster_id' => QuestionVariant::query()->find($answerDto->question_variant_id)->questionCluster->getKey(),
             'ml_text_semantics' => $this->rawPromptResponse,
             'score' => $this->calculateAverageScore($answerDto->question_variant_id, $answerDto->answer_text),
+            'english_score' => $this->calculateAverageEnglishScore($answerDto->question_variant_id, $answerDto->answer_text),
+            'raw_response' => $this->rawPromptResponse,
+            //todo save prompt request raw
         ];
 
         $answer = $interview->answers()->create($data)->refresh();
@@ -55,9 +58,14 @@ class SubmitInterviewQuestionAnswerAction
         return $interview->running() && $interview->answers()->count() === 1;
     }
 
-    protected function calculateAverageScore(int $question_variant_id, string $answer): float
+    protected function calculateAverageScore(int $question_variant_id, string $answer): int
     {
-        return (float) collect($this->promptResponse($question_variant_id, $answer))->avg('correctness_rate') ?? 0;
+        return (int) collect($this->promptResponse($question_variant_id, $answer))->avg('correctness_rate') ?? 0;
+    }
+
+    protected function calculateAverageEnglishScore(int $question_variant_id, string $answer): int
+    {
+        return (int) collect($this->promptResponse($question_variant_id, $answer))->avg('correctness_rate') ?? 0;
     }
 
     protected function promptResponse(int $question_variant_id, string $answer): array
