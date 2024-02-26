@@ -36,6 +36,7 @@ use Support\ValueObjects\URL;
  * @property ?Carbon $candidate_report_sent_at
  * @property ?Carbon $candidate_rejected_mail_sent_at
  * @property InterviewReport $defaultLastReport
+ * @property Candidate $candidate
  */
 class Interview extends Model
 {

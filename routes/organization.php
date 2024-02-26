@@ -1,15 +1,15 @@
 <?php
 
+use App\Organization\Auth\Controllers\ForgotPasswordLinkController;
 use App\Organization\Auth\Controllers\LoginController;
 use App\Organization\Auth\Controllers\MyOrganizationController;
-use App\Organization\Auth\Controllers\ForgotPasswordLinkController;
-use App\Organization\Auth\Controllers\ResetPasswordController;
 use App\Organization\Auth\Controllers\MyProfileController;
 use App\Organization\Auth\Controllers\RegisterController;
+use App\Organization\Auth\Controllers\ResetPasswordController;
 use App\Organization\Auth\Controllers\UpdatePersonalInformationController;
 use App\Organization\CandidateManagement\Controllers\TotalCandidatesController;
 use App\Organization\EmployeeManagement\Controllers\EmployeeController;
-use App\Organization\InterviewManagement\Controllers\GetInterviewsReportsController;
+use App\Organization\InterviewManagement\Controllers\InterviewsReportsController;
 use App\Organization\InterviewManagement\Controllers\InterviewTemplateController;
 use App\Organization\InterviewManagement\Controllers\TotalInterviewsController;
 use App\Organization\InvitationManagement\Controllers\ImportInvitationsController;
@@ -57,7 +57,8 @@ Route::prefix('interview-management')
     ->group(function () {
         Route::apiResource('interview-templates', InterviewTemplateController::class);
         Route::prefix('interviews')->name('interviews.')->group(function () {
-            Route::get('reports', GetInterviewsReportsController::class)->name('reports');
+            Route::get('reports/{interview}', [InterviewsReportsController::class, 'show'])->name('reports.show');
+            Route::get('reports', [InterviewsReportsController::class, 'index'])->name('reports.index');
             Route::get('count', TotalInterviewsController::class)->name('count');
         });
     });
