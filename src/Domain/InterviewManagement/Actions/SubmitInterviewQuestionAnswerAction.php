@@ -65,7 +65,7 @@ class SubmitInterviewQuestionAnswerAction
 
     protected function calculateAverageEnglishScore(int $question_variant_id, string $answer): int
     {
-        return (int) collect($this->promptResponse($question_variant_id, $answer))->avg('correctness_rate') ?? 0;
+        return (int) collect($this->promptResponse($question_variant_id, $answer))->avg('english_score') ?? 0;
     }
 
     protected function promptResponse(int $question_variant_id, string $answer): array
