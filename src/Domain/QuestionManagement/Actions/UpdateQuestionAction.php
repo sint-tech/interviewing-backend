@@ -17,7 +17,7 @@ class UpdateQuestionAction
     {
         $this->question->update($this->questionData->except('ai_prompt')->toArray());
 
-        $this->question->defaultAIPrompt()->update($this->questionData->ai_prompt);
+        $this->question->defaultAIPrompt->update($this->questionData->ai_prompt);
 
         return $this->question->refresh()->load([
             'questionCluster',
