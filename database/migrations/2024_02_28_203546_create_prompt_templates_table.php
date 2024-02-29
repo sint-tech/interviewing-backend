@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('version')->default(1);
             $table->boolean('is_selected')->default(false);
             $table->timestamps();
+            $table->unique(['name', 'version']);
         });
     }
 
