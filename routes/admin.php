@@ -22,6 +22,7 @@ use App\Admin\QuestionManagement\Controllers\QuestionVariantController;
 use App\Admin\Skill\Controllers\SkillController;
 use App\Admin\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
+use App\Admin\AIModelManagement\Controllers\PromptTemplatesController;
 
 Route::middleware('guest:admin')->withoutMiddleware('auth:admin')->group(function () {
     Route::post('/login', LoginController::class)->name('login');
@@ -66,3 +67,5 @@ Route::post('invitations/{invitation}/send-email', SendInvitationController::cla
 Route::apiResource('vacancies', VacancyController::class);
 
 Route::get('ai-models', ListAIModelsController::class)->name('ai-models.index');
+
+Route::apiResource('prompt-templates', PromptTemplatesController::class);
