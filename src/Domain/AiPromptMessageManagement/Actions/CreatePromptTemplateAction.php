@@ -2,10 +2,9 @@
 
 namespace Domain\AiPromptMessageManagement\Actions;
 
-use Exception;
-use Domain\AiPromptMessageManagement\Models\PromptTemplate;
 use Domain\AiPromptMessageManagement\DataTransferObjects\PromptTemplateDto;
-
+use Domain\AiPromptMessageManagement\Models\PromptTemplate;
+use Exception;
 
 class CreatePromptTemplateAction
 {
@@ -15,14 +14,16 @@ class CreatePromptTemplateAction
     public function execute(PromptTemplateDto $promptTemplateDto): PromptTemplate
     {
         if ($promptTemplateDto->is_selected) {
-            PromptTemplate::where('name', $promptTemplateDto->name)->update(['is_selected' => false]);
+            PromptTemplate::query()->where('name', $promptTemplateDto->name)->get()->each->update(['is_selected' => false]);
         }
 
-        $version = PromptTemplate::where('name', $promptTemplateDto->name)->max('version');
-        $version = $version ? $version + 1 : 1;
-
-        return PromptTemplate::create($promptTemplateDto->toArray() + [
-            'version' => $version,
+        return PromptTemplate::query()->create($promptTemplateDto->toArray() + [
+            'version' => $this->nextVersion($promptTemplateDto->name),
         ]);
+    }
+
+    protected function nextVersion(string $templateName): int
+    {
+        return ((int) PromptTemplate::query()->where('name', $templateName)->max('version')) + 1;
     }
 }

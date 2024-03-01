@@ -13,6 +13,7 @@ use Domain\ReportManagement\DataTransferObjects\ReportValueDto;
 use Domain\ReportManagement\Models\InterviewReport;
 use Illuminate\Support\Arr;
 use OpenAI\Laravel\Facades\OpenAI;
+use Support\ValueObjects\PromptMessage;
 
 class GenerateInterviewReport
 {
@@ -72,7 +73,7 @@ class GenerateInterviewReport
         return is_null($interview->ended_at);
     }
 
-    private function getRecommendations(Interview $interview, string $recommendation_type = 'advices' | 'impacts'): array
+    private function getRecommendations(Interview $interview, string $recommendation_type): array
     {
         return match ($recommendation_type) {
             'candidate_advices' => Arr::wrap($this->getCandidateAdvices($this->getQuestionClustersStats($interview))),
@@ -107,12 +108,9 @@ class GenerateInterviewReport
 
     private function getImpacts(array $questionClusters): string
     {
-        $impact_template = PromptTemplate::query()
-            ->where('name', 'impact')
-            ->orderByDesc('is_selected')
-            ->orderByDesc('version')
-            ->firstOrFail();
+        $impact_template = PromptTemplate::query()->latestTemplateOrFail('impacts');
 
+        //todo use @PromptMessage valueObject
         $impact_template_content = str_replace(
             [PromptTemplateVariableEnum::JobTitle->value],
             [$this->interview->vacancy->interviewTemplate->jobTitle->title],
@@ -146,11 +144,7 @@ class GenerateInterviewReport
 
     protected function getCandidateAdvices(array $questionClusters): string
     {
-        $candidate_template = PromptTemplate::query()
-            ->where('name', 'candidate_advices')
-            ->orderByDesc('is_selected')
-            ->orderByDesc('version')
-            ->firstOrFail();
+        $candidate_template = PromptTemplate::query()->latestTemplateOrFail('candidate_advices');
 
         $candidate_template_content = str_replace(
             [PromptTemplateVariableEnum::JobTitle->value],
@@ -185,11 +179,7 @@ class GenerateInterviewReport
 
     protected function getRecruiterAdvices(array $questionClusters): string
     {
-        $recruiter_template = PromptTemplate::query()
-            ->where('name', 'recruiter_advices')
-            ->orderByDesc('is_selected')
-            ->orderByDesc('version')
-            ->firstOrFail();
+        $recruiter_template = PromptTemplate::query()->latestTemplateOrFail('recruiter_advices');
 
         $recruiter_template_content = str_replace(
             [PromptTemplateVariableEnum::JobTitle->value],
