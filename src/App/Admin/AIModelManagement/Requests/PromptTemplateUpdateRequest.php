@@ -11,7 +11,7 @@ class PromptTemplateUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['filled', 'string', 'max:50'],
+            'name' => ['filled', 'string', 'max:50', 'in:impacts,candidate_advices,recruiter_advices'],
             'text' => ['filled', 'string', new TextContainsRule(PromptTemplateVariableEnum::textVariables())],
             'stats_text' => ['filled', 'string', new TextContainsRule(PromptTemplateVariableEnum::statsVariables())],
             'conclusion_text' => ['filled', 'string'],

@@ -2,6 +2,8 @@
 
 namespace App\Admin\AIModelManagement\Controllers;
 
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 use Support\Controllers\Controller;
 use Domain\AiPromptMessageManagement\Models\PromptTemplate;
 use App\Admin\AIModelManagement\Resources\PromptTemplateResource;
@@ -16,7 +18,13 @@ class PromptTemplatesController extends Controller
 {
     public function index()
     {
-        return PromptTemplateResource::collection(PromptTemplate::all());
+        $query = QueryBuilder::for(PromptTemplate::class)
+            ->allowedFilters(
+                AllowedFilter::exact('is_selected')->default(true),
+                AllowedFilter::exact('name'),
+                AllowedFilter::exact('version')
+            );
+        return PromptTemplateResource::collection($query->paginate());
     }
 
     public function store(PromptTemplateStoreRequest $request, CreatePromptTemplateAction $createPromptTemplateAction)
