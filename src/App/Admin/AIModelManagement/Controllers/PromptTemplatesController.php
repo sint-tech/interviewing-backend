@@ -20,11 +20,11 @@ class PromptTemplatesController extends Controller
     {
         $query = QueryBuilder::for(PromptTemplate::class)
             ->allowedFilters(
-                AllowedFilter::exact('is_selected')->default(true),
+                AllowedFilter::exact('is_selected'),
                 AllowedFilter::exact('name'),
                 AllowedFilter::exact('version')
             );
-        return PromptTemplateResource::collection($query->paginate());
+        return PromptTemplateResource::collection($query->paginate(pagination_per_page()));
     }
 
     public function store(PromptTemplateStoreRequest $request, CreatePromptTemplateAction $createPromptTemplateAction)
