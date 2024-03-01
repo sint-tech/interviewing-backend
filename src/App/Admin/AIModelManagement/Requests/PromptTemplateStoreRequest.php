@@ -11,7 +11,7 @@ class PromptTemplateStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:50'],
+            'name' => ['required', 'string', 'max:50', 'in:impacts,candidate_advices,recruiter_advices'],
             'text' => ['required', 'string', new TextContainsRule(PromptTemplateVariableEnum::textVariables())],
             'stats_text' => ['required', 'string', new TextContainsRule(PromptTemplateVariableEnum::statsVariables())],
             'conclusion_text' => ['required', 'string'],

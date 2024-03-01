@@ -36,7 +36,7 @@ class PromptTemplatesControllerTest extends TestCase
 
         $response = $this->get(route('admin.prompt-templates.index'));
         $response->assertSuccessful();
-        $response->assertJsonCount(40, 'data');
+        $response->assertJsonCount(25, 'data');
     }
 
     /** @test */
@@ -124,13 +124,13 @@ class PromptTemplatesControllerTest extends TestCase
     public function itShouldOnlyHaveOneSelectedTemplate()
     {
         $response = $this->post(route('admin.prompt-templates.store'), $this->requestData([
-            'name' => 'impact',
+            'name' => 'impacts',
             'is_selected' => true,
         ]));
         $response->assertSuccessful();
 
         $response = $this->post(route('admin.prompt-templates.store'), $this->requestData([
-            'name' => 'impact',
+            'name' => 'impacts',
             'is_selected' => true,
         ]));
         $response->assertSuccessful();
@@ -148,17 +148,17 @@ class PromptTemplatesControllerTest extends TestCase
     public function itShouldUpdateSelectedTemplate()
     {
         $prompt_template_1 = PromptTemplate::factory()->createOne($this->requestData([
-            'name' => 'impact',
+            'name' => 'impacts',
             'is_selected' => true,
         ]));
 
         $prompt_template_2 = PromptTemplate::factory()->createOne($this->requestData([
-            'name' => 'impact',
+            'name' => 'impacts',
             'is_selected' => false,
         ]));
 
         $response = $this->put(route('admin.prompt-templates.update', $prompt_template_2->id), $this->requestData([
-            'name' => 'impact',
+            'name' => 'impacts',
             'is_selected' => true,
         ]));
 
@@ -200,7 +200,7 @@ class PromptTemplatesControllerTest extends TestCase
     private function requestData(array $overrides = []): array
     {
         return array_merge([
-            'name' => 'impact',
+            'name' => 'impacts',
             'text' => "You are an HR Expert, and an interviewee gave you the report they got from, you are explaining to the interviewee ther impacts of his scores based on his job profile and the scores from interviewee's report.
             Generate 3 or 4 impacts in bullet points in html format based on the scores in a professional manner.
             The interviewee is applying for _JOB_TITLE_, take that into consideration while generating the impacts based on the scores from interviewee's report.
