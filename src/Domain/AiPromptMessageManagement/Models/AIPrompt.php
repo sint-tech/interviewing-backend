@@ -86,7 +86,6 @@ class AIPrompt extends Model
         return match ($this->model) {
             AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
                 'model' => $this->model->value,
-                'response_format' => ['type' => 'json_object'],
                 'messages' => [
                     [
                         'role' => 'system',
