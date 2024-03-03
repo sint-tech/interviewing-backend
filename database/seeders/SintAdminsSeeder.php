@@ -15,6 +15,7 @@ class SintAdminsSeeder extends Seeder
         'mostafa.gouda@sint.com',
         'mohamed.mokbel@sint.com',
         'moaz.soliman@sint.com',
+        'mohamed.ghannam@sint.com',
     ];
 
     protected string $defaultPassword = 'password';
