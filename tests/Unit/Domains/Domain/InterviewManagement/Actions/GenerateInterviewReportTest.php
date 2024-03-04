@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Support\Actions;
+namespace Tests\Unit\Domains\Domain\InterviewManagement\Actions;
 
 use Tests\TestCase;
 use OpenAI\Laravel\Facades\OpenAI;
