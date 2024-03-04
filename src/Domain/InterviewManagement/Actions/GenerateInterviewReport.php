@@ -75,11 +75,42 @@ class GenerateInterviewReport
 
     private function getRecommendations(Interview $interview, string $recommendation_type): array
     {
-        return match ($recommendation_type) {
-            'candidate_advices' => Arr::wrap($this->getCandidateAdvices($this->getQuestionClustersStats($interview))),
-            'impacts' => Arr::wrap($this->getImpacts($this->getQuestionClustersStats($interview))),
-            'recruiter_advices' => Arr::wrap($this->getRecruiterAdvices($this->getQuestionClustersStats($interview))),
-        };
+        $prompt_template = PromptTemplate::query()
+            ->latestTemplateOr(
+                $recommendation_type,
+                fn() => abort(404, 'no active prompt template with name: '. $recommendation_type)
+            );
+
+        //todo use @PromptMessage valueObject
+        $template_content = str_replace(
+            [PromptTemplateVariableEnum::JobTitle->value],
+            [$this->interview->vacancy->interviewTemplate->jobTitle->title],
+            $prompt_template->text
+        );
+
+        foreach ($this->getQuestionClustersStats($interview) as $questionClustersStat) {
+            $template_content .= str_replace([
+                PromptTemplateVariableEnum::QuestionClusterName->value,
+                PromptTemplateVariableEnum::QuestionClusterAvgScore->value,
+            ], [
+                $questionClustersStat['name'],
+                $questionClustersStat['avg_score'],
+            ], $prompt_template->stats_text);
+        }
+
+        $template_content .= $prompt_template->conclusion_text;
+
+        $response = OpenAI::chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => $template_content,
+                ],
+            ],
+        ]);
+
+        return Arr::wrap((string) ($response->choices[0])->message->content);
     }
 
     public function getQuestionClustersStats(Interview $interview): array
@@ -104,111 +135,5 @@ class GenerateInterviewReport
         });
 
         return $clustersStats;
-    }
-
-    private function getImpacts(array $questionClusters): string
-    {
-        $impact_template = PromptTemplate::query()->latestTemplateOrFail('impacts');
-
-        //todo use @PromptMessage valueObject
-        $impact_template_content = str_replace(
-            [PromptTemplateVariableEnum::JobTitle->value],
-            [$this->interview->vacancy->interviewTemplate->jobTitle->title],
-            $impact_template->text
-        );
-
-        foreach ($questionClusters as $questionClustersStat) {
-            $impact_template_content .= str_replace([
-                PromptTemplateVariableEnum::QuestionClusterName->value,
-                PromptTemplateVariableEnum::QuestionClusterAvgScore->value,
-            ], [
-                $questionClustersStat['name'],
-                $questionClustersStat['avg_score'],
-            ], $impact_template->stats_text);
-        }
-
-        $impact_template_content .= $impact_template->conclusion_text;
-
-        $response = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $impact_template_content,
-                ],
-            ],
-        ]);
-
-        return (string) ($response->choices[0])->message->content;
-    }
-
-    protected function getCandidateAdvices(array $questionClusters): string
-    {
-        $candidate_template = PromptTemplate::query()->latestTemplateOrFail('candidate_advices');
-
-        $candidate_template_content = str_replace(
-            [PromptTemplateVariableEnum::JobTitle->value],
-            [$this->interview->vacancy->interviewTemplate->jobTitle->title],
-            $candidate_template->text
-        );
-
-        foreach ($questionClusters as $questionClustersStat) {
-            $candidate_template_content .= str_replace([
-                PromptTemplateVariableEnum::QuestionClusterName->value,
-                PromptTemplateVariableEnum::QuestionClusterAvgScore->value,
-            ], [
-                $questionClustersStat['name'],
-                $questionClustersStat['avg_score'],
-            ], $candidate_template->stats_text);
-        }
-
-        $candidate_template_content .= $candidate_template->conclusion_text;
-
-        $response = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $candidate_template_content,
-                ],
-            ],
-        ]);
-
-        return (string) ($response->choices[0])->message->content;
-    }
-
-    protected function getRecruiterAdvices(array $questionClusters): string
-    {
-        $recruiter_template = PromptTemplate::query()->latestTemplateOrFail('recruiter_advices');
-
-        $recruiter_template_content = str_replace(
-            [PromptTemplateVariableEnum::JobTitle->value],
-            [$this->interview->vacancy->interviewTemplate->jobTitle->title],
-            $recruiter_template->text
-        );
-
-        foreach ($questionClusters as $questionClustersStat) {
-            $recruiter_template_content .= str_replace([
-                PromptTemplateVariableEnum::QuestionClusterName->value,
-                PromptTemplateVariableEnum::QuestionClusterAvgScore->value,
-            ], [
-                $questionClustersStat['name'],
-                $questionClustersStat['avg_score'],
-            ], $recruiter_template->stats_text);
-        }
-
-        $recruiter_template_content .= $recruiter_template->conclusion_text;
-
-        $response = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $recruiter_template_content,
-                ],
-            ],
-        ]);
-
-        return (string) ($response->choices[0])->message->content;
     }
 }
