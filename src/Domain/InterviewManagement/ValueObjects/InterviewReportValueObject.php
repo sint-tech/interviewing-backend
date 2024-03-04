@@ -39,7 +39,7 @@ class InterviewReportValueObject implements Arrayable //todo rename the value ob
 
         $this->questionClustersStats = $report_values['question_clusters_stats'];
 
-        $this->advices = $report_values['advices'];
+        $this->advices = $report_values['candidate_advices'];
 
         $this->impacts = $report_values['impacts'];
 

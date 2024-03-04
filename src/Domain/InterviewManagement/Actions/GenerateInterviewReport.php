@@ -6,14 +6,13 @@ use Domain\AiPromptMessageManagement\Enums\PromptTemplateVariableEnum;
 use Domain\AiPromptMessageManagement\Models\PromptTemplate;
 use Domain\InterviewManagement\Exceptions\InterviewNotFinishedException;
 use Domain\InterviewManagement\Models\Interview;
-use Domain\InterviewManagement\ValueObjects\InterviewReportValueObject;
 use Domain\ReportManagement\Actions\CreateReportAction;
 use Domain\ReportManagement\DataTransferObjects\ReportDto;
 use Domain\ReportManagement\DataTransferObjects\ReportValueDto;
 use Domain\ReportManagement\Models\InterviewReport;
+use Domain\ReportManagement\Models\Report;
 use Illuminate\Support\Arr;
 use OpenAI\Laravel\Facades\OpenAI;
-use Support\ValueObjects\PromptMessage;
 
 class GenerateInterviewReport
 {
@@ -23,9 +22,12 @@ class GenerateInterviewReport
     ) {
     }
 
+    /**
+     * @throws InterviewNotFinishedException
+     */
     public function execute(
         Interview $interview
-    ): InterviewReportValueObject {
+    ):Report {
         if ($this->interviewStillRunning($interview)) {
             throw new InterviewNotFinishedException();
         }
@@ -65,7 +67,7 @@ class GenerateInterviewReport
 
         app(CreateReportAction::class)->execute($reportDto);
 
-        return new InterviewReportValueObject($interview);
+        return $interview->refresh()->defaultLastReport;
     }
 
     public function interviewStillRunning(Interview $interview): bool
