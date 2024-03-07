@@ -14,6 +14,10 @@ use Support\Controllers\Controller;
 
 class QuestionVariantController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(QuestionVariant::class, 'question_variant');
+    }
     /**
      * @return AnonymousResourceCollection<QuestionVariantResource>
      */
