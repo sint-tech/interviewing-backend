@@ -17,7 +17,7 @@ class UpdateQuestionClusterAction
     {
         $this->questionCluster->append([
             'creator_id' => $this->questionClusterDto->creator->getKey(),
-            'creator_type' => $this->questionClusterDto->creator::class,
+            'creator_type' => $this->questionClusterDto->creator->getMorphClass(),
         ]);
 
         $this->questionCluster->update($this->questionClusterDto->except('skills')->toArray());

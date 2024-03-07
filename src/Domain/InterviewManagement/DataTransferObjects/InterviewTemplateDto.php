@@ -28,7 +28,7 @@ class InterviewTemplateDto extends Data
         public readonly iterable $question_variants,
     ) {
         $this->additional([
-            'creator_type' => $this->creator::class,
+            'creator_type' => $this->creator->getMorphClass(),
             'creator_id' => $this->creator->getKey(),
         ]);
 

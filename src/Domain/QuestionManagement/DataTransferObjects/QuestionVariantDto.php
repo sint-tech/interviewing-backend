@@ -20,7 +20,7 @@ class QuestionVariantDto extends Data
     ) {
         if ($this->creator instanceof Authorizable) {
             $this->additional([
-                'creator_type' => $this->creator::class,
+                'creator_type' => $this->creator->getMorphClass(),
                 'creator_id' => $this->creator->getKey(),
             ]);
         }
