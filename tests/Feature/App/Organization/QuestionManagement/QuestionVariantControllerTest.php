@@ -35,7 +35,7 @@ class QuestionVariantControllerTest extends TestCase
     {
         QuestionVariant::factory(30)->for($this->employeeAuth, 'creator')->create(['organization_id' => $this->employeeAuth->organization_id]);
 
-        QuestionVariant::factory(30)->for(User::first(), 'creator')->create(['organization_id' => Organization::factory()->createOne()->getKey()]);
+        QuestionVariant::factory(30)->for(User::first(), 'creator')->create(['organization_id' => Organization::factory()->createOne()->getKey(), 'status' => QuestionVariantStatusEnum::Private->value]);
 
         $response = $this->get(route('organization.question-variants.index', ['per_page' => 1000]));
         $response->assertSuccessful();
@@ -60,7 +60,7 @@ class QuestionVariantControllerTest extends TestCase
     {
         $questionVariant = QuestionVariant::factory(1)->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id]);
 
-        $invalidQuestionVariant = QuestionVariant::factory(1)->for(User::first(), 'creator')->createOne(['organization_id' => Organization::factory()->createOne()->getKey()]);
+        $invalidQuestionVariant = QuestionVariant::factory(1)->for(User::first(), 'creator')->createOne(['organization_id' => Organization::factory()->createOne()->getKey(), 'status' => QuestionVariantStatusEnum::Private->value]);
 
         $this->get(route('organization.question-variants.show', $questionVariant))
             ->assertSuccessful();

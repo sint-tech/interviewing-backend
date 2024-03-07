@@ -23,7 +23,7 @@ class QuestionVariantFactory extends Factory
         return [
             'text' => $this->faker->text(1000),
             'description' => $this->faker->text(1000),
-            'status' => $this->faker->randomElement(QuestionVariantStatusEnum::toArray()),
+            'status' => $this->faker->randomElement(QuestionVariantStatusEnum::cases()),
             'reading_time_in_seconds' => $this->faker->numberBetween(12, 360),
             'answering_time_in_seconds' => $this->faker->numberBetween(12, 360),
         ];
