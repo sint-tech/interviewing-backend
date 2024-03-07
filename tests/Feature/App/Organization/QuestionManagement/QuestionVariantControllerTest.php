@@ -42,6 +42,19 @@ class QuestionVariantControllerTest extends TestCase
         $response->assertJsonCount(30, 'data');
     }
 
+    /** @test */
+    public function itShouldShowOrganizationQuestionVariantsAndPublicQuestionVariants()
+    {
+        QuestionVariant::factory(20)->for($this->employeeAuth, 'creator')->create(['organization_id' => $this->employeeAuth->organization_id]);
+
+        QuestionVariant::factory(20)->for(User::first(), 'creator')->create(['organization_id' => Organization::factory()->createOne()->getKey(), 'status' => QuestionVariantStatusEnum::Public->value]);
+
+        $response = $this->get(route('organization.question-variants.index', ['per_page' => 1000]));
+
+        $response->assertSuccessful();
+        $response->assertJsonCount(40, 'data');
+    }
+
     /** @test  */
     public function itShouldShowSingleQuestionVariant()
     {
@@ -143,7 +156,7 @@ class QuestionVariantControllerTest extends TestCase
     {
         $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id]);
 
-        $response = $this->actingAs($this->employeeAuth, 'organization')->delete(route('organization.question-variants.destroy', $questionVariant->id))->assertSuccessful();
+        $this->actingAs($this->employeeAuth, 'organization')->delete(route('organization.question-variants.destroy', $questionVariant->id))->assertSuccessful();
     }
 
     /** @test  */
