@@ -17,7 +17,7 @@ class QuestionVariantStoreRequest extends FormRequest
             'text' => ['required', 'string', 'min:3', 'max:1000'],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'question_id' => ['required', Rule::exists('questions', 'id')->withoutTrashed()],
-            'status' => ['required', new Enum(QuestionVariantStatusEnum::class)],
+            'status' => ['filled', new Enum(QuestionVariantStatusEnum::class)],
             'reading_time_in_seconds' => ['required', 'integer', 'min:1'],
             'answering_time_in_seconds' => ['required', 'integer', 'min:1'],
         ];
