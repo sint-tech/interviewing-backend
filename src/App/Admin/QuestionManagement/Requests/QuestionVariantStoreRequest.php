@@ -2,15 +2,16 @@
 
 namespace App\Admin\QuestionManagement\Requests;
 
-use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
-use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
-use Domain\Organization\Models\Organization;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\Validator;
+use Illuminate\Validation\Rules\Enum;
+use Illuminate\Foundation\Http\FormRequest;
+use Domain\Organization\Models\Organization;
+use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
+use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
+use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
 
 class QuestionVariantStoreRequest extends FormRequest
 {
@@ -20,6 +21,7 @@ class QuestionVariantStoreRequest extends FormRequest
             'text' => ['required', 'string', 'min:3', 'max:1000'],
             'description' => ['string', 'min:3', 'max:1000'],
             'question_id' => ['required', Rule::exists('questions', 'id')->withoutTrashed()],
+            'status' => ['required', new Enum(QuestionVariantStatusEnum::class)],
             'reading_time_in_seconds' => ['required', 'integer', 'min:1'],
             'answering_time_in_seconds' => ['required', 'integer', 'min:1'],
             'organization_id' => ['required', Rule::exists(Organization::class, 'id')->withoutTrashed()],
