@@ -25,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('question_variants', function (Blueprint $table) {
-            //
+            $table->dropColumn('status');
         });
     }
 };
