@@ -5,6 +5,7 @@ namespace Tests\Feature\App\Organization\QuestionManagement;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
+use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -62,6 +63,7 @@ class QuestionVariantControllerTest extends TestCase
             'text' => 'this is text',
             'description' => 'this is description',
             'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
             'reading_time_in_seconds' => 60 * 3, // 3 minutes
             'answering_time_in_seconds' => 60 * 10, // 10 minutes
         ])->assertSuccessful();
@@ -77,11 +79,13 @@ class QuestionVariantControllerTest extends TestCase
             'text' => 'this is text updated',
             'description' => 'this is description updated',
             'question_id' => $newQuestion->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
             'reading_time_in_seconds' => 40 * 3, // 2 minutes
             'answering_time_in_seconds' => 60 * 3, // 3 minutes
         ])->assertSuccessful()->assertJson(function (AssertableJson $json) use ($newQuestion) {
             $json->where('data.text', 'this is text updated')
                 ->where('data.description', 'this is description updated')
+                ->where('data.status', QuestionVariantStatusEnum::Public->value)
                 ->where('data.reading_time_in_seconds', 40 * 3)
                 ->where('data.answering_time_in_seconds', 60 * 3)
                 ->where('data.question_id', $newQuestion->getKey());

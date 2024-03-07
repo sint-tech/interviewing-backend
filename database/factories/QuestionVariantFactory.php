@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,6 +23,7 @@ class QuestionVariantFactory extends Factory
         return [
             'text' => $this->faker->text(1000),
             'description' => $this->faker->text(1000),
+            'status' => $this->faker->randomElement(QuestionVariantStatusEnum::toArray()),
             'reading_time_in_seconds' => $this->faker->numberBetween(12, 360),
             'answering_time_in_seconds' => $this->faker->numberBetween(12, 360),
         ];
