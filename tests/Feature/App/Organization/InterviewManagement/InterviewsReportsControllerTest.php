@@ -44,7 +44,6 @@ class InterviewsReportsControllerTest extends TestCase
             'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available,
             'creator_id' => $this->employeeAuth->getKey(),
             'creator_type' => $this->employeeAuth->getMorphClass(),
-
         ]);
 
         $this->vacancy = Vacancy::factory()->createOne([
@@ -55,7 +54,23 @@ class InterviewsReportsControllerTest extends TestCase
             'open_positions' => fake()->numberBetween(1, 10),
         ]);
 
-        $this->candidates = Candidate::factory(20)->create()->each(function ($candidate) {
+        $minPassedInterviews = $this->vacancy->open_positions;
+
+        Candidate::factory($minPassedInterviews)->create()->each(function ($candidate) {
+            $interview = Interview::factory()->createOne([
+                'candidate_id' => $candidate->getKey(),
+                'vacancy_id' => $this->vacancy->getKey(),
+                'interview_template_id' => $this->interviewTemplate->getKey(),
+                'status' => InterviewStatusEnum::Passed,
+            ]);
+
+            InterviewReport::factory()->createOne([
+                'reportable_id' => $interview->getKey(),
+                'reportable_type' => $interview->getMorphClass(),
+            ]);
+        });
+
+        Candidate::factory(20)->create()->each(function ($candidate) {
             $interview = Interview::factory()->createOne([
                 'candidate_id' => $candidate->getKey(),
                 'vacancy_id' => $this->vacancy->getKey(),
