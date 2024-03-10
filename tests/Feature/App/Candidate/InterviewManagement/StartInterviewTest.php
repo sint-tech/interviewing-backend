@@ -35,7 +35,7 @@ class StartInterviewTest extends TestCase
         $this->vacancy = Vacancy::factory()
             ->for($this->interviewTemplate = InterviewTemplate::factory()->createOne(), 'defaultInterviewTemplate')
             ->for($employee = Employee::factory()->createOne(), 'creator')
-            ->for($employee->organization, 'organization')->createOne(['max_reconnection_tries' => 0]);
+            ->for($employee->organization, 'organization')->createOne(['max_reconnection_tries' => 0, 'started_at' => now()->subDay()]);
     }
 
     /** @test */
@@ -111,7 +111,7 @@ class StartInterviewTest extends TestCase
             'vacancy_id' => Vacancy::factory()
                 ->for($this->interviewTemplate = InterviewTemplate::factory()->createOne(), 'defaultInterviewTemplate')
                 ->for($employee = Employee::factory()->createOne(), 'creator')
-                ->for($employee->organization, 'organization')->createOne(['max_reconnection_tries' => 0])->id,
+                ->for($employee->organization, 'organization')->createOne(['max_reconnection_tries' => 0, 'started_at'=> now()->subDay()])->id,
         ];
 
         $this->actingAs($this->authCandidate, 'candidate')
@@ -166,7 +166,7 @@ class StartInterviewTest extends TestCase
         $this->assertCount(1, $this->authCandidate->interviews()->where('status', InterviewStatusEnum::Withdrew)->get());
 
         $data = [
-            'vacancy_id' => Vacancy::factory()->createOne()->id,
+            'vacancy_id' => Vacancy::factory()->createOne(['started_at'=> now()->subDay()])->id,
         ];
 
         $this->actingAs($this->authCandidate, 'candidate')
@@ -218,6 +218,7 @@ class StartInterviewTest extends TestCase
             ->post(route('candidate.interviews.start'), [
                 'vacancy_id' => $new_vacancy_id = Vacancy::factory()->createOne([
                     'max_reconnection_tries' => 3,
+                    'started_at' => now()->subDay(),
                 ])->id,
             ])
             ->assertSuccessful();
@@ -227,5 +228,28 @@ class StartInterviewTest extends TestCase
             ->post(route('candidate.interviews.start'), [
                 'vacancy_id' => $new_vacancy_id,
             ])->assertSuccessful();
+    }
+    /** @test  */
+    public function itShouldNotStartInterviewWhenVacancyIsNotStarted()
+    {
+        $this->vacancy->update(['started_at' => now()->addDay()]);
+
+        $this->actingAs($this->authCandidate, 'candidate')
+            ->post(route('candidate.interviews.start'), [
+                'vacancy_id' => $this->vacancy->getKey(),
+            ])->assertUnprocessable()
+            ->assertJsonValidationErrorFor('vacancy_id');
+    }
+
+    /** @test  */
+    public function itShouldNotStartInterviewWhenVacancyIsEnded()
+    {
+        $this->vacancy->update(['ended_at' => now()->subDay()]);
+
+        $this->actingAs($this->authCandidate, 'candidate')
+            ->post(route('candidate.interviews.start'), [
+                'vacancy_id' => $this->vacancy->getKey(),
+            ])->assertUnprocessable()
+            ->assertJsonValidationErrorFor('vacancy_id');
     }
 }
