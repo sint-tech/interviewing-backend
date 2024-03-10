@@ -90,6 +90,11 @@ class Vacancy extends Model
         return Attribute::get(fn () => $this->ended_at?->lessThanOrEqualTo(now()));
     }
 
+    public function isStarted(): Attribute
+    {
+        return Attribute::get(fn () => $this->started_at?->lessThanOrEqualTo(now()));
+    }
+
     protected function getPreventDeletionRelations(): array
     {
         return [
