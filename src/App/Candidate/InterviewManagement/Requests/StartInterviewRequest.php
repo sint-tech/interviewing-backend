@@ -30,6 +30,12 @@ class StartInterviewRequest extends FormRequest
                 if ($this->interviewTemplateIsNotOpenForVacancy()) {
                     $validator->errors()->add('interview_template_id', __('interview template id not open to this vacancy'));
                 }
+                if ($this->vacancy()->is_ended) {
+                    $validator->errors()->add('vacancy_id', __('vacancy is ended'));
+                }
+                if (! $this->vacancy()->is_started) {
+                    $validator->errors()->add('vacancy_id', __('vacancy is not started'));
+                }
             },
         ];
     }
