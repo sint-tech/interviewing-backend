@@ -14,6 +14,7 @@ class QuestionVariantDto extends Data
         public readonly int|Optional $reading_time_in_seconds,
         public readonly int|Optional $answering_time_in_seconds,
         public readonly int|Optional $question_id,
+        public readonly int|Optional $status,
         public readonly Authorizable|Optional $creator,
         public readonly int $organization_id,
         public readonly array $ai_prompts, //todo validate ai_prompts

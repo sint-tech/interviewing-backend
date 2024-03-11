@@ -16,6 +16,7 @@ class QuestionVariantResource extends JsonResource
             'id' => $this->resource->getKey(),
             'text' => $this->resource->text,
             'description' => $this->resource->description,
+            'status' => $this->status,
             'reading_time_in_seconds' => $this->resource->reading_time_in_seconds,
             'answering_time_in_seconds' => $this->resource->answering_time_in_seconds,
             'deleted_at' => $this->whenNotNull($this->deleted_at?->format('Y-m-d H:i')),

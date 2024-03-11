@@ -2,10 +2,12 @@
 
 namespace App\Organization\QuestionManagement\Requests;
 
-use Domain\QuestionManagement\Models\Question;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
+use Illuminate\Validation\Rules\Enum;
+use Illuminate\Foundation\Http\FormRequest;
+use Domain\QuestionManagement\Models\Question;
+use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
 
 class QuestionVariantUpdateRequest extends FormRequest
 {
@@ -15,6 +17,7 @@ class QuestionVariantUpdateRequest extends FormRequest
             'text' => ['filled', 'string', 'min:3', 'max:1000'],
             'description' => ['filled', 'string', 'min:3', 'max:1000'],
             'question_id' => ['filled', Rule::exists('questions', 'id')->withoutTrashed()],
+            'status' => ['filled', new Enum(QuestionVariantStatusEnum::class)],
             'reading_time_in_seconds' => ['filled', 'integer', 'min:1'],
             'answering_time_in_seconds' => ['filled', 'integer', 'min:1'],
         ];

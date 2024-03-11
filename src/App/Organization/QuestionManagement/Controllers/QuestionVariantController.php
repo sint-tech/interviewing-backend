@@ -14,6 +14,10 @@ use Support\Controllers\Controller;
 
 class QuestionVariantController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(QuestionVariant::class, 'question_variant');
+    }
     /**
      * @return AnonymousResourceCollection<QuestionVariantResource>
      */
@@ -57,10 +61,8 @@ class QuestionVariantController extends Controller
         return QuestionVariantResource::make($action->execute($question_variant, $data));
     }
 
-    public function destroy(int $question_variant): QuestionVariantResource
+    public function destroy(QuestionVariant $question_variant): QuestionVariantResource
     {
-        $question_variant = QuestionVariant::query()->findOrFail($question_variant);
-
         $question_variant->delete();
 
         return QuestionVariantResource::make($question_variant);

@@ -35,6 +35,7 @@ class QuestionVariant extends Model
     protected $fillable = [
         'text',
         'description',
+        'status',
         'reading_time_in_seconds',
         'answering_time_in_seconds',
         'question_id',

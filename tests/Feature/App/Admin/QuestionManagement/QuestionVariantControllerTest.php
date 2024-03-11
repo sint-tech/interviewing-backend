@@ -2,17 +2,18 @@
 
 namespace Tests\Feature\App\Admin\QuestionManagement;
 
-use Database\Seeders\SintAdminsSeeder;
-use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
-use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
-use Domain\AiPromptMessageManagement\Models\AIPrompt;
-use Domain\Organization\Models\Organization;
-use Domain\QuestionManagement\Models\Question;
-use Domain\QuestionManagement\Models\QuestionVariant;
-use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Domain\Users\Models\User;
+use Database\Seeders\SintAdminsSeeder;
+use Domain\Organization\Models\Organization;
+use Illuminate\Foundation\Testing\WithFaker;
+use Domain\QuestionManagement\Models\Question;
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
+use Domain\QuestionManagement\Models\QuestionVariant;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
+use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
+use Domain\AiPromptMessageManagement\Enums\PromptMessageStatus;
 
 class QuestionVariantControllerTest extends TestCase
 {
@@ -63,6 +64,7 @@ class QuestionVariantControllerTest extends TestCase
             'text' => $this->faker->text,
             'description' => $this->faker->text,
             'question_id' => Question::factory()->for($this->sintUser, 'creator')->createOne()->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
             'reading_time_in_seconds' => 120,
             'answering_time_in_seconds' => 340,
             'organization_id' => Organization::factory()->createOne()->getKey(),
