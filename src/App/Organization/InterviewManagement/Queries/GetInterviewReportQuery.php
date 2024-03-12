@@ -20,7 +20,7 @@ class GetInterviewReportQuery extends QueryBuilder
         $this->allowedFilters(
             AllowedFilter::exact('interview_template_id'),
             AllowedFilter::exact('vacancy_id'),
-            AllowedFilter::exact('status'),
+            AllowedFilter::exact('status')->ignore(['accepted', 'passed']),
         );
 
         $this->disallowFilterByMultipleValues();
@@ -32,12 +32,12 @@ class GetInterviewReportQuery extends QueryBuilder
     {
         if ($this->request->input('filter.status') === 'accepted') {
             $this->abortFilterVacancyIdRequired();
-
             $this->subject->whereAccepted(Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'))->open_positions);
         }
 
         if ($this->request->input('filter.status') == 'passed') {
-            $this->subject->orderByAvgScoreDesc()->whereNotIn('id', Interview::query()->whereAccepted()->pluck('id'));
+            $this->abortFilterVacancyIdRequired();
+            $this->subject->orderByAvgScoreDesc()->whereNotIn('id', Interview::query()->whereAccepted(Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'))->open_positions)->pluck('id'));
         }
 
         return $this;

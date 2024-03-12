@@ -15,7 +15,7 @@ class InterviewsReportsController extends Controller
         $finishedInterviews = $query
             ->withWhereHas('defaultLastReport')
             ->with('candidate')
-            ->paginate(pagination_per_page());
+            ->get();
 
         return InterviewReportResource::collection($finishedInterviews);
     }

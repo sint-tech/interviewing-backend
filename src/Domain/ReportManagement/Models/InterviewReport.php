@@ -5,6 +5,8 @@ namespace Domain\ReportManagement\Models;
 use Domain\InterviewManagement\Models\Interview;
 use Illuminate\Database\Eloquent\Builder;
 use Support\Scopes\ForAuthScope;
+use Database\Factories\InterviewReportFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InterviewReport extends Report
 {
@@ -34,5 +36,10 @@ class InterviewReport extends Report
         }));
 
         parent::booted();
+    }
+
+    protected static function newFactory(): Factory
+    {
+        return InterviewReportFactory::new();
     }
 }
