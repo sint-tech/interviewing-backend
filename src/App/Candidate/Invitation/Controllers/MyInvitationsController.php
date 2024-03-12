@@ -15,6 +15,7 @@ class MyInvitationsController extends Controller
         return InvitationResource::collection(
             QueryBuilder::for(Invitation::query())
                 ->allowedIncludes('vacancy', 'vacancy.organization')
+                ->defaultSort('-is_expired')
                 ->paginate(pagination_per_page()));
     }
 }
