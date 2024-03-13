@@ -99,4 +99,45 @@ class MyInvitationsControllerTest extends TestCase
         $response->assertSuccessful();
         $response->assertJsonCount(0, 'data');
     }
+    /** @test */
+    public function itShouldSortInvitations()
+    {
+        $invitation1 = Invitation::factory()->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'last_invited_at' => now()->subDay(),
+                'should_be_invited_at' => now()->subDay(),
+                'expired_at' => now()->subDays(1)
+            ]);
+
+        $invitation2 = Invitation::factory()->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'last_invited_at' => now()->subDay(),
+                'should_be_invited_at' => now()->subDay(),
+                'expired_at' => null
+            ]);
+
+        $invitation3 = Invitation::factory()->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'last_invited_at' => now()->subDays(2),
+                'should_be_invited_at' => now()->subDays(2),
+                'expired_at' => null
+            ]);
+
+        $response = $this->get(route('candidate.invitations.my-invitations', ['sort' => 'is_expired,-last_invited_at']));
+
+        $data = $response->json('data');
+
+        $this->assertEquals($invitation2->id, $data[0]['id']);
+        $this->assertEquals($invitation3->id, $data[1]['id']);
+        $this->assertEquals($invitation1->id, $data[2]['id']);
+    }
 }
