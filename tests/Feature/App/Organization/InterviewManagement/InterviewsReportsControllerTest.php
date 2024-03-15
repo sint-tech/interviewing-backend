@@ -100,7 +100,7 @@ class InterviewsReportsControllerTest extends TestCase
     /** @test  */
     public function itShouldRetrievePassedInterviewsReports()
     {
-        $passedInterviewsCount = Interview::query()->orderByAvgScoreDesc()->whereNotIn('id', Interview::query()->whereAccepted($this->vacancy->open_positions)->pluck('id'))->count();
+        $passedInterviewsCount = Interview::query()->wherePassed()->whereNotIn('id', Interview::query()->whereAccepted($this->vacancy->open_positions)->pluck('id'))->count();
 
         $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => 'passed', 'filter[vacancy_id]' => $this->vacancy->getKey()]));
 
@@ -144,4 +144,15 @@ class InterviewsReportsControllerTest extends TestCase
         $response->assertJsonCount($rejectedInterviewsCount, 'data');
     }
 
+    /** @test  */
+    public function itShouldRetrieveWithdrewInterviewsReports()
+    {
+        $withdrewInterviewsCount = Interview::query()->whereStatus(InterviewStatusEnum::Withdrew)->count();
+
+        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => InterviewStatusEnum::Withdrew->value]));
+
+        $response->assertSuccessful();
+
+        $response->assertJsonCount($withdrewInterviewsCount, 'data');
+    }
 }
