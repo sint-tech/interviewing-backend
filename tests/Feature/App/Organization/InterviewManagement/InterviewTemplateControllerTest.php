@@ -7,6 +7,7 @@ use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\JobTitle\Models\JobTitle;
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
+use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
 use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
@@ -166,6 +167,52 @@ class InterviewTemplateControllerTest extends TestCase
         ])->assertSuccessful();
 
         $this->assertCount(1, InterviewTemplate::query()->get());
+    }
+    /** @test  */
+    public function itShouldStoreInterviewTemplateWithPublicQuestionVariant(): void
+    {
+        $anotherOrganization = Employee::factory()->createOne();
+        $questionVariant = QuestionVariant::factory()->createOne([
+            'organization_id' => $anotherOrganization->organization_id,
+            'creator_id' => $anotherOrganization->getKey(),
+            'creator_type' => $anotherOrganization->getMorphClass(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+        ]);
+
+        $this->post(route('organization.interview-templates.store'), [
+            'name' => 'testing name',
+            'description' => null,
+            'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,
+            'reusable' => 1,
+            'job_profile_id' => JobTitle::factory()->createOne()->getKey(),
+            'question_variants' => [
+                $questionVariant->getKey(),
+            ],
+        ])->assertSuccessful();
+
+        $this->assertCount(1, InterviewTemplate::query()->get());
+    }
+    /** @test  */
+    public function itShouldNotStoreInterviewTemplateWithPrivateQuestionVariant(): void
+    {
+        $anotherOrganization = Employee::factory()->createOne();
+        $questionVariant = QuestionVariant::factory()->createOne([
+            'organization_id' => $anotherOrganization->organization_id,
+            'creator_id' => $anotherOrganization->getKey(),
+            'creator_type' => $anotherOrganization->getMorphClass(),
+            'status' => QuestionVariantStatusEnum::Private->value,
+        ]);
+
+        $this->post(route('organization.interview-templates.store'), [
+            'name' => 'testing name',
+            'description' => null,
+            'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,
+            'reusable' => 1,
+            'job_profile_id' => JobTitle::factory()->createOne()->getKey(),
+            'question_variants' => [
+                $questionVariant->getKey(),
+            ],
+        ])->assertJsonValidationErrors('question_variants');
     }
 
     /** @test  */
