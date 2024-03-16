@@ -8,6 +8,7 @@ use Domain\JobTitle\Models\JobTitle;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
 
 class InterviewTemplateStoreRequest extends FormRequest
 {
@@ -29,7 +30,10 @@ class InterviewTemplateStoreRequest extends FormRequest
             'question_variants' => [
                 'required', 'array', 'min:1',
                 Rule::exists(table_name(QuestionVariant::class), 'id')
-                    ->where('organization_id', auth()->user()->organization_id)
+                    ->where(function ($query) {
+                        $query->where('organization_id', auth()->user()->organization_id)
+                        ->orWhere('status', QuestionVariantStatusEnum::Public);
+                    })
                     ->withoutTrashed(),
             ],
         ];
