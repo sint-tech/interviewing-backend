@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class ModelHasRelationsPreventDeleteException extends Exception
 {
@@ -15,13 +15,28 @@ class ModelHasRelationsPreventDeleteException extends Exception
      */
     public static function make(Model $model, string|array $relations)
     {
-        $relations = collect($relations)->join(', ', ',And ');
+        $relations = self::generateRelationNames($relations);
 
-        $errMessage = sprintf('model with %s: %s can\'t be deleted as it has these relations: %s', $model->getKeyName(), $model->getKey(), $relations);
+        $errMessage = sprintf('%s can\'t be deleted as it has %s', self::generateClassName($model), $relations);
 
         throw new self($errMessage);
     }
 
+    private static function generateClassName(Model $model): string
+    {
+        $className = class_basename($model);
+        $className = Str::of($className)->kebab()->replace('-', ' ');
+        return $className;
+    }
+
+    private static function generateRelationNames(array|string $relations): string
+    {
+        return collect($relations)
+            ->map(function ($relation) {
+                return Str::of($relation)->kebab()->replace('-', ' ');
+            })
+            ->join(', ', ', and ');
+    }
 
     /**
      * Render the exception into an HTTP response.
