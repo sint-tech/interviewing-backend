@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Support\Scopes\ForAuthScope;
 use Support\Traits\Model\PreventDeleteWithRelations;
+use Domain\Vacancy\Models\Vacancy;
 
 class InterviewTemplate extends Model
 {
@@ -70,6 +71,11 @@ class InterviewTemplate extends Model
     public function jobTitle(): BelongsTo
     {
         return $this->targetedJobTitle();
+    }
+
+    public function vacancies(): HasMany
+    {
+        return $this->hasMany(Vacancy::class, 'interview_template_id');
     }
 
     public function creator(): MorphTo
