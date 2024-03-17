@@ -22,13 +22,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Support\Scopes\ForAuthScope;
+use Support\Traits\Model\PreventDeleteWithRelations;
 
 /**
  * @property Collection<AIPrompt> $aiPrompts
  */
 class QuestionVariant extends Model
 {
-    use HasFactory,SoftDeletes,HasRelationships;
+    use HasFactory,SoftDeletes,HasRelationships, PreventDeleteWithRelations;
 
     protected $table = 'question_variants';
 
@@ -84,6 +85,13 @@ class QuestionVariant extends Model
             'question_variant_id',
             'interview_template_id',
         );
+    }
+
+    protected function getPreventDeletionRelations(): array
+    {
+        return [
+            'interviewTemplates'
+        ];
     }
 
     public function creator(): MorphTo

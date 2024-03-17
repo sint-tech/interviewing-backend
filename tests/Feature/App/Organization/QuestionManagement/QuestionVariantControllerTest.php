@@ -12,6 +12,9 @@ use Domain\QuestionManagement\Models\QuestionVariant;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
+use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
+use Domain\InterviewManagement\Models\InterviewTemplate;
+use Domain\JobTitle\Models\JobTitle;
 
 class QuestionVariantControllerTest extends TestCase
 {
@@ -157,6 +160,26 @@ class QuestionVariantControllerTest extends TestCase
         $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id]);
 
         $this->actingAs($this->employeeAuth, 'organization')->delete(route('organization.question-variants.destroy', $questionVariant->id))->assertSuccessful();
+    }
+
+    /** @test */
+    public function itShouldNotDeleteQuestionVariantIfInInterviewTemplate()
+    {
+        $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id]);
+
+        $interviewTemplate = InterviewTemplate::create([
+            'name' => 'test',
+            'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,
+            'targeted_job_title_id' => JobTitle::factory()->createOne()->getKey(),
+            'creator_id' => $this->employeeAuth->getKey(),
+            'creator_type' => $this->employeeAuth->getMorphClass(),
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
+        $interviewTemplate->questionVariants()->attach($questionVariant);
+
+        $this->actingAs($this->employeeAuth, 'organization')->delete(route('organization.question-variants.destroy', $questionVariant->id))
+            ->assertConflict();
     }
 
     /** @test  */
