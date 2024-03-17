@@ -237,7 +237,7 @@ class InterviewTemplateControllerTest extends TestCase
     }
 
     /** @test  */
-    public function itShouldUpdateVacancy()
+    public function itShouldUpdateInterviewTemplate()
     {
         $interview_template = InterviewTemplate::factory()->for($this->employeeAuth, 'creator')->createOne([
             'organization_id' => $this->employeeAuth->organization_id,
