@@ -16,7 +16,7 @@ class InterviewReportResource extends JsonResource
             'language_fluency_score' => (float) $this->resource->defaultLastReport->language_fluency_score,
             'advices' => (array) $this->resource->defaultLastReport->recruiter_advices,
             'impacts' => (array) $this->resource->defaultLastReport->impacts,
-            'question_clusters_scores' => $this->resource->defaultLastReport->questionClustersStats,
+            'question_clusters_scores' => $this->resource->defaultLastReport->question_clusters_stats,
             'created_at' => $this->resource->defaultLastReport->created_at?->format('Y-m-d H:i'),
         ];
     }
