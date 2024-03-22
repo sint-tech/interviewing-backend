@@ -16,7 +16,7 @@ class MyInvitationsController extends Controller
     {
         return InvitationResource::collection(
             QueryBuilder::for(Invitation::query())
-                ->allowedIncludes('vacancy', 'vacancy.organization')
+                ->with('vacancy.organization')
                 ->allowedSorts([
                     AllowedSort::custom('is_expired', new SortsInvitationByExpiration()),
                     'last_invited_at',

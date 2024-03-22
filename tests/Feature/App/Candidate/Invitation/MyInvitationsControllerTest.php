@@ -107,8 +107,8 @@ class MyInvitationsControllerTest extends TestCase
             ->create([
                 'candidate_id' => $this->authCandidate,
                 'email' => $this->authCandidate->email,
-                'last_invited_at' => now()->subDay(),
-                'should_be_invited_at' => now()->subDay(),
+                'last_invited_at' => now()->subDays(3),
+                'should_be_invited_at' => now()->subDays(3),
                 'expired_at' => now()->subDays(1)
             ]);
 
@@ -127,8 +127,18 @@ class MyInvitationsControllerTest extends TestCase
             ->create([
                 'candidate_id' => $this->authCandidate,
                 'email' => $this->authCandidate->email,
-                'last_invited_at' => now()->subDays(2),
-                'should_be_invited_at' => now()->subDays(2),
+                'last_invited_at' => now()->subDays(4),
+                'should_be_invited_at' => now()->subDays(4),
+                'expired_at' => null
+            ]);
+
+        $invitation4 = Invitation::factory()->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay(), 'ended_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'last_invited_at' => now()->subDay(),
+                'should_be_invited_at' => now()->subDay(),
                 'expired_at' => null
             ]);
 
@@ -138,6 +148,7 @@ class MyInvitationsControllerTest extends TestCase
 
         $this->assertEquals($invitation2->id, $data[0]['id']);
         $this->assertEquals($invitation3->id, $data[1]['id']);
-        $this->assertEquals($invitation1->id, $data[2]['id']);
+        $this->assertEquals($invitation4->id, $data[2]['id']);
+        $this->assertEquals($invitation1->id, $data[3]['id']);
     }
 }
