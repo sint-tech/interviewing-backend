@@ -2,6 +2,7 @@
 
 namespace App\Organization\QuestionManagement\Controllers;
 
+use App\Organization\QuestionManagement\Queries\QuestionVariantIndexQuery;
 use App\Organization\QuestionManagement\Requests\QuestionVariantStoreRequest;
 use App\Organization\QuestionManagement\Requests\QuestionVariantUpdateRequest;
 use App\Organization\QuestionManagement\Resources\QuestionVariantResource;
@@ -21,10 +22,10 @@ class QuestionVariantController extends Controller
     /**
      * @return AnonymousResourceCollection<QuestionVariantResource>
      */
-    public function index(): AnonymousResourceCollection
+    public function index(QuestionVariantIndexQuery $query): AnonymousResourceCollection
     {
         return QuestionVariantResource::collection(
-            QuestionVariant::query()->paginate(pagination_per_page())
+            $query->paginate(pagination_per_page())
         );
     }
 
