@@ -3,6 +3,7 @@
 namespace App\Organization\QuestionManagement\Resources;
 
 use Domain\QuestionManagement\Models\QuestionVariant;
+use App\Organization\QuestionManagement\Resources\OrganizationResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -21,6 +22,7 @@ class QuestionVariantResource extends JsonResource
             'answering_time_in_seconds' => $this->resource->answering_time_in_seconds,
             'deleted_at' => $this->whenNotNull($this->deleted_at?->format('Y-m-d H:i')),
             'question_id' => $this->resource->question_id,
+            'organization' => OrganizationResource::make($this->whenLoaded('organization')),
         ];
     }
 }
