@@ -18,6 +18,9 @@ enum InterviewStatusEnum: string
     //interview's candidate rejected
     case Rejected = 'rejected';
 
+    //interview's candidate selected
+    case Selected = 'selected';
+
     /**
      * get status refers as this interview had ended and can't be revisited
      */
