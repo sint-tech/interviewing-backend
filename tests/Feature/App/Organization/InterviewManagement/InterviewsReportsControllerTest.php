@@ -155,4 +155,35 @@ class InterviewsReportsControllerTest extends TestCase
 
         $response->assertJsonCount($withdrewInterviewsCount, 'data');
     }
+
+    /** @test  */
+    public function itShouldReturnSelectedInterviewsAsAccepted()
+    {
+        $openPositions = $this->vacancy->open_positions;
+        $rejectedInterview = Interview::query()->whereRejected()->first();
+
+        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => 'accepted', 'filter[vacancy_id]' => $this->vacancy->getKey()]));
+        $this->assertFalse(collect($response->json('data'))->contains($rejectedInterview));
+
+        $this->post(route('organization.interviews.change-status', $rejectedInterview->getKey()), [
+            'status' => InterviewStatusEnum::Selected->value,
+        ])->assertSuccessful();
+
+        $acceptedInterviewsAfterChange = Interview::query()->whereAccepted($openPositions)->get();
+
+        $this->assertTrue($acceptedInterviewsAfterChange->contains($rejectedInterview));
+
+        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => 'accepted', 'filter[vacancy_id]' => $this->vacancy->getKey()]));
+
+        $response->assertSuccessful();
+
+        $response->assertJsonCount($openPositions, 'data');
+
+        $response->assertJsonFragment(['id' => $rejectedInterview->getKey()]);
+
+        $passedInterviewsCount = $acceptedInterviewsAfterChange->filter(fn ($interview) => $interview->status === InterviewStatusEnum::Passed)->count();
+        $selectedInterviewsCount = $acceptedInterviewsAfterChange->filter(fn ($interview) => $interview->status === InterviewStatusEnum::Selected)->count();
+
+        $this->assertEquals($openPositions - $selectedInterviewsCount, $passedInterviewsCount);
+    }
 }
