@@ -15,6 +15,7 @@ class VacancyResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'title' => $this->resource->title,
+            'ended_at' => $this->resource->ended_at,
             'description' => $this->resource->descripion,
             'interview_template_id' => $this->resource->interview_template_id,
             'organization' => OrganizationResource::make($this->whenLoaded('organization')),
