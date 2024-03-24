@@ -23,6 +23,7 @@ use App\Organization\SkillManagement\Controllers\SkillController;
 use App\Organization\Vacancy\Controllers\TotalVacanciesController;
 use App\Organization\Vacancy\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
+use App\Organization\InterviewManagement\Controllers\ChangeInterviewStatusController;
 
 Route::name('auth.')->group(function () {
     Route::post('/login', LoginController::class)->withoutMiddleware('auth:organization')->middleware('guest:organization')->name('login');
@@ -61,6 +62,7 @@ Route::prefix('interview-management')
             Route::get('reports', [InterviewsReportsController::class, 'index'])->name('reports.index');
             Route::get('count', TotalInterviewsController::class)->name('count');
         });
+        Route::post('interviews/{interview}/change-status', ChangeInterviewStatusController::class)->name('interviews.change-status');
     });
 
 Route::apiResource('invitations', InvitationController::class);

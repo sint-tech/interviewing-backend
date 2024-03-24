@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\InterviewManagement\Controllers;
+namespace App\Organization\InterviewManagement\Controllers;
 
 use App\Admin\InterviewManagement\Requests\ChangeInterviewStatusRequest;
 use App\Admin\InterviewManagement\Resources\InterviewResource;
