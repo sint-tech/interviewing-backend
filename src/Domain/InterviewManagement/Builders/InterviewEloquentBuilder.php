@@ -71,13 +71,13 @@ class InterviewEloquentBuilder extends Builder
         $answers_table = (new Answer())->getTable();
 
         $this->orderBy(Answer::query()
-            ->select(DB::raw('AVG(score)'))
-            ->whereColumn(
-                "$answers_table.interview_id",
-                '=',
-                "{$this->getModel()->getTable()}.id"
-            )
-            ->groupBy('interview_id'),
+                ->select(DB::raw('AVG(score)'))
+                ->whereColumn(
+                    "$answers_table.interview_id",
+                    '=',
+                    "{$this->getModel()->getTable()}.id"
+                )
+                ->groupBy('interview_id'),
             $direction
         );
 
@@ -94,13 +94,29 @@ class InterviewEloquentBuilder extends Builder
      */
     public function whereAccepted(int $open_positions = 1): self
     {
-        return $this->wherePassed()->take($open_positions);
+        $selected = $this->getModel()->newQuery()->whereSelected()->select('id')->get();
+        $remaining_positions = $open_positions - $selected->count();
+
+        if ($remaining_positions <= 0) {
+            return $this->whereIn('id', $selected->pluck('id'));
+        }
+
+        $passed = $this->getModel()->newQuery()->wherePassed()->take($remaining_positions)->select('id')->get();
+
+        $accepted = $passed->merge($selected);
+
+        return $this->whereIn('id', $accepted->pluck('id'));
     }
 
     public function wherePassed(): self
     {
         return $this->orderByAvgScoreDesc()
             ->whereStatus(InterviewStatusEnum::Passed);
+    }
+
+    public function whereSelected(): self
+    {
+        return $this->whereStatus(InterviewStatusEnum::Selected);
     }
 
     public function whereRejected(string $boolean = 'and'): self
