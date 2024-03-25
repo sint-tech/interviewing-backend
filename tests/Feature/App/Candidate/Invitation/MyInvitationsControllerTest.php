@@ -32,7 +32,8 @@ class MyInvitationsControllerTest extends TestCase
     /** @test  */
     public function itShouldShowAllAuthCandidateInvitations()
     {
-        Invitation::factory(25)->for(User::query()->first(), 'creator')
+        // active invitations
+        Invitation::factory(15)->for(User::query()->first(), 'creator')
             ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay()]), 'vacancy')
             ->create([
                 'candidate_id' => $this->authCandidate,
@@ -40,10 +41,30 @@ class MyInvitationsControllerTest extends TestCase
                 'should_be_invited_at' => now()->subDay(),
             ]);
 
-        Invitation::factory(100)->for(User::query()->first(), 'creator')
+        // expired invitations
+        Invitation::factory(10)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+                'expired_at' => now()->subDay(),
+            ]);
+
+        // upcoming invitations
+        Invitation::factory(5)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->addDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+            ]);
+
+        // invitations for other candidates
+        Invitation::factory(10)->for(User::query()->first(), 'creator')
             ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay()]), 'vacancy')
             ->create();
-        Invitation::factory(100)->for(User::query()->first(), 'creator')->create([
+        Invitation::factory(10)->for(User::query()->first(), 'creator')->create([
             'candidate_id' => Candidate::factory()->createOne()->getKey(),
         ]);
 
@@ -81,6 +102,104 @@ class MyInvitationsControllerTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertJsonCount(10, 'data');
+    }
+
+    /** @test */
+    public function itShouldShowExpiredInvitations()
+    {
+        // expired invitations with expired vacancies
+        Invitation::factory(5)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay(), 'ended_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+                'expired_at' => now()->subDay(),
+                'used_at' => now()->subDay(),
+            ]);
+
+        // expired invitations with not expired vacancies
+        Invitation::factory(5)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+                'expired_at' => now()->subDay(),
+                'used_at' => now()->subDay(),
+            ]);
+
+        // not expired invitations with expired vacancies
+        Invitation::factory(5)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay(), 'ended_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+            ]);
+
+        // active invitations
+        Invitation::factory(2)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->addDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+            ]);
+
+        $response = $this->get(route('candidate.invitations.my-invitations', ['filter[is_expired]' => 'true']));
+
+        $response->assertSuccessful();
+        $response->assertJsonCount(15, 'data');
+    }
+
+    /** @test */
+    public function itShouldShowNotExpiredInvitations()
+    {
+        // expired invitations with expired vacancies
+        Invitation::factory(5)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay(), 'ended_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+                'expired_at' => now()->subDay(),
+                'used_at' => now()->subDay(),
+            ]);
+
+        // expired invitations with not expired vacancies
+        Invitation::factory(5)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay(), 'ended_at' => now()->addDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+                'expired_at' => now()->subDay(),
+                'used_at' => now()->subDay(),
+            ]);
+
+        // not expired invitations with expired vacancies
+        Invitation::factory(5)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay(), 'ended_at' => now()->subDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+            ]);
+
+        // active invitations
+        Invitation::factory(2)->for(User::query()->first(), 'creator')
+            ->for(Vacancy::factory()->createOne(['started_at' => now()->subDay(), 'ended_at' => now()->addDay()]), 'vacancy')
+            ->create([
+                'candidate_id' => $this->authCandidate,
+                'email' => $this->authCandidate->email,
+                'should_be_invited_at' => now()->subDay(),
+            ]);
+
+        $response = $this->get(route('candidate.invitations.my-invitations', ['filter[is_expired]' => 'false']));
+
+        $response->assertSuccessful();
+        $response->assertJsonCount(2, 'data');
     }
 
     /** @test */
