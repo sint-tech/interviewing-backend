@@ -3,24 +3,18 @@
 namespace App\Candidate\Invitation\Controllers;
 
 use App\Candidate\Invitation\Resources\InvitationResource;
-use Domain\Invitation\Models\Invitation;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
 use Support\Controllers\Controller;
-use App\Candidate\Invitation\Queries\SortsInvitationByExpiration;
-use Spatie\QueryBuilder\AllowedSort;
+use App\Candidate\Invitation\Queries\MyInvitationsQuery;
 
 class MyInvitationsController extends Controller
 {
-    public function __invoke(): AnonymousResourceCollection
+    public function __invoke(MyInvitationsQuery $query): AnonymousResourceCollection
     {
         return InvitationResource::collection(
-            QueryBuilder::for(Invitation::query())
-                ->with('vacancy.organization')
-                ->allowedSorts([
-                    AllowedSort::custom('is_expired', new SortsInvitationByExpiration()),
-                    'last_invited_at',
-                ])
-                ->paginate(pagination_per_page()));
+            $query
+            ->with('vacancy.organization')
+            ->paginate(pagination_per_page())
+        );
     }
 }
