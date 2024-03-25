@@ -5,6 +5,7 @@ namespace Domain\Invitation\Models;
 use Carbon\Carbon;
 use Database\Factories\InvitationFactory;
 use Domain\Candidate\Models\Candidate;
+use Domain\Invitation\Builders\InvitationEloquentBuilder;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -96,6 +97,11 @@ class Invitation extends Model
                 ]
             );
         });
+    }
+
+    public function newEloquentBuilder($query): InvitationEloquentBuilder
+    {
+        return new InvitationEloquentBuilder($query);
     }
 
     protected static function newFactory(): InvitationFactory
