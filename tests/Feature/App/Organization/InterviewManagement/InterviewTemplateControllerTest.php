@@ -15,6 +15,7 @@ use Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
+use Domain\Vacancy\Models\Vacancy;
 
 class InterviewTemplateControllerTest extends TestCase
 {
@@ -246,5 +247,46 @@ class InterviewTemplateControllerTest extends TestCase
         $response = $this->put(route('organization.interview-templates.update', $interview_template));
 
         $response->assertSuccessful();
+    }
+
+    /** @test  */
+    public function itShouldNotUpdateInterviewTemplateWithRunningVacancy()
+    {
+        $interview_template = InterviewTemplate::factory()->for($this->employeeAuth, 'creator')->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
+        Vacancy::factory()
+        ->for($this->employeeAuth->organization, 'organization')
+        ->for($this->employeeAuth, 'creator')->create([
+            'interview_template_id' => $interview_template->getKey(),
+            'started_at' => now()->subDay(),
+            'ended_at' => now()->addDay(),
+        ]);
+
+        $response = $this->put(route('organization.interview-templates.update', $interview_template));
+
+        $response->assertJsonValidationErrors('interview_template');
+    }
+
+    /** @test  */
+    public function itShouldNotUpdateInterviewTemplateWithInterviews()
+    {
+        $interview_template = InterviewTemplate::factory()->for($this->employeeAuth, 'creator')->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
+        $interview_template->interviews()->create([
+            'organization_id' => $this->employeeAuth->organization_id,
+            'vacancy_id' => Vacancy::factory()->createOne([
+                'organization_id' => $this->employeeAuth->organization_id,
+                'interview_template_id' => $interview_template->getKey(),
+            ])->getKey(),
+
+        ]);
+
+        $response = $this->put(route('organization.interview-templates.update', $interview_template));
+
+        $response->assertJsonValidationErrors('interview_template');
     }
 }

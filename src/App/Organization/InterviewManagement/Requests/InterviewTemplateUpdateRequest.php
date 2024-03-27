@@ -35,6 +35,9 @@ class InterviewTemplateUpdateRequest extends FormRequest
                 if ($this->interviewTemplate()->interviews()->exists()) {
                     $validator->errors()->add('interview_template', "Can't update this interview template as there are interviews use this template");
                 }
+                if ($this->interviewTemplate()->hasRunningVacancies()) {
+                    $validator->errors()->add('interview_template', "Can't update this interview template as there are running vacancies use this template");
+                }
             },
         ];
     }

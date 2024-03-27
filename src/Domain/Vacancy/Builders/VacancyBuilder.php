@@ -24,4 +24,10 @@ class VacancyBuilder extends Builder
     {
         return $this->where('ended_at', '>=', now());
     }
+
+    public function whereRunning(): self
+    {
+        return $this->where('started_at', '<=', now())
+            ->where('ended_at', '>=', now());
+    }
 }
