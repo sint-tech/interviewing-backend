@@ -87,6 +87,18 @@ class QuestionVariant extends Model
         );
     }
 
+    public function inRunningVacancies(): bool
+    {
+        return $this->interviewTemplates()->whereHas('vacancies', function ($query) {
+            $query->whereRunning();
+        })->exists();
+    }
+
+    public function inInterviewTemplates(): bool
+    {
+        return $this->interviewTemplates()->exists();
+    }
+
     protected function getPreventDeletionRelations(): array
     {
         return [
