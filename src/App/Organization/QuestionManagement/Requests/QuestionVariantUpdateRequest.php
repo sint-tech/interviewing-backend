@@ -7,6 +7,7 @@ use Illuminate\Validation\Validator;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Foundation\Http\FormRequest;
 use Domain\QuestionManagement\Models\Question;
+use Domain\QuestionManagement\Models\QuestionVariant;
 use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
 
 class QuestionVariantUpdateRequest extends FormRequest
@@ -30,8 +31,19 @@ class QuestionVariantUpdateRequest extends FormRequest
                 if ($this->selectedQuestionHasNoDefaultAIPrompt()) {
                     $validator->errors()->add('question_id', 'invalid question_id');
                 }
+                if ($this->questionVariant()->status == QuestionVariantStatusEnum::Public->value && $this->questionVariant()->inInterviewTemplates()) {
+                    $validator->errors()->add('status', 'Can\'t update this question variant as there are interview templates use this question variant');
+                }
+                if ($this->questionVariant()->status == QuestionVariantStatusEnum::Private->value && $this->questionVariant()->inRunningVacancies()) {
+                    $validator->errors()->add('status', 'Can\'t update this question variant as there are interview templates use this question variant');
+                }
             },
         ];
+    }
+
+    public function questionVariant(): QuestionVariant
+    {
+        return $this->route('question_variant');
     }
 
     public function question(): Question
