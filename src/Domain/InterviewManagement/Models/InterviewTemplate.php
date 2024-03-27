@@ -78,6 +78,11 @@ class InterviewTemplate extends Model
         return $this->hasMany(Vacancy::class, 'interview_template_id');
     }
 
+    public function hasRunningVacancies(): bool
+    {
+        return $this->vacancies()->whereRunning()->exists();
+    }
+
     public function creator(): MorphTo
     {
         return $this->morphTo('creator');
