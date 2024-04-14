@@ -10,24 +10,20 @@ use Support\Controllers\Controller;
 
 class UpdatePersonalInformationController extends Controller
 {
-    public function __construct(protected UpdateEmployeeAction $updateEmployeeAction)
-    {
-    }
-
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, UpdateEmployeeAction $updateEmployeeAction)
     {
         $request->validate([
             'first_name' => ['filled', 'string', 'max:64'],
             'last_name' => ['filled', 'string', 'max:64'],
         ]);
 
-        $this->updateEmployeeAction->execute(
-            auth()->user(),
-            EmployeeData::from(
-                array_merge(auth()->user()->toArray(), $request->only(['first_name', 'last_name']))
+        return EmployeeResource::make(
+            $updateEmployeeAction->execute(
+                auth()->user(),
+                EmployeeData::from(
+                    array_merge(auth()->user()->toArray(), $request->only(['first_name', 'last_name']))
+                )
             )
         );
-
-        return EmployeeResource::make(auth()->user()->fresh());
     }
 }
