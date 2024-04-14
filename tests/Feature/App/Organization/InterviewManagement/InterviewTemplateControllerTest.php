@@ -257,12 +257,12 @@ class InterviewTemplateControllerTest extends TestCase
         ]);
 
         Vacancy::factory()
-        ->for($this->employeeAuth->organization, 'organization')
-        ->for($this->employeeAuth, 'creator')->create([
-            'interview_template_id' => $interview_template->getKey(),
-            'started_at' => now()->subDay(),
-            'ended_at' => now()->addDay(),
-        ]);
+            ->for($this->employeeAuth->organization, 'organization')
+            ->for($this->employeeAuth, 'creator')->create([
+                'interview_template_id' => $interview_template->getKey(),
+                'started_at' => now()->subDay(),
+                'ended_at' => now()->addDay(),
+            ]);
 
         $response = $this->put(route('organization.interview-templates.update', $interview_template));
 
@@ -288,5 +288,35 @@ class InterviewTemplateControllerTest extends TestCase
         $response = $this->put(route('organization.interview-templates.update', $interview_template));
 
         $response->assertJsonValidationErrors('interview_template');
+    }
+
+    /** @test  */
+    public function itShouldDeleteInterviewTemplate(): void
+    {
+        $interview_template = InterviewTemplate::factory()->for($this->employeeAuth, 'creator')->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
+        $this->delete(route('organization.interview-templates.destroy', $interview_template))
+            ->assertSuccessful();
+
+        $this->assertSoftDeleted($interview_template);
+    }
+
+    /** @test  */
+    public function itShouldNotDeleteInterviewTemplateIfUsedInVacancy(): void
+    {
+        $interview_template = InterviewTemplate::factory()->for($this->employeeAuth, 'creator')->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
+        Vacancy::factory()
+            ->for($this->employeeAuth->organization, 'organization')
+            ->for($this->employeeAuth, 'creator')->create([
+                'interview_template_id' => $interview_template->getKey(),
+            ]);
+
+        $this->delete(route('organization.interview-templates.destroy', $interview_template))
+            ->assertConflict();
     }
 }
