@@ -186,4 +186,15 @@ class InterviewsReportsControllerTest extends TestCase
 
         $this->assertEquals($openPositions - $selectedInterviewsCount, $passedInterviewsCount);
     }
+
+    public function itShouldShowInterviewReport()
+    {
+        $interview = Interview::query()->first();
+
+        $response = $this->get(route('organization.interviews.reports.show', $interview->getKey()));
+
+        $response->assertSuccessful();
+
+        $response->assertJsonFragment(['id' => $interview->getKey()]);
+    }
 }
