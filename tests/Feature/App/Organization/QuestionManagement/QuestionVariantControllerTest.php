@@ -53,10 +53,33 @@ class QuestionVariantControllerTest extends TestCase
 
         QuestionVariant::factory(20)->for(User::first(), 'creator')->create(['organization_id' => Organization::factory()->createOne()->getKey(), 'status' => QuestionVariantStatusEnum::Public->value]);
 
-        $response = $this->get(route('organization.question-variants.index', ['per_page' => 1000]));
+        $response = $this->get(route('organization.question-variants.index', ['per_page' => 1000, 'include' => 'organization']));
 
         $response->assertSuccessful();
         $response->assertJsonCount(40, 'data');
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'organization' => [
+                        'id',
+                        'name',
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /** @test  */
+    public function itShouldShowOrganizationPrivateQuestionVariants()
+    {
+        QuestionVariant::factory(20)->for($this->employeeAuth, 'creator')->create(['organization_id' => $this->employeeAuth->organization_id]);
+
+        QuestionVariant::factory(20)->for(User::first(), 'creator')->create(['organization_id' => Organization::factory()->createOne()->getKey(), 'status' => QuestionVariantStatusEnum::Public->value]);
+
+        $response = $this->get(route('organization.question-variants.index', ['per_page' => 1000, 'filter[status]' => 'private']));
+
+        $response->assertSuccessful();
+        $response->assertJsonCount(20, 'data');
     }
 
     /** @test  */
@@ -84,53 +107,71 @@ class QuestionVariantControllerTest extends TestCase
             'reading_time_in_seconds' => 60 * 3, // 3 minutes
             'answering_time_in_seconds' => 60 * 10, // 10 minutes
         ])->assertSuccessful();
+
+        $this->post(route('organization.question-variants.store'), [
+            'text' => 'this is text',
+            'description' => 'this is description',
+            'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->createOne()->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+            'reading_time_in_seconds' => 60 * 3, // 3 minutes
+            'answering_time_in_seconds' => 60 * 10, // 10 minutes
+        ])->assertJsonValidationErrorFor('question_id');
     }
 
-    // /** @test  */
-    // public function itShouldUpdateQuestionVariant(): void
-    // {
-    //     $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id, 'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey()]);
+    /** @test  */
+    public function itShouldUpdateQuestionVariant(): void
+    {
+        $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id, 'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey()]);
 
-    //     $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
-    //     $this->put(route('organization.question-variants.update', $questionVariant), [
-    //         'text' => 'this is text updated',
-    //         'description' => 'this is description updated',
-    //         'question_id' => $newQuestion->getKey(),
-    //         'status' => QuestionVariantStatusEnum::Public->value,
-    //         'reading_time_in_seconds' => 40 * 3, // 2 minutes
-    //         'answering_time_in_seconds' => 60 * 3, // 3 minutes
-    //     ])->assertSuccessful()->assertJson(function (AssertableJson $json) use ($newQuestion) {
-    //         $json->where('data.text', 'this is text updated')
-    //             ->where('data.description', 'this is description updated')
-    //             ->where('data.status', QuestionVariantStatusEnum::Public->value)
-    //             ->where('data.reading_time_in_seconds', 40 * 3)
-    //             ->where('data.answering_time_in_seconds', 60 * 3)
-    //             ->where('data.question_id', $newQuestion->getKey());
-    //     });
-    // }
+        $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
+        $this->put(route('organization.question-variants.update', $questionVariant), [
+            'text' => 'this is text updated',
+            'description' => 'this is description updated',
+            'question_id' => $newQuestion->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+            'reading_time_in_seconds' => 40 * 3, // 2 minutes
+            'answering_time_in_seconds' => 60 * 3, // 3 minutes
+        ])->assertSuccessful()->assertJson(function (AssertableJson $json) use ($newQuestion) {
+            $json->where('data.text', 'this is text updated')
+                ->where('data.description', 'this is description updated')
+                ->where('data.status', QuestionVariantStatusEnum::Public->value)
+                ->where('data.reading_time_in_seconds', 40 * 3)
+                ->where('data.answering_time_in_seconds', 60 * 3)
+                ->where('data.question_id', $newQuestion->getKey());
+        });
 
-    // /** @test  */
-    // public function itShouldNotLetAnotherOrganizationUpdateQuestionVariant(): void
-    // {
+        $this->put(route('organization.question-variants.update', $questionVariant), [
+            'text' => 'this is text updated',
+            'description' => 'this is description updated',
+            'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->createOne()->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+            'reading_time_in_seconds' => 40 * 3, // 2 minutes
+            'answering_time_in_seconds' => 60 * 3, // 3 minutes
+        ])->assertJsonValidationErrorFor('question_id');
+    }
 
-    //     $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
-    //     $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne([
-    //         'organization_id' => $this->employeeAuth->organization_id,
-    //         'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey(),
-    //         'status' => QuestionVariantStatusEnum::Public->value
-    //     ]);
+    /** @test  */
+    public function itShouldNotLetAnotherOrganizationUpdateQuestionVariant(): void
+    {
 
-    //     $anotherEmployee = Employee::factory()->createOne();
+        $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
+        $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+            'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value
+        ]);
 
-    //     $this->actingAs($anotherEmployee, 'organization')->put(route('organization.question-variants.update', $questionVariant->id), [
-    //         'text' => 'this is text updated',
-    //         'description' => 'this is description updated',
-    //         'question_id' => $newQuestion->getKey(),
-    //         'status' => QuestionVariantStatusEnum::Public->value,
-    //         'reading_time_in_seconds' => 40 * 3, // 2 minutes
-    //         'answering_time_in_seconds' => 60 * 3, // 3 minutes
-    //     ])->assertForbidden();
-    // }
+        $anotherEmployee = Employee::factory()->createOne();
+
+        $this->actingAs($anotherEmployee, 'organization')->put(route('organization.question-variants.update', $questionVariant->id), [
+            'text' => 'this is text updated',
+            'description' => 'this is description updated',
+            'question_id' => $newQuestion->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+            'reading_time_in_seconds' => 40 * 3, // 2 minutes
+            'answering_time_in_seconds' => 60 * 3, // 3 minutes
+        ])->assertForbidden();
+    }
 
     /** @test  */
     public function itShouldNotUpdatePublicQuestionVariantIfInInterviewTemplate(): void
