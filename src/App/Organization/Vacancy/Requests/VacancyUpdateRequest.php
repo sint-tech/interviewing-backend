@@ -39,10 +39,6 @@ class VacancyUpdateRequest extends FormRequest
 
     public function vacancy(): Vacancy
     {
-        if ($this->route('vacancy') instanceof Vacancy) {
-            return $this->route('vacancy');
-        }
-
-        return Vacancy::query()->findOrFail($this->route('vacancy'));
+        return $this->route('vacancy');
     }
 }
