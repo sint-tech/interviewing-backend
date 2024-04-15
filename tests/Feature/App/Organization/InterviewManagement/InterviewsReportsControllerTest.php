@@ -187,6 +187,7 @@ class InterviewsReportsControllerTest extends TestCase
         $this->assertEquals($openPositions - $selectedInterviewsCount, $passedInterviewsCount);
     }
 
+    /** @test */
     public function itShouldShowInterviewReport()
     {
         $interview = Interview::query()->first();
