@@ -21,7 +21,8 @@ class QuestionVariantIndexQuery extends QueryBuilder
         $this->defaultSort('-updated_at');
 
         $this->allowedIncludes(
-            AllowedInclude::relationship('organization')
+            AllowedInclude::relationship('organization'),
+            AllowedInclude::relationship('question')
         );
     }
 

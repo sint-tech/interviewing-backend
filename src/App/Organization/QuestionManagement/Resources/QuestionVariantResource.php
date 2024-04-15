@@ -23,6 +23,7 @@ class QuestionVariantResource extends JsonResource
             'deleted_at' => $this->whenNotNull($this->deleted_at?->format('Y-m-d H:i')),
             'question_id' => $this->resource->question_id,
             'organization' => OrganizationResource::make($this->whenLoaded('organization')),
+            'question' => QuestionResource::make($this->whenLoaded('question')),
         ];
     }
 }
