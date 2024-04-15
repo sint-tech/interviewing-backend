@@ -15,7 +15,6 @@ use Tests\TestCase;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\JobTitle\Models\JobTitle;
-use Domain\Vacancy\Models\Vacancy;
 
 class QuestionVariantControllerTest extends TestCase
 {
@@ -86,51 +85,79 @@ class QuestionVariantControllerTest extends TestCase
         ])->assertSuccessful();
     }
 
-    // /** @test  */
-    // public function itShouldUpdateQuestionVariant(): void
-    // {
-    //     $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id, 'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey()]);
+    /** @test  */
+    public function itShouldNotStoreTwoQuestionVariantsWithSameText(): void
+    {
+        $question = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
 
-    //     $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
-    //     $this->put(route('organization.question-variants.update', $questionVariant), [
-    //         'text' => 'this is text updated',
-    //         'description' => 'this is description updated',
-    //         'question_id' => $newQuestion->getKey(),
-    //         'status' => QuestionVariantStatusEnum::Public->value,
-    //         'reading_time_in_seconds' => 40 * 3, // 2 minutes
-    //         'answering_time_in_seconds' => 60 * 3, // 3 minutes
-    //     ])->assertSuccessful()->assertJson(function (AssertableJson $json) use ($newQuestion) {
-    //         $json->where('data.text', 'this is text updated')
-    //             ->where('data.description', 'this is description updated')
-    //             ->where('data.status', QuestionVariantStatusEnum::Public->value)
-    //             ->where('data.reading_time_in_seconds', 40 * 3)
-    //             ->where('data.answering_time_in_seconds', 60 * 3)
-    //             ->where('data.question_id', $newQuestion->getKey());
-    //     });
-    // }
+        QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id, 'question_id' => $question->getKey(), 'text' => 'this is text']);
 
-    // /** @test  */
-    // public function itShouldNotLetAnotherOrganizationUpdateQuestionVariant(): void
-    // {
+        $this->post(route('organization.question-variants.store'), [
+            'text' => 'this is text',
+            'description' => 'this is description',
+            'question_id' => $question->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+            'reading_time_in_seconds' => 60 * 3, // 3 minutes
+            'answering_time_in_seconds' => 60 * 10, // 10 minutes
+        ])->assertJsonValidationErrors('text');
+    }
 
-    //     $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
-    //     $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne([
-    //         'organization_id' => $this->employeeAuth->organization_id,
-    //         'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey(),
-    //         'status' => QuestionVariantStatusEnum::Public->value
-    //     ]);
+    /** @test  */
+    public function itShouldUpdateQuestionVariant(): void
+    {
+        $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id, 'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey()]);
+        $anotherQuestionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization_id, 'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey()]);
 
-    //     $anotherEmployee = Employee::factory()->createOne();
+        $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
 
-    //     $this->actingAs($anotherEmployee, 'organization')->put(route('organization.question-variants.update', $questionVariant->id), [
-    //         'text' => 'this is text updated',
-    //         'description' => 'this is description updated',
-    //         'question_id' => $newQuestion->getKey(),
-    //         'status' => QuestionVariantStatusEnum::Public->value,
-    //         'reading_time_in_seconds' => 40 * 3, // 2 minutes
-    //         'answering_time_in_seconds' => 60 * 3, // 3 minutes
-    //     ])->assertForbidden();
-    // }
+        $this->put(route('organization.question-variants.update', $questionVariant), [
+            'text' => $questionVariant->text,
+            'description' => 'this is description updated',
+            'question_id' => $newQuestion->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+            'reading_time_in_seconds' => 40 * 3, // 2 minutes
+            'answering_time_in_seconds' => 60 * 3, // 3 minutes
+        ])->assertSuccessful()->assertJson(function (AssertableJson $json) use ($newQuestion, $questionVariant) {
+            $json->where('data.text', $questionVariant->text)
+                ->where('data.description', 'this is description updated')
+                ->where('data.status', QuestionVariantStatusEnum::Public->value)
+                ->where('data.reading_time_in_seconds', 40 * 3)
+                ->where('data.answering_time_in_seconds', 60 * 3)
+                ->where('data.question_id', $newQuestion->getKey());
+        });
+
+        $this->put(route('organization.question-variants.update', $questionVariant), [
+            'text' => $anotherQuestionVariant->text,
+            'description' => 'this is description updated',
+            'question_id' => $newQuestion->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+            'reading_time_in_seconds' => 40 * 3, // 2 minutes
+            'answering_time_in_seconds' => 60 * 3, // 3 minutes
+        ])->assertJsonValidationErrors('text');
+    }
+
+    /** @test  */
+    public function itShouldNotLetAnotherOrganizationUpdateQuestionVariant(): void
+    {
+
+        $newQuestion = Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne();
+        $questionVariant = QuestionVariant::factory()->for($this->employeeAuth, 'creator')->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+            'question_id' => Question::factory()->for($this->employeeAuth, 'creator')->configure()->createOne()->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value
+        ]);
+
+        $anotherEmployee = Employee::factory()->createOne();
+
+        $this->actingAs($anotherEmployee, 'organization')->put(route('organization.question-variants.update', $questionVariant->id), [
+            'text' => 'this is text updated',
+            'description' => 'this is description updated',
+            'question_id' => $newQuestion->getKey(),
+            'status' => QuestionVariantStatusEnum::Public->value,
+            'reading_time_in_seconds' => 40 * 3, // 2 minutes
+            'answering_time_in_seconds' => 60 * 3, // 3 minutes
+        ])->assertForbidden();
+    }
 
     /** @test  */
     public function itShouldNotUpdatePublicQuestionVariantIfInInterviewTemplate(): void

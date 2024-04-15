@@ -15,7 +15,9 @@ class QuestionVariantUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'text' => ['filled', 'string', 'min:3', 'max:1000'],
+            'text' => ['filled', 'string', 'min:3', 'max:1000', Rule::unique('question_variants', 'text')
+                ->where('organization_id', $this->questionVariant()->organization_id)
+                ->ignore($this->questionVariant()->id)],
             'description' => ['filled', 'string', 'min:3', 'max:1000'],
             'question_id' => ['filled', Rule::exists('questions', 'id')->withoutTrashed()],
             'status' => ['filled', new Enum(QuestionVariantStatusEnum::class)],

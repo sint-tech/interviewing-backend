@@ -14,7 +14,8 @@ class QuestionVariantStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'text' => ['required', 'string', 'min:3', 'max:1000'],
+            'text' => ['required', 'string', 'min:3', 'max:1000',   Rule::unique('question_variants', 'text')
+                ->where('organization_id', auth()->user()->organization_id)],
             'description' => ['nullable', 'string', 'min:3', 'max:1000'],
             'question_id' => ['required', Rule::exists('questions', 'id')->withoutTrashed()],
             'status' => ['filled', new Enum(QuestionVariantStatusEnum::class)],
