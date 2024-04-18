@@ -1,6 +1,5 @@
 <?php
 
-use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('question_variants', function (Blueprint $table) {
             $table->unsignedTinyInteger('status')
-                ->default(QuestionVariantStatusEnum::Private)
+                ->default(1)
                 ->after('question_id');
         });
     }

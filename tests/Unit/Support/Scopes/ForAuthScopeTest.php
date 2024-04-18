@@ -82,8 +82,8 @@ class ForAuthScopeTest extends TestCase
             ->shouldReceive('check')->andReturn(true)
             ->shouldReceive('guest')->andReturn(false);
 
-        $this->assertSame($this->applyScope()->toRawSql(),
-            'select * from "users" where "candidate_id" = 1'
+        $this->assertSame('select * from "users" where "candidate_id" = 1',
+            $this->applyScope()->toRawSql(),
         );
     }
 
@@ -95,8 +95,8 @@ class ForAuthScopeTest extends TestCase
             ->shouldReceive('check')->andReturn(true)
             ->shouldReceive('guest')->andReturn(false);
 
-        $this->assertSame($this->applyScope()->toRawSql(),
-            'select * from "users" where "employee_id" = 1');
+        $this->assertSame('select * from "users" where "employee_id" = 1',
+            $this->applyScope()->toRawSql());
     }
 
     /** @test  */
@@ -107,8 +107,8 @@ class ForAuthScopeTest extends TestCase
             ->shouldReceive('check')->andReturn(false)
             ->shouldReceive('guest')->andReturn(true);
 
-        $this->assertSame($this->applyScope()->toRawSql(),
-            'select * from "users" where "guest_id" = 1'
+        $this->assertSame('select * from "users" where "guest_id" = 1',
+            $this->applyScope()->toRawSql()
         );
     }
 
@@ -120,8 +120,8 @@ class ForAuthScopeTest extends TestCase
             ->shouldReceive('check')->andReturn(true)
             ->shouldReceive('guest')->andReturn(false);
 
-        $this->assertSame($this->applyScope()->toRawSql(),
-            'select * from "users" where "sint_user_id" = 1'
+        $this->assertSame('select * from "users" where "sint_user_id" = 1',
+            $this->applyScope()->toRawSql()
         );
     }
 
@@ -154,7 +154,7 @@ class ForAuthScopeTest extends TestCase
 
         $this->scope->apply($builder = new $childBuilder($model), $model);
 
-        $this->assertEquals($builder->toRawSql(), 'select * from "users" where "organization_id" = 1');
+        $this->assertEquals('select * from "users" where "organization_id" = 1', $builder->toRawSql());
     }
 
     private function applyScope(Model $testing_model = new User()): Builder
