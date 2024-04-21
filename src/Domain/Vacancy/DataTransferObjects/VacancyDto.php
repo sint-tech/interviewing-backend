@@ -23,7 +23,7 @@ class VacancyDto extends Data
 
         public readonly ?int $organization_id,
         public readonly int $interview_template_id,
-        #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z'])]
+        #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z', 'Y-m-d H:i:s'])]
         public readonly ?\DateTime $started_at,
         #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z'])]
         public readonly ?\DateTime $ended_at,
