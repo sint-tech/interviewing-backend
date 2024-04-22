@@ -47,7 +47,7 @@ class InterviewTemplateController extends Controller
         $dto = InterviewTemplateDto::from(array_merge($request->validated(), [
             'organization_id' => auth()->user()->organization_id,
             'creator' => auth()->user(),
-            'question_variants' => QuestionVariant::query()->whereIntegerInRaw('id', $request->validated('question_variants'))->get(),
+            'question_variants' => QuestionVariant::query()->whereIntegerInRaw('id', $request->validated('question_variants'))->get()->sortToOriginal($request->input('question_variants')),
         ]));
 
         return InterviewTemplateResource::make(
@@ -63,7 +63,7 @@ class InterviewTemplateController extends Controller
 
         $updatedData = $request->validated();
         if ($request->filled('question_variants')) {
-            $updatedData['question_variants'] = QuestionVariant::query()->whereKey($request->input('question_variants'))->get();
+            $updatedData['question_variants'] = QuestionVariant::query()->whereKey($request->input('question_variants'))->get()->sortToOriginal($request->input('question_variants'));
         }
 
         $dto = InterviewTemplateDto::from(array_merge(
