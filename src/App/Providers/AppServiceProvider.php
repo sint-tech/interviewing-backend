@@ -21,17 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Collection::macro('sortToOriginal', function ($ids): Collection
-        {
-            $ids = $ids instanceof Arrayable ? $ids->toArray() : $ids;
-
-            $models = array_flip($ids);
-
-            foreach ($this as $model) {
-                $models[ $model->id ] = $model;
-            }
-
-            return Collection::make(array_values($models));
-        });
+        //
     }
 }

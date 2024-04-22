@@ -44,10 +44,17 @@ class InterviewTemplateController extends Controller
 
     public function store(InterviewTemplateStoreRequest $request, CreateInterviewTemplateAction $action): InterviewTemplateResource
     {
+        $questionVariantIds = $request->validated('question_variants');
+        $questionVariants = QuestionVariant::query()->whereIn('id', $questionVariantIds)->get();
+
+        $questionVariants = $questionVariants->sortBy(function ($questionVariant) use ($questionVariantIds) {
+            return array_search($questionVariant->id, $questionVariantIds);
+        });
+
         $dto = InterviewTemplateDto::from(array_merge($request->validated(), [
             'organization_id' => auth()->user()->organization_id,
             'creator' => auth()->user(),
-            'question_variants' => QuestionVariant::query()->whereIntegerInRaw('id', $request->validated('question_variants'))->get()->sortToOriginal($request->input('question_variants')),
+            'question_variants' => $questionVariants->values(),
         ]));
 
         return InterviewTemplateResource::make(
@@ -63,7 +70,14 @@ class InterviewTemplateController extends Controller
 
         $updatedData = $request->validated();
         if ($request->filled('question_variants')) {
-            $updatedData['question_variants'] = QuestionVariant::query()->whereKey($request->input('question_variants'))->get()->sortToOriginal($request->input('question_variants'));
+            $questionVariantIds = $request->input('question_variants');
+            $questionVariants = QuestionVariant::query()->whereIn('id', $questionVariantIds)->get();
+
+            $questionVariants = $questionVariants->sortBy(function ($questionVariant) use ($questionVariantIds) {
+                return array_search($questionVariant->id, $questionVariantIds);
+            });
+
+            $updatedData['question_variants'] = $questionVariants->values();
         }
 
         $dto = InterviewTemplateDto::from(array_merge(
