@@ -217,6 +217,34 @@ class InterviewTemplateControllerTest extends TestCase
     }
 
     /** @test  */
+
+    public function itShouldStoreInterviewTemplateWithQuestionVariantsInOrder(): void
+    {
+        $questionVariants = QuestionVariant::factory(5)
+            ->for($this->employeeAuth, 'creator')
+            ->for($this->employeeAuth->organization, 'organization')
+            ->create();
+
+        $questionVariants = $questionVariants->shuffle();
+
+        $this->post(route('organization.interview-templates.store'), [
+            'name' => 'testing name',
+            'description' => null,
+            'availability_status' => InterviewTemplateAvailabilityStatusEnum::Available->value,
+            'reusable' => 1,
+            'job_profile_id' => JobTitle::factory()->createOne()->getKey(),
+            'question_variants' => $questionVariants->pluck('id')->toArray(),
+        ])->assertSuccessful();
+
+        $interviewTemplate = InterviewTemplate::query()->latest('id')->first();
+
+        $this->assertEquals(
+            $questionVariants->pluck('id')->toArray(),
+            $interviewTemplate->questionVariants->pluck('id')->toArray()
+        );
+    }
+
+    /** @test  */
     public function itShouldCreateInterviewTemplateForParentInterviewTemplate(): void
     {
         $this->post(route('organization.interview-templates.store'), [
@@ -257,12 +285,12 @@ class InterviewTemplateControllerTest extends TestCase
         ]);
 
         Vacancy::factory()
-        ->for($this->employeeAuth->organization, 'organization')
-        ->for($this->employeeAuth, 'creator')->create([
-            'interview_template_id' => $interview_template->getKey(),
-            'started_at' => now()->subDay(),
-            'ended_at' => now()->addDay(),
-        ]);
+            ->for($this->employeeAuth->organization, 'organization')
+            ->for($this->employeeAuth, 'creator')->create([
+                'interview_template_id' => $interview_template->getKey(),
+                'started_at' => now()->subDay(),
+                'ended_at' => now()->addDay(),
+            ]);
 
         $response = $this->put(route('organization.interview-templates.update', $interview_template));
 
@@ -288,5 +316,40 @@ class InterviewTemplateControllerTest extends TestCase
         $response = $this->put(route('organization.interview-templates.update', $interview_template));
 
         $response->assertJsonValidationErrors('interview_template');
+    }
+
+    /** @test  */
+    public function itShouldUpdateInterviewTemplateWithQuestionVariantsInOrder(): void
+    {
+        $interview_template = InterviewTemplate::factory()->for($this->employeeAuth, 'creator')->createOne([
+            'organization_id' => $this->employeeAuth->organization_id,
+        ]);
+
+        $questionVariants = QuestionVariant::factory(5)
+            ->for($this->employeeAuth, 'creator')
+            ->for($this->employeeAuth->organization, 'organization')
+            ->create();
+
+        $questionVariants = $questionVariants->shuffle();
+
+        $this->put(route('organization.interview-templates.update', $interview_template), [
+            'question_variants' => $questionVariants->pluck('id')->toArray(),
+        ])->assertSuccessful();
+
+        $this->assertEquals(
+            $questionVariants->pluck('id')->toArray(),
+            $interview_template->questionVariants->pluck('id')->toArray()
+        );
+
+        $questionVariants = $questionVariants->shuffle();
+
+        $this->put(route('organization.interview-templates.update', $interview_template), [
+            'question_variants' => $questionVariants->pluck('id')->toArray(),
+        ])->assertSuccessful();
+
+        $this->assertEquals(
+            $questionVariants->pluck('id')->toArray(),
+            $interview_template->refresh()->questionVariants->pluck('id')->toArray()
+        );
     }
 }
