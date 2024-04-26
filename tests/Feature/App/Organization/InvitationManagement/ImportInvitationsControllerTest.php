@@ -7,7 +7,8 @@ use Database\Seeders\SintAdminsSeeder;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Employee;
 use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
@@ -15,7 +16,7 @@ use Tests\TestCase;
 
 class ImportInvitationsControllerTest extends TestCase
 {
-    use DatabaseMigrations,WithFaker;
+    use RefreshDatabase,WithFaker;
 
     protected Employee $employee;
 

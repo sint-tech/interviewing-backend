@@ -8,15 +8,16 @@ use Illuminate\Support\Collection;
 use Domain\Candidate\Models\Candidate;
 use Domain\Organization\Models\Employee;
 use Domain\InterviewManagement\Models\Interview;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Domain\ReportManagement\Models\InterviewReport;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 
 class InterviewsReportsControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

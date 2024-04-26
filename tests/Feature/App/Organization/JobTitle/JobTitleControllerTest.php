@@ -2,16 +2,17 @@
 
 namespace Tests\Feature\App\Organization\JobTitle;
 
-use Database\Seeders\SintAdminsSeeder;
-use Domain\JobTitle\Enums\AvailabilityStatusEnum;
-use Domain\JobTitle\Models\JobTitle;
-use Domain\Organization\Models\Employee;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
+use Domain\JobTitle\Models\JobTitle;
+use Database\Seeders\SintAdminsSeeder;
+use Domain\Organization\Models\Employee;
+use Domain\JobTitle\Enums\AvailabilityStatusEnum;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class JobTitleControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

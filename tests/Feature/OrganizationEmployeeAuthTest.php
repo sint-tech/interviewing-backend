@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use Domain\Organization\Models\Employee;
 use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class OrganizationEmployeeAuthTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {

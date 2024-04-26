@@ -8,14 +8,15 @@ use Domain\Candidate\Models\RegistrationReason;
 use Domain\Invitation\Models\Invitation;
 use Domain\JobTitle\Models\JobTitle;
 use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegisterControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp(): void
     {

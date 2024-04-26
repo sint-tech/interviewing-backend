@@ -12,14 +12,15 @@ use Domain\QuestionManagement\Models\Question;
 use Domain\QuestionManagement\Models\QuestionCluster;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 use Domain\Vacancy\Models\Vacancy;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class InterviewTemplateControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

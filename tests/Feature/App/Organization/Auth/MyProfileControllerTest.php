@@ -3,13 +3,14 @@
 namespace Tests\Feature\App\Organization\Auth;
 
 use Domain\Organization\Models\Employee;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MyProfileControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

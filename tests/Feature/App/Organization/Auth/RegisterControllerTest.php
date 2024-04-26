@@ -2,13 +2,14 @@
 
 namespace Tests\Feature\App\Organization\Auth;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegisterControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected array $mainData = [
         'name' => 'Sint Fintech',

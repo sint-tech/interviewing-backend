@@ -9,12 +9,13 @@ use Domain\InterviewManagement\Models\Interview;
 use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Employee;
 use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class StartInterviewTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected Candidate $authCandidate;
 
