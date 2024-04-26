@@ -4,13 +4,14 @@ namespace Tests\Feature\App\Organization\EmployeeManagement;
 
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EmployeeControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {

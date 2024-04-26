@@ -6,12 +6,13 @@ use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
 use Domain\QuestionManagement\Models\Question;
 use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class QuestionControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

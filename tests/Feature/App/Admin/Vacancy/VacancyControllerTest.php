@@ -8,13 +8,14 @@ use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class VacancyControllerTest extends TestCase
 {
-    use DatabaseMigrations,WithFaker;
+    use RefreshDatabase,WithFaker;
 
     const INDEX_ROUTE_NAME = 'admin.vacancies.index';
 

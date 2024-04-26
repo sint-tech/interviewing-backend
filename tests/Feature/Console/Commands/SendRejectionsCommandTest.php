@@ -13,14 +13,15 @@ use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\QuestionManagement\Models\QuestionVariant;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class SendRejectionsCommandTest extends TestCase
 {
-    use DatabaseMigrations,WithFaker;
+    use RefreshDatabase,WithFaker;
 
     protected Vacancy $vacancy;
 

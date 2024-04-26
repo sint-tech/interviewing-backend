@@ -5,13 +5,14 @@ namespace Tests\Feature\App\Organization\Auth;
 use Tests\TestCase;
 use Domain\Organization\Models\Employee;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use App\Organization\Auth\Notifications\ResetPasswordNotification;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PasswordResetTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
     protected function setUp(): void

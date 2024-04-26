@@ -7,15 +7,16 @@ use Database\Seeders\SintAdminsSeeder;
 use Domain\Invitation\Models\Invitation;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ImportInvitationsControllerTest extends TestCase
 {
-    use DatabaseMigrations,WithFaker;
+    use RefreshDatabase,WithFaker;
 
     protected User $sintUser;
 

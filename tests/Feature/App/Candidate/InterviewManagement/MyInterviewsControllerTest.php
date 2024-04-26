@@ -2,19 +2,19 @@
 
 namespace Tests\Feature\App\Candidate\InterviewManagement;
 
+use Tests\TestCase;
+use Domain\Vacancy\Models\Vacancy;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Candidate\Models\Candidate;
-use Domain\InterviewManagement\Models\Interview;
-use Domain\InterviewManagement\Models\InterviewTemplate;
 use Domain\Organization\Models\Employee;
-use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\TestCase;
+use Domain\InterviewManagement\Models\Interview;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Domain\InterviewManagement\Models\InterviewTemplate;
 
 class MyInterviewsControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected Candidate $authCandidate;
 

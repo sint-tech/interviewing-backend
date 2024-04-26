@@ -4,13 +4,14 @@ namespace Tests\Feature\App\Organization\InterviewManagement;
 use Tests\TestCase;
 use Domain\Organization\Models\Employee;
 use Domain\InterviewManagement\Models\Interview;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\Vacancy\Models\Vacancy;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ChangeInterviewStatusControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

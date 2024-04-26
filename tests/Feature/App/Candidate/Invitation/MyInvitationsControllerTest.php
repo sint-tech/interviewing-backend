@@ -7,12 +7,13 @@ use Domain\Candidate\Models\Candidate;
 use Domain\Invitation\Models\Invitation;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MyInvitationsControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     protected Candidate $authCandidate;
 

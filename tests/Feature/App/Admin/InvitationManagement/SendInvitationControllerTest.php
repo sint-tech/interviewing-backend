@@ -2,19 +2,20 @@
 
 namespace Tests\Feature\App\Admin\InvitationManagement;
 
+use Tests\TestCase;
+use Domain\Users\Models\User;
 use App\Mail\InterviewInvitation;
+use Illuminate\Support\Facades\Mail;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Invitation\Models\Invitation;
-use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class SendInvitationControllerTest extends TestCase
 {
-    use DatabaseMigrations,WithFaker;
+    use RefreshDatabase,WithFaker;
 
     public User $sintUser;
 

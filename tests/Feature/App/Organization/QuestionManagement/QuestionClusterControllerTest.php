@@ -2,16 +2,17 @@
 
 namespace Tests\Feature\App\Organization\QuestionManagement;
 
+use Tests\TestCase;
+use Domain\Users\Models\User;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Domain\QuestionManagement\Models\QuestionCluster;
-use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\TestCase;
+
 
 class QuestionClusterControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

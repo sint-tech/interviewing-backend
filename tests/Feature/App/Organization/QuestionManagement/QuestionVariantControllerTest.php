@@ -2,23 +2,24 @@
 
 namespace Tests\Feature\App\Organization\QuestionManagement;
 
+use Tests\TestCase;
+use Domain\Users\Models\User;
+use Domain\JobTitle\Models\JobTitle;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
-use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Domain\QuestionManagement\Models\Question;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Domain\QuestionManagement\Models\QuestionVariant;
-use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\TestCase;
-use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
+
 use Domain\InterviewManagement\Models\InterviewTemplate;
-use Domain\JobTitle\Models\JobTitle;
+use Domain\QuestionManagement\Enums\QuestionVariantStatusEnum;
+use Domain\InterviewManagement\Enums\InterviewTemplateAvailabilityStatusEnum;
 
 class QuestionVariantControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

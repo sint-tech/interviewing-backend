@@ -5,14 +5,15 @@ namespace Tests\Feature\App\Admin\InvitationManagement;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class InvitationControllerTest extends TestCase
 {
-    use DatabaseMigrations,WithFaker;
+    use RefreshDatabase,WithFaker;
 
     public User $sintUser;
 

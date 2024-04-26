@@ -5,14 +5,14 @@ namespace Tests\Feature\App\Admin\JobTitle;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\JobTitle\Models\JobTitle;
 use Domain\Users\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class JobTitleControllerTest extends TestCase
 {
-    use DatabaseMigrations,WithFaker;
+    use RefreshDatabase,WithFaker;
 
     protected User $sintUser;
 

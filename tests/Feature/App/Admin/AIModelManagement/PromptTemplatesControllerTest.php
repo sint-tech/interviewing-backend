@@ -6,13 +6,14 @@ use Tests\TestCase;
 use Domain\Users\Models\User;
 use Database\Seeders\SintAdminsSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Domain\AiPromptMessageManagement\Models\PromptTemplate;
 use Domain\AiPromptMessageManagement\Enums\PromptTemplateVariableEnum;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PromptTemplatesControllerTest extends TestCase
 {
-    use DatabaseMigrations, WithFaker;
+    use RefreshDatabase, WithFaker;
 
     protected User $sintUser;
 

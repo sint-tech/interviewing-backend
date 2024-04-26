@@ -2,15 +2,16 @@
 
 namespace Tests\Feature\App\Organization\SkillManagement;
 
+use Tests\TestCase;
+use Domain\Skill\Models\Skill;
 use Database\Seeders\SintAdminsSeeder;
 use Domain\Organization\Models\Employee;
-use Domain\Skill\Models\Skill;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class SkillControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 

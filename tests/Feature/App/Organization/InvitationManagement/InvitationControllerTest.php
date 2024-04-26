@@ -7,13 +7,14 @@ use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class InvitationControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public Employee $employeeAuth;
 
