@@ -2,20 +2,22 @@
 
 namespace App\Admin\InvitationManagement\Jobs;
 
-use Domain\Invitation\Actions\CreateInvitationAction;
-use Domain\Invitation\DataTransferObjects\InvitationDto;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Log;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Illuminate\Queue\SerializesModels;
+use Domain\Organization\Models\Employee;
+use Illuminate\Queue\InteractsWithQueue;
+use App\Exceptions\LimitExceededException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use OpenSpout\Common\Exception\IOException;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Domain\Invitation\Actions\CreateInvitationAction;
+use Domain\Invitation\DataTransferObjects\InvitationDto;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Reader\Exception\ReaderNotOpenedException;
-use Rap2hpoutre\FastExcel\FastExcel;
 
 class ImportInvitationsFromExcelJob implements ShouldQueue
 {
@@ -36,10 +38,20 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
      * @throws IOException
      * @throws UnsupportedTypeException
      * @throws ReaderNotOpenedException
+     * @throws LimitExceededException
      */
     public function handle(CreateInvitationAction $createInvitationAction)
     {
         $rows = (new FastExcel())->import($this->filePath);
+
+        $total = $rows->count();
+
+        if ($this->creator instanceof Employee) {
+            if ($total > $this->creator->organization->invitationsLeft()) {
+                throw new LimitExceededException('You have exceeded your invitation limit');
+            }
+            $this->creator->organization->increment('consumption', $total);
+        }
 
         $rows->each(function (array $row) use ($createInvitationAction) {
             try {
