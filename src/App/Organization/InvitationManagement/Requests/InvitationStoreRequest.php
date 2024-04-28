@@ -9,6 +9,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Support\Rules\ValidMobileNumberRule;
 use Support\Services\MobileStrategy\MobileCountryCodeEnum;
+use Illuminate\Validation\Validator;
+
 
 class InvitationStoreRequest extends FormRequest
 {
@@ -35,6 +37,17 @@ class InvitationStoreRequest extends FormRequest
             ],
             'should_be_invited_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],
+        ];
+    }
+
+    public function after(): array
+    {
+        return [
+            function (Validator $validator) {
+                if (auth()->user()->organization->limitExceeded()) {
+                    $validator->errors()->add('vacancy_id', __('Organization limit exceeded'));
+                }
+            },
         ];
     }
 }
