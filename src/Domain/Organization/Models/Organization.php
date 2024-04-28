@@ -29,6 +29,8 @@ class Organization extends Model implements OwnerInterface, HasMedia
         'contact_email',
         'industry',
         'number_of_employees',
+        'limit',
+        'consumption',
     ];
 
     protected $casts = [
@@ -58,6 +60,16 @@ class Organization extends Model implements OwnerInterface, HasMedia
         return $this->hasOne(Employee::class, 'organization_id')
             ->where('is_organization_manager', true)
             ->oldestOfMany();
+    }
+
+    public function limitExceeded(): bool
+    {
+        return $this->limit <= $this->consumption;
+    }
+
+    public function invitationsLeft(): int
+    {
+        return $this->limit - $this->consumption;
     }
 
     protected static function newFactory()
