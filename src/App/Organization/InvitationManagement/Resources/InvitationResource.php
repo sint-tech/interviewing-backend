@@ -17,7 +17,7 @@ class InvitationResource extends JsonResource
             'email' => $this->resource->email,
             'batch' => $this->resource->batch,
             'mobile_number' => $this->resource->mobile_number->number,
-            'mobile_country_code' => $this->resource->mobile_number->number,
+            'mobile_country_code' => $this->resource->mobile_number->dialCode,
             'should_be_invited_at' => $this->resource->should_be_invited_at?->format('Y-m-d H:i'),
             'last_invited_at' => $this->resource->last_invited_at?->format('Y-m-d H:i'),
             'vacancy' => VacancyResource::make($this->whenLoaded('vacancy')),
