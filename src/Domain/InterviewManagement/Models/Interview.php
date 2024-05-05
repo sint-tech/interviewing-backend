@@ -204,6 +204,13 @@ class Interview extends Model
         return $this->status === $status;
     }
 
+    public function setInvitationUsed(): void
+    {
+        $this->vacancy->invitations()
+            ->where('email', $this->candidate->email)
+            ->update(['used_at' => now()]);
+    }
+
     public function statusInFinalStage(): bool
     {
         return in_array($this->status, InterviewStatusEnum::endedStatuses());
