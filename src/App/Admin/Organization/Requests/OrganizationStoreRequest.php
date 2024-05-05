@@ -17,7 +17,7 @@ class OrganizationStoreRequest extends FormRequest
             'address' => ['nullable', 'string', 'max:1000'],
             'website_url' => ['nullable', 'url'],
             'number_of_employees' => ['nullable', Rule::enum(OrganizationEmployeesRangeEnum::class)],
-            'industry' => ['nullable', 'string', 'min3', 'max:255'],
+            'industry' => ['nullable', 'string', 'min:3', 'max:255'],
             'manager' => ['required', 'array'],
             'manager.first_name' => ['required', 'string', 'min:3', 'max:1000'],
             'manager.last_name' => ['required', 'string', 'min:3', 'max:1000'],
