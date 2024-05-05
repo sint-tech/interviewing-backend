@@ -3,6 +3,7 @@
 namespace Domain\Organization\Models;
 
 use Database\Factories\OrganizationFactory;
+use Domain\Invitation\Models\Invitation;
 use Domain\Organization\Enums\OrganizationEmployeesRangeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,13 +15,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Support\Interfaces\OwnerInterface;
+use Domain\Vacancy\Models\Vacancy;
 
 /**
  * @property OrganizationEmployeesRangeEnum $number_of_employees
  */
 class Organization extends Model implements OwnerInterface, HasMedia
 {
-    use HasFactory,SoftDeletes,InteractsWithMedia;
+    use HasFactory, SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -55,6 +57,11 @@ class Organization extends Model implements OwnerInterface, HasMedia
         return $this->hasMany(Employee::class, 'organization_id');
     }
 
+    public function vacancies(): HasMany
+    {
+        return $this->hasMany(Vacancy::class, 'organization_id');
+    }
+
     public function oldestManager(): HasOne
     {
         return $this->hasOne(Employee::class, 'organization_id')
@@ -64,7 +71,18 @@ class Organization extends Model implements OwnerInterface, HasMedia
 
     public function limitExceeded(): bool
     {
-        return $this->limit <= $this->consumption;
+        $vacancies = $this->vacancies()->whereEnded()->pluck('id');
+
+        $invitations = Invitation::query()
+            ->whereIn('vacancy_id', $vacancies)
+            ->get();
+
+        $used_invitations = $invitations->whereNotNull('used_at')->count();
+        $unused_invitations = $invitations->whereNull('used_at')->count();
+
+        $rest = $used_invitations - $unused_invitations;
+
+        return $this->limit <= $this->consumption - $rest;
     }
 
     public function invitationsLeft(): int
