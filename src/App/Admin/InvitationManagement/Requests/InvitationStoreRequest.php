@@ -43,4 +43,13 @@ class InvitationStoreRequest extends FormRequest
             'vacancy_id.exists' => __('the vacancy_id is not valid, ensure it exists and has default interview template'),
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('mobile_country_code')) {
+            $this->merge([
+                'mobile_country_code' => $this->input('mobile_country_code')[0] === '+' ? $this->input('mobile_country_code') : '+' . $this->input('mobile_country_code'),
+            ]);
+        }
+    }
 }

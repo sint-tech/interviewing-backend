@@ -37,4 +37,13 @@ class InvitationStoreRequest extends FormRequest
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('mobile_country_code')) {
+            $this->merge([
+                'mobile_country_code' => $this->input('mobile_country_code')[0] === '+' ? $this->input('mobile_country_code') : '+' . $this->input('mobile_country_code'),
+            ]);
+        }
+    }
 }
