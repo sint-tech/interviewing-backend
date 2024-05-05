@@ -19,6 +19,8 @@ class CreateInterviewAction
 
         $interview->save();
 
+        $interview->setInvitationUsed();
+
         $interview->refresh()->load('questionVariants');
 
         return $interview;
