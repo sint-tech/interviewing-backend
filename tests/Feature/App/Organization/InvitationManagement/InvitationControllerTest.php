@@ -7,7 +7,6 @@ use Domain\Organization\Models\Employee;
 use Domain\Organization\Models\Organization;
 use Domain\Users\Models\User;
 use Domain\Vacancy\Models\Vacancy;
-
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -60,6 +59,27 @@ class InvitationControllerTest extends TestCase
             'name' => 'ahmed badawy',
             'email' => 'ahmedbadawy.fcai@gmail.com',
             'mobile_country_code' => '+20',
+            'mobile_number' => '1123456789',
+            'vacancy_id' => Vacancy::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization->getKey()])->getKey(),
+            'should_be_invited_at' => now()->addDays(2)->format('Y-m-d H:i'),
+            'expired_at' => now()->addDays(5)->format('Y-m-d H:i'),
+        ];
+
+        $this->assertEmpty(Invitation::query()->get());
+
+        $this->post(route('organization.invitations.store'), $request_data)
+            ->assertSuccessful();
+
+        $this->assertCount(1, Invitation::query()->get());
+    }
+
+    /** @test  */
+    public function itShouldStoreInvitationWithMobileCountryCodeWithoutPlusSign(): void
+    {
+        $request_data = [
+            'name' => 'ahmed badawy',
+            'email' => 'ahmedbadawy.fcai@gmail.com',
+            'mobile_country_code' => '20',
             'mobile_number' => '1123456789',
             'vacancy_id' => Vacancy::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization->getKey()])->getKey(),
             'should_be_invited_at' => now()->addDays(2)->format('Y-m-d H:i'),
