@@ -33,6 +33,7 @@ class SubmitInterviewQuestionAnswerRequest extends FormRequest
                     ->withoutTrashed(),
             ],
             'answer_text' => ['required', 'string', 'min:3', 'max:1000000'],
+            'ml_video_semantics' => ['nullable', 'string', 'min:3', 'max:1000000'],
         ];
     }
 

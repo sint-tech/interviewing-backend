@@ -13,6 +13,7 @@ class AnswerDto extends Data
         public readonly int $question_variant_id,
         public readonly QuestionOccurrenceReasonEnum $question_occurrence_reason,
         public readonly string $answer_text,
+        public ?string $ml_video_semantics = null,
     ) {
         //        $this->additional([
         //            'question_cluster_id' => QuestionVariant::query()->find($this->question_variant_id)->questionCluster->getKey(),
