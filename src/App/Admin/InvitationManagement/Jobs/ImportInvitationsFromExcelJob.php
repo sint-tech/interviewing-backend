@@ -46,11 +46,8 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
 
         $total = $rows->count();
 
-        if ($this->creator instanceof Employee) {
-            if ($total > $this->creator->organization->invitationsLeft()) {
-                throw new LimitExceededException('You have exceeded your invitation limit');
-            }
-            $this->creator->organization->increment('consumption', $total);
+        if ($this->creator instanceof Employee && ($total > $this->creator->organization->invitationsLeft())) {
+            throw new LimitExceededException('You have exceeded your invitation limit');
         }
 
         $rows->each(function (array $row) use ($createInvitationAction) {
@@ -61,7 +58,7 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
             } catch (Exception $exception) {
                 dd($exception);
                 //todo handle exceptions to parse it again for the client
-                Log::info($exception->getMessage().' job_direction:'.__DIR__);
+                Log::info($exception->getMessage() . ' job_direction:' . __DIR__);
             }
         });
     }
