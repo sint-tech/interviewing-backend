@@ -19,9 +19,12 @@ class UpdateInterviewTemplateAction
 
         $question_variants = [];
 
+        $order = 0;
+
         foreach ($interviewTemplateDto->question_variants as $question_variant) {
             $question_variants[$question_variant->getKey()] = [
                 'question_cluster_id' => $question_variant->questionCluster?->getKey(),
+                'order' => $order++,
             ];
         }
 
