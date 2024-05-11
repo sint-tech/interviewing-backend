@@ -107,7 +107,8 @@ class Interview extends Model
 
         )
             ->using(InterviewTemplateQuestion::class)
-            ->withPivot('question_cluster_id')
+            ->withPivot('question_cluster_id', 'order')
+            ->orderBy('order')
             ->withTimestamps();
     }
 
