@@ -95,7 +95,9 @@ class InterviewTemplate extends Model
             'interview_template_questions',
             'interview_template_id',
             'question_variant_id'
-        )->withTimestamps();
+        )->withTimestamps()
+            ->withPivot('order')
+            ->orderBy('order');
     }
 
     public function questionClusters(): BelongsToMany
