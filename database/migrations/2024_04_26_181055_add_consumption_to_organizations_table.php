@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('organizations', function (Blueprint $table) {
-            $table->unsignedInteger('consumption')->after('number_of_employees')->default(0);
+            $table->unsignedInteger('interview_consumption')->after('number_of_employees')->default(0)->comment('this column is deprecated, will be removed or reimplemented once the subscription module is finished');
+            $table->unsignedInteger('limit')->after('number_of_employees')->default(config('app.organization_default_limit', 5));
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('organizations', function (Blueprint $table) {
-            $table->dropColumn('consumption');
+            $table->dropColumn(['interview_consumption', 'limit']);
         });
     }
 };
