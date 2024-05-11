@@ -7,7 +7,6 @@ use Illuminate\Http\UploadedFile;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Support\Facades\Bus;
 use Database\Seeders\SintAdminsSeeder;
-
 use Domain\Organization\Models\Employee;
 use App\Exceptions\LimitExceededException;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -49,7 +48,7 @@ class ImportInvitationsControllerTest extends TestCase
     {
         Bus::fake();
 
-        $vacancy = Vacancy::factory()->createOne([
+        $vacancy = Vacancy::factory()->for($this->employee->organization, 'organization')->createOne([
             'interview_template_id' => InterviewTemplate::factory()
                 ->for($this->employee, 'creator')
                 ->createOne()->getKey(),
@@ -67,7 +66,7 @@ class ImportInvitationsControllerTest extends TestCase
     /** @test  */
     public function itShouldNotSaveInvitationsWhenLimitExceeded(): void
     {
-        $vacancy = Vacancy::factory()->createOne([
+        $vacancy = Vacancy::factory()->for($this->employee->organization, 'organization')->createOne([
             'interview_template_id' => InterviewTemplate::factory()
                 ->for($this->employee, 'creator')
                 ->createOne()->getKey(),
@@ -92,7 +91,7 @@ class ImportInvitationsControllerTest extends TestCase
         $this->expectException(LimitExceededException::class);
         $this->expectExceptionMessage('You have exceeded your invitation limit');
 
-        $vacancy = Vacancy::factory()->createOne([
+        $vacancy = Vacancy::factory()->for($this->employee->organization, 'organization')->createOne([
             'interview_template_id' => InterviewTemplate::factory()
                 ->for($this->employee, 'creator')
                 ->createOne()->getKey(),
@@ -107,6 +106,27 @@ class ImportInvitationsControllerTest extends TestCase
             $vacancy->getKey(),
             $vacancy->interview_template_id,
             now()->addDays(5),
+        );
+    }
+
+    /** @test  */
+    public function itShouldAddConsumptionWhenInvitationIsCreated(): void
+    {
+        $vacancy = Vacancy::factory()->for($this->employee->organization, 'organization')->createOne([
+            'interview_template_id' => InterviewTemplate::factory()
+                ->for($this->employee, 'creator')
+                ->createOne()->getKey(),
+        ]);
+
+        $this->post(route('organization.invitations.import'), [
+            'file' => $this->excelFile,
+            'vacancy_id' => $vacancy->getKey(),
+            'should_be_invited_at' => now()->addDays(5)->format('Y-m-d H:i'),
+        ]);
+
+        $this->assertEquals(
+            $this->employee->refresh()->organization->interview_consumption,
+            4
         );
     }
 }
