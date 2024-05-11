@@ -47,7 +47,7 @@ class OrganizationControllerTest extends TestCase
     {
         $organization = Organization::factory()->createOne([
             'limit' => 1000,
-            'consumption' => 500,
+            'interview_consumption' => 500,
         ]);
 
         $response = $this->get(route('admin.organizations.show', $organization));
@@ -63,7 +63,7 @@ class OrganizationControllerTest extends TestCase
                 'industry' => $organization->industry,
                 'logo' => $organization->logo,
                 'limit' => $organization->limit,
-                'consumption' => $organization->consumption,
+                'interview_consumption' => $organization->interview_consumption,
                 'limit_exceeded' => $organization->limitExceeded(),
             ]
         ]);

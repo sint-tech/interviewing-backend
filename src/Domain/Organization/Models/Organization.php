@@ -32,7 +32,7 @@ class Organization extends Model implements OwnerInterface, HasMedia
         'industry',
         'number_of_employees',
         'limit',
-        'consumption',
+        'interview_consumption',
     ];
 
     protected $casts = [
@@ -82,12 +82,12 @@ class Organization extends Model implements OwnerInterface, HasMedia
 
         $rest = $used_invitations - $unused_invitations;
 
-        return $this->limit <= $this->consumption - $rest;
+        return $this->limit <= $this->interview_consumption - $rest;
     }
 
     public function invitationsLeft(): int
     {
-        return $this->limit - $this->consumption;
+        return $this->limit - $this->interview_consumption;
     }
 
     protected static function newFactory()

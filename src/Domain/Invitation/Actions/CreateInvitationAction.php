@@ -13,7 +13,7 @@ class CreateInvitationAction
 
         $invitation->save();
 
-        $invitation->vacancy->organization->increment('consumption');
+        $invitation->vacancy->organization->increment('interview_consumption');
 
         return $invitation->refresh();
     }

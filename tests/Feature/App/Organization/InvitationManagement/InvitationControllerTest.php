@@ -95,7 +95,7 @@ class InvitationControllerTest extends TestCase
     public function itShouldNotSendInvitationWhenLimitExceeded(): void
     {
         $this->employeeAuth->organization->update([
-            'consumption' => 1,
+            'interview_consumption' => 1,
             'limit' => 1,
         ]);
 
@@ -109,7 +109,7 @@ class InvitationControllerTest extends TestCase
         {
             $this->post(route('organization.invitations.store'), $this->requestData())->assertSuccessful();
 
-            $this->assertEquals(1, $this->employeeAuth->refresh()->organization->consumption);
+            $this->assertEquals(1, $this->employeeAuth->refresh()->organization->interview_consumption);
         }
 
         /** @test  */
@@ -119,7 +119,7 @@ class InvitationControllerTest extends TestCase
                 vacancy: $vacancy = Vacancy::factory()->for($this->employeeAuth, 'creator')->createOne(['organization_id' => $this->employeeAuth->organization->getKey()])
             ))->assertSuccessful();
 
-            $this->assertEquals(1, $this->employeeAuth->refresh()->organization->consumption);
+            $this->assertEquals(1, $this->employeeAuth->refresh()->organization->interview_consumption);
 
             $vacancy->update(['ended_at' => now()]);
 
