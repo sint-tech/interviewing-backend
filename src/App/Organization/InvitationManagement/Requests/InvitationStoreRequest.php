@@ -33,21 +33,13 @@ class InvitationStoreRequest extends FormRequest
                     if (Invitation::query()->where('email', $this->input('email'))->where('vacancy_id', $value)->exists()) {
                         $fail(__('This invitation had create/sent before'));
                     }
+                    if (auth()->user()->organization->limitExceeded()) {
+                        $fail( __('Organization limit exceeded'));
+                    }
                 },
             ],
             'should_be_invited_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],
-        ];
-    }
-
-    public function after(): array
-    {
-        return [
-            function (Validator $validator) {
-                if (auth()->user()->organization->limitExceeded()) {
-                    $validator->errors()->add('vacancy_id', __('Organization limit exceeded'));
-                }
-            },
         ];
     }
 }
