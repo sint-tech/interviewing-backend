@@ -26,6 +26,9 @@ class OrganizationResource extends JsonResource
             'employees' => EmployeeResource::collection($this->whenLoaded('employees')),
             'current_manager' => EmployeeResource::make($this->whenLoaded('oldestManager')),
             'logo' => $this->whenLoaded('logo', $this->logo?->getFullUrl()),
+            'limit' => $this->resource->limit,
+            'interview_consumption' => $this->resource->interview_consumption,
+            'limit_exceeded' => $this->limitExceeded(),
         ];
     }
 }

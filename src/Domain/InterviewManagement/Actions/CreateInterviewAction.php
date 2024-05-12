@@ -2,9 +2,10 @@
 
 namespace Domain\InterviewManagement\Actions;
 
-use Domain\InterviewManagement\DataTransferObjects\InterviewDto;
-use Domain\InterviewManagement\Models\Interview;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Domain\InterviewManagement\Models\Interview;
+use Domain\InterviewManagement\DataTransferObjects\InterviewDto;
 
 class CreateInterviewAction
 {
@@ -13,15 +14,19 @@ class CreateInterviewAction
      */
     public function execute(InterviewDto $interviewDto): Interview
     {
-        $this->noInterviewsRunningForCandidate($interviewDto->candidate_id);
+        return DB::transaction(function () use ($interviewDto) {
+            $this->noInterviewsRunningForCandidate($interviewDto->candidate_id);
 
-        $interview = (new Interview())->fill($interviewDto->toArray());
+            $interview = (new Interview())->fill($interviewDto->toArray());
 
-        $interview->save();
+            $interview->save();
 
-        $interview->refresh()->load('questionVariants');
+            $interview->setInvitationUsed();
 
-        return $interview;
+            $interview->refresh()->load('questionVariants');
+
+            return $interview;
+        });
     }
 
     /**

@@ -64,6 +64,8 @@ return [
 
     'asset_url' => env('ASSET_URL', '/'),
 
+    'organization_default_limit' => env('ORGANIZATION_DEFAULT_LIMIT', 5),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

@@ -12,12 +12,13 @@ use Domain\Organization\Actions\DeleteOrganizationAction;
 use Domain\Organization\Actions\RestoreOrganizationAction;
 use Domain\Organization\Models\Organization;
 use Support\Controllers\Controller;
+use Domain\Organization\Actions\UpdateOrganizationAction;
+use App\Admin\Organization\Requests\OrganizationUpdateRequest;
 
 class OrganizationController extends Controller
 {
     public function index(IndexOrganizationQuery $query)
     {
-        //        dd(auth()->user());
         return OrganizationResource::collection($query->paginate((int) request()->input('per_page', 25)));
     }
 
@@ -36,9 +37,15 @@ class OrganizationController extends Controller
         return OrganizationResource::make($organization);
     }
 
-    public function update()
+    public function update(int $organization, OrganizationUpdateRequest $request): OrganizationResource
     {
-        //todo implement update method
+        return OrganizationResource::make(
+            (new UpdateOrganizationAction(
+                Organization::query()->findOrFail($organization),
+                OrganizationDataFactory::fromRequest($request)
+            )
+            )->execute()
+        );
     }
 
     public function destroy(int $organization): OrganizationResource

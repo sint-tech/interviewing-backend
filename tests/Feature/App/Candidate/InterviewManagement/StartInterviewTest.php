@@ -253,4 +253,30 @@ class StartInterviewTest extends TestCase
             ])->assertUnprocessable()
             ->assertJsonValidationErrorFor('vacancy_id');
     }
+
+    /** @test  */
+    public function itShouldMarkInvitationAsUsedWhenStartInterview()
+    {
+        $invitation = $this->vacancy->invitations()->create([
+            'name' => $this->authCandidate->first_name,
+            'email' => $this->authCandidate->email,
+            'mobile_number' => 1208205900,
+            'mobile_country_code' => $this->authCandidate->mobile_dial_code,
+            'should_be_invited_at' => now()->subDay(),
+            'batch' => 1,
+            'creator_id' => $this->vacancy->creator->getKey(),
+            'creator_type' => $this->vacancy->creator->getMorphClass(),
+        ]);
+
+        $this->assertNull($invitation->used_at);
+
+        $this->actingAs($this->authCandidate, 'candidate')
+            ->post(route('candidate.interviews.start'), [
+                'vacancy_id' => $this->vacancy->getKey(),
+            ])->assertSuccessful();
+
+        $invitation->refresh();
+
+        $this->assertNotNull($invitation->used_at);
+    }
 }

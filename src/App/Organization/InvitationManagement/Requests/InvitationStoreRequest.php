@@ -9,6 +9,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Support\Rules\ValidMobileNumberRule;
 use Support\Services\MobileStrategy\MobileCountryCodeEnum;
+use Illuminate\Validation\Validator;
+
 
 class InvitationStoreRequest extends FormRequest
 {
@@ -30,6 +32,9 @@ class InvitationStoreRequest extends FormRequest
                 function (string $attribute, mixed $value, \Closure $fail) {
                     if (Invitation::query()->where('email', $this->input('email'))->where('vacancy_id', $value)->exists()) {
                         $fail(__('This invitation had create/sent before'));
+                    }
+                    if (auth()->user()->organization->limitExceeded()) {
+                        $fail( __('Organization limit exceeded'));
                     }
                 },
             ],

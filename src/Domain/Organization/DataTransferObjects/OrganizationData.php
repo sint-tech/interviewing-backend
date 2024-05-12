@@ -16,7 +16,9 @@ class OrganizationData extends Data
         public readonly null|string|Optional $address,
         public readonly null|string|Optional $industry,
         public readonly null|OrganizationEmployeesRangeEnum|Optional $number_of_employees,
-        public readonly UploadedFile|Optional $logo
+        public readonly UploadedFile|Optional $logo,
+        public readonly null|int|Optional $limit,
+        public readonly null|int|Optional $interview_consumption,
     ) {
 
     }
