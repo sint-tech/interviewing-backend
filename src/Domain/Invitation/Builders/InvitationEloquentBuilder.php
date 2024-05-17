@@ -13,14 +13,12 @@ class InvitationEloquentBuilder extends Builder
     public function whereIsExpired(): self
     {
         return $this->whereHas('vacancy', fn ($query) => $query->where('ended_at', '<', now()))
-            ->orWhere('expired_at', '<', now())
-            ->orWhereNotNull('used_at');
+            ->orWhere('expired_at', '<', now());
     }
 
     public function whereIsNotExpired(): self
     {
         return $this->whereHas('vacancy', fn ($query) => $query->where('ended_at', '>', now()))
-            ->where(fn ($query) => $query->where('expired_at', '>', now())->orWhereNull('expired_at'))
-            ->whereNull('used_at');
+            ->where(fn ($query) => $query->where('expired_at', '>', now())->orWhereNull('expired_at'));
     }
 }
