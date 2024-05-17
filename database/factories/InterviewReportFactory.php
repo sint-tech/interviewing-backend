@@ -36,6 +36,7 @@ class InterviewReportFactory extends Factory
                 'question_clusters_stats' => [],
                 'language_fluency_score' => fake()->randomFloat(2, 0, 100),
                 'recruiter_advices' => [],
+                'emotional_score' => [],
             ];
 
             $interviewReport->setMeta($values);

@@ -21,6 +21,7 @@ class InterviewReport extends Report
             'question_clusters_stats' => [],
             'language_fluency_score' => 0,
             'recruiter_advices' => [],
+            'emotional_score' => [],
         ];
     }
 
