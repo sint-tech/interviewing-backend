@@ -31,7 +31,7 @@ class GenerateInterviewReportTest extends TestCase
             'ended_at' => now(),
         ]);
 
-        QuestionVariant::factory()->createOne([
+        QuestionVariant::factory(2)->create([
             'creator_id' => User::factory()->createOne()->id,
             'creator_type' => User::class,
         ]);
@@ -40,6 +40,44 @@ class GenerateInterviewReportTest extends TestCase
             'question_variant_id' => 1,
             'score' => 10,
             'max_score' => 10,
+            'ml_video_semantics' => '{
+                "code": 200,
+                "emotions": {
+                    "angry": 0.9883678555488586,
+                    "disgust": 1.3277789902044505e-15,
+                    "fear": 2.383256833127234e-05,
+                    "happy": 1.3518533847900471e-08,
+                    "neutral": 2.0277220755815506e-06,
+                    "sad": 0.011606342159211636,
+                    "surprise": 1.5735965319414041e-13
+                },
+                "frames_analyzed": 1,
+                "frames_total": 1,
+                "model_name": "DefaultEmotion.h5",
+                "state": "true"
+            }'
+        ]);
+
+        $this->interview->answers()->create([
+            'question_variant_id' => 2,
+            'score' => 10,
+            'max_score' => 10,
+            'ml_video_semantics' => '{
+                "code": 200,
+                "emotions": {
+                    "angry": 0.4783678555488586,
+                    "disgust": 0.3277789902044505e-15,
+                    "fear": 1.383256833127234e-05,
+                    "happy": 0.3518533847900471e-08,
+                    "neutral": 1.0277220755815506e-06,
+                    "sad": 0.311606342159211636,
+                    "surprise": 0.5735965319414041e-13
+                },
+                "frames_analyzed": 1,
+                "frames_total": 1,
+                "model_name": "DefaultEmotion.h5",
+                "state": "true"
+            }'
         ]);
 
         $this->seed('RecommendationsPromptTemplateSeeder');
@@ -124,5 +162,28 @@ class GenerateInterviewReportTest extends TestCase
             'key' => 'candidate_advices',
             'value' => "[\"Candidate advices: This is a test message\"]",
         ]);
+
+        $this->assertDatabaseHas('report_values', [
+            'key' => 'emotional_score',
+            'value' => $this->getAverageEmotionalScore(),
+        ]);
+    }
+
+    private function getAverageEmotionalScore() {
+        $count = $this->interview->answers->count();
+
+        $emotions = $this->interview->answers
+            ->map(fn ($answer) => (array) json_decode($answer->ml_video_semantics)->emotions)
+            ->reduce(function ($carry, $emotions) {
+                foreach ($emotions as $emotion => $value) {
+                    $carry[$emotion] = ($carry[$emotion] ?? 0) + $value;
+                }
+
+                return $carry;
+            }, []);
+
+        $averageEmotions = collect($emotions)->map(fn ($value) => $value / $count);
+
+        return json_encode($averageEmotions->sortDesc()->take(5)->toArray());
     }
 }
