@@ -169,7 +169,24 @@ class GenerateInterviewReportTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function itShouldReturnAnEmptyArrayIfTheInterviewHasNoEmotionalScores()
+    {
+        $this->interview->answers->first()->update(['ml_video_semantics' => null]);
+
+        app(GenerateInterviewReport::class)->execute($this->interview);
+
+        $this->assertDatabaseHas('report_values', [
+            'key' => 'emotional_score',
+            'value' => '[]',
+        ]);
+    }
+
     private function getAverageEmotionalScore() {
+        if ($this->interview->answers->contains(fn ($answer) => $answer->ml_video_semantics === null)) {
+            return [];
+        }
+
         $count = $this->interview->answers->count();
 
         $emotions = $this->interview->answers

@@ -145,6 +145,10 @@ class GenerateInterviewReport
 
     private function getAverageEmotionalScore(Interview $interview): array
     {
+        if ($interview->answers->contains(fn ($answer) => $answer->ml_video_semantics === null)) {
+            return [];
+        }
+
         $count = $interview->answers->count();
 
         $emotions = $interview->answers
