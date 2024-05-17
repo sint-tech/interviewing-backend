@@ -17,6 +17,7 @@ class InterviewReportResource extends JsonResource
             'advices' => (array) $this->resource->defaultLastReport->recruiter_advices,
             'impacts' => (array) $this->resource->defaultLastReport->impacts,
             'question_clusters_scores' => $this->resource->defaultLastReport->question_clusters_stats,
+            'emotional_score' => $this->resource->defaultLastReport->emotional_score,
             'created_at' => $this->resource->defaultLastReport->created_at?->format('Y-m-d H:i'),
         ];
     }
