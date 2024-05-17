@@ -62,6 +62,10 @@ class GenerateInterviewReport
                     'key' => 'recruiter_advices',
                     'value' => $this->getRecommendations($interview, 'recruiter_advices'),
                 ]),
+                ReportValueDto::from([
+                    'key' => 'emotional_score',
+                    'value' => $this->getAverageEmotionalScore($interview),
+                ])
             ],
         ]);
 
@@ -137,5 +141,24 @@ class GenerateInterviewReport
         });
 
         return $clustersStats;
+    }
+
+    private function getAverageEmotionalScore(Interview $interview): array
+    {
+        $count = $interview->answers->count();
+
+        $emotions = $interview->answers
+            ->map(fn ($answer) => (array) json_decode($answer->ml_video_semantics)->emotions)
+            ->reduce(function ($carry, $emotions) {
+                foreach ($emotions as $emotion => $value) {
+                    $carry[$emotion] = ($carry[$emotion] ?? 0) + $value;
+                }
+
+                return $carry;
+            }, []);
+
+        $averageEmotions = collect($emotions)->map(fn ($value) => $value / $count);
+
+        return $averageEmotions->sortDesc()->take(5)->toArray();
     }
 }
