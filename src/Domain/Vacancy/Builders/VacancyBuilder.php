@@ -22,7 +22,7 @@ class VacancyBuilder extends Builder
 
     public function whereEnded(): self
     {
-        return $this->where('ended_at', '>=', now());
+        return $this->where('ended_at', '<=', now());
     }
 
     public function whereRunning(): self

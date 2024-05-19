@@ -71,18 +71,11 @@ class Organization extends Model implements OwnerInterface, HasMedia
 
     public function limitExceeded(): bool
     {
-        $vacancies = $this->vacancies()->whereEnded()->pluck('id');
-
-        $invitations = Invitation::query()
-            ->whereIn('vacancy_id', $vacancies)
-            ->get();
-
-        $used_invitations = $invitations->whereNotNull('used_at')->count();
-        $unused_invitations = $invitations->whereNull('used_at')->count();
-
-        $rest = $used_invitations - $unused_invitations;
-
-        return $this->limit <= $this->interview_consumption - $rest;
+        $unused_invitations = Invitation::query()
+            ->whereIn('vacancy_id', $this->vacancies()->whereEnded()->pluck('id'))
+            ->whereNull('used_at')
+            ->count();
+        return $this->limit <= $this->interview_consumption - $unused_invitations;
     }
 
     public function invitationsLeft(): int
