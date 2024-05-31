@@ -64,14 +64,17 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
             }
         });
 
-        $status_code = count($exceptions) > 0 ? 400 : 200;
 
-        dd(response()->json([
-            'total' => $total,
-            'errors' => count($exceptions),
-            'sent' => $total - count($exceptions),
-            'errors_messages' => array_unique($exceptions),
-        ], $status_code));
+        if (app()->environment('production')) {
+            $status_code = count($exceptions) > 0 ? 400 : 200;
+
+            dd(response()->json([
+                'total' => $total,
+                'errors' => count($exceptions),
+                'sent' => $total - count($exceptions),
+                'errors_messages' => array_unique($exceptions),
+            ], $status_code));
+        }
     }
 
     protected function prepareRow(array &$row): array
