@@ -50,17 +50,28 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
             throw new LimitExceededException('You have exceeded your invitation limit');
         }
 
-        $rows->each(function (array $row) use ($createInvitationAction) {
+        $exceptions = [];
+
+        $rows->each(function (array $row) use ($createInvitationAction, &$exceptions) {
             try {
                 $dto = InvitationDto::validateAndCreate($this->prepareRow($row));
 
                 $createInvitationAction->execute($dto);
             } catch (Exception $exception) {
-                dd($exception);
+                $exceptions[] = $exception->getMessage();
                 //todo handle exceptions to parse it again for the client
                 Log::info($exception->getMessage() . ' job_direction:' . __DIR__);
             }
         });
+
+        $status_code = count($exceptions) > 0 ? 400 : 200;
+
+        dd(response()->json([
+            'total' => $total,
+            'errors' => count($exceptions),
+            'sent' => $total - count($exceptions),
+            'errors_messages' => array_unique($exceptions),
+        ], $status_code));
     }
 
     protected function prepareRow(array &$row): array
@@ -73,7 +84,7 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
         );
 
         if (isset($data['mobile_country_code']) && $data['mobile_country_code'][0] !== '+') {
-            $data['mobile_country_code'] = '+'.$data['mobile_country_code'];
+            $data['mobile_country_code'] = '+' . $data['mobile_country_code'];
         }
 
         $data['vacancy_id'] = $this->vacancy_id;
