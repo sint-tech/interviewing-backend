@@ -6,7 +6,6 @@ use Domain\Invitation\Models\Invitation;
 use Domain\Vacancy\Models\Vacancy;
 use Illuminate\Support\Optional;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithCastable;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
@@ -16,6 +15,7 @@ use Support\Data\Creator;
 use Support\Rules\ValidMobileNumberRule;
 use Support\Services\MobileStrategy\MobileCountryCodeEnum;
 use Support\Services\MobileStrategy\MobileNumberFactory;
+use Illuminate\Validation\Validator;
 
 class InvitationDto extends Data
 {
@@ -52,18 +52,40 @@ class InvitationDto extends Data
         return [
             'name' => ['required', 'string', 'min:1'],
             'email' => ['required', 'email'],
-            'mobile_country_code' => ['required', new Enum(MobileCountryCodeEnum::class)],
-            'dirty_mobile_number' => ['required', 'integer',
-                new ValidMobileNumberRule(MobileCountryCodeEnum::from($context->fullPayload['mobile_country_code'])),
-            ],
-            'vacancy_id' => ['required', 'integer', Rule::exists(Vacancy::class, 'id'),
+            'mobile_country_code' => ['required', Rule::enum(MobileCountryCodeEnum::class)],
+            'vacancy_id' => [
+                'required', 'integer', Rule::exists(Vacancy::class, 'id'),
                 function (string $attribute, mixed $value, \Closure $fail) use ($context) {
                     if (Invitation::query()->where('email', $context->fullPayload['email'])->where('vacancy_id', $value)->exists()) {
-                        $fail(__('This invitation had been created/sent before'));
+                        $fail(__('Invitation for ' . $context->fullPayload['email'] . ' had been created/sent before'));
                     }
-                }],
+                }
+            ],
             'expired_at' => ['nullable', 'date', 'date_format:Y-m-d H:i', 'after:should_be_invited_at'],
             'should_be_invited_at' => ['required', 'date_format:Y-m-d H:i', 'date', 'after:now'],
+        ];
+    }
+
+    public static function withValidator(Validator $validator): void
+    {
+        $validator->after(function ($validator) {
+            if ($validator->errors()->has('mobile_country_code')) {
+                return;
+            }
+
+            $validator->addRules([
+                'dirty_mobile_number' => [
+                    'required', 'integer',
+                    new ValidMobileNumberRule(MobileCountryCodeEnum::from($validator->getData()['mobile_country_code'])),
+                ],
+            ]);
+        });
+    }
+
+    public static function messages(...$args): array
+    {
+        return [
+            'mobile_country_code.Illuminate\Validation\Rules\Enum' => 'This country code :input is not supported please choose from ' . implode(', ', MobileCountryCodeEnum::getValues()),
         ];
     }
 }
