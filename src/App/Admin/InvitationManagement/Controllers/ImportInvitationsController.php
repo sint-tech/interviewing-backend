@@ -17,12 +17,12 @@ class ImportInvitationsController extends Controller
 
         $file_path = $request->file('file')->store('public/imported-excels/invitations/'.$file_name);
 
-        dispatch(new ImportInvitationsFromExcelJob(
+        ImportInvitationsFromExcelJob::dispatchSync(
             storage_path('app/'.$file_path),
             $request->validated('vacancy_id'),
             $request->validated('interview_template_id'),
             $request->date('should_be_invited_at'),
-        ));
+        );
 
         return message_response('file uploaded, we will send you notification once importing finished!');
     }
