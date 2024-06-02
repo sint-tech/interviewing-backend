@@ -37,7 +37,7 @@ class ImportInvitationsControllerTest extends TestCase
         $this->employee = Employee::factory()->createOne();
 
         $this->excelFile = (new UploadedFile(
-            public_path('tests/invitations.csv'),
+            public_path('tests/csvs/invitations.csv'),
             'invitations.csv',
             'csv',
             null,
@@ -45,7 +45,7 @@ class ImportInvitationsControllerTest extends TestCase
         ));
 
         $this->wrong_cc = (new UploadedFile(
-            public_path('tests/wrong_country_code_invitations.csv'),
+            public_path('tests/csvs/wrong_country_code_invitations.csv'),
             'wrong_cc.csv',
             'csv',
             null,
@@ -53,7 +53,7 @@ class ImportInvitationsControllerTest extends TestCase
         ));
 
         $this->duplicate_emails = (new UploadedFile(
-            public_path('tests/duplicate_emails_invitations.csv'),
+            public_path('tests/csvs/duplicate_emails_invitations.csv'),
             'wrong_email.csv',
             'csv',
             null,

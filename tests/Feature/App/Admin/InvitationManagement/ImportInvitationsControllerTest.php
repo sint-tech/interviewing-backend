@@ -33,7 +33,7 @@ class ImportInvitationsControllerTest extends TestCase
         $this->sintUser = User::query()->first();
 
         $this->excelFile = (new UploadedFile(
-            public_path('tests/invitations.csv'),
+            public_path('tests/csvs/invitations.csv'),
             'invitations.csv',
             'csv',
             null,
