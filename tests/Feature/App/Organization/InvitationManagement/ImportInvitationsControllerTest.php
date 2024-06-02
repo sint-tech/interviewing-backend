@@ -22,6 +22,10 @@ class ImportInvitationsControllerTest extends TestCase
 
     protected UploadedFile $excelFile;
 
+    protected UploadedFile $wrong_cc;
+
+    protected UploadedFile $duplicate_emails;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -33,8 +37,24 @@ class ImportInvitationsControllerTest extends TestCase
         $this->employee = Employee::factory()->createOne();
 
         $this->excelFile = (new UploadedFile(
-            public_path('tests/invitations.csv'),
+            public_path('tests/csvs/invitations.csv'),
             'invitations.csv',
+            'csv',
+            null,
+            true
+        ));
+
+        $this->wrong_cc = (new UploadedFile(
+            public_path('tests/csvs/wrong_country_code_invitations.csv'),
+            'wrong_cc.csv',
+            'csv',
+            null,
+            true
+        ));
+
+        $this->duplicate_emails = (new UploadedFile(
+            public_path('tests/csvs/duplicate_emails_invitations.csv'),
+            'wrong_email.csv',
             'csv',
             null,
             true
@@ -129,4 +149,46 @@ class ImportInvitationsControllerTest extends TestCase
             4
         );
     }
+
+    /** @test  */
+    public function itShouldNotAddConsumptionWhenEmailIsDuplicated(): void
+    {
+        $vacancy = Vacancy::factory()->for($this->employee->organization, 'organization')->createOne([
+            'interview_template_id' => InterviewTemplate::factory()
+                ->for($this->employee, 'creator')
+                ->createOne()->getKey(),
+        ]);
+
+        $this->post(route('organization.invitations.import'), [
+            'file' => $this->duplicate_emails,
+            'vacancy_id' => $vacancy->getKey(),
+            'should_be_invited_at' => now()->addDays(5)->format('Y-m-d H:i'),
+        ]);
+
+        $this->assertEquals(
+            $this->employee->refresh()->organization->interview_consumption,
+            2
+        );
+    }
+
+        /** @test  */
+        public function itShouldNotAddConsumptionWhenCountryCodeIsWrong(): void
+        {
+            $vacancy = Vacancy::factory()->for($this->employee->organization, 'organization')->createOne([
+                'interview_template_id' => InterviewTemplate::factory()
+                    ->for($this->employee, 'creator')
+                    ->createOne()->getKey(),
+            ]);
+
+            $this->post(route('organization.invitations.import'), [
+                'file' => $this->wrong_cc,
+                'vacancy_id' => $vacancy->getKey(),
+                'should_be_invited_at' => now()->addDays(5)->format('Y-m-d H:i'),
+            ]);
+
+            $this->assertEquals(
+                $this->employee->refresh()->organization->interview_consumption,
+                2
+            );
+        }
 }
