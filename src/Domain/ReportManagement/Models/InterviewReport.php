@@ -32,7 +32,10 @@ class InterviewReport extends Report
                 ->where(function (Builder $wheres) {
                     return $wheres
                         ->where('reportable_type', (new Interview())->getMorphClass())
-                        ->whereIn('reportable_id', auth()->user()->interviews()->select('id'));
+                        ->whereIn('reportable_id', auth()->user()->interviews()->select('id'))
+                        ->whereHas('reportable.vacancy', function ($query) {
+                            return $query->whereEnded();
+                        });
                 });
         }));
 
