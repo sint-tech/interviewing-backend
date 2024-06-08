@@ -21,4 +21,12 @@ class VacancyStoreRequest extends FormRequest
             //todo add current trial for interview
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'started_at.after' => "The 'Start Time' field must be a date and time after the current time.",
+            'ended_at.after' => "The 'End Time' field must be a date and time after the 'Start Time' field.",
+        ];
+    }
 }
