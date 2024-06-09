@@ -27,7 +27,7 @@ class GenerateInterviewReport
      */
     public function execute(
         Interview $interview
-    ):Report {
+    ): void {
         if ($this->interviewStillRunning($interview)) {
             throw new InterviewNotFinishedException();
         }
@@ -70,8 +70,6 @@ class GenerateInterviewReport
         ]);
 
         app(CreateReportAction::class)->execute($reportDto);
-
-        return $interview->refresh()->defaultLastReport;
     }
 
     public function interviewStillRunning(Interview $interview): bool

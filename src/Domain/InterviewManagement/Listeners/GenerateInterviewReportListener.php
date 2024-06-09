@@ -22,9 +22,9 @@ class GenerateInterviewReportListener
         app(SetInterviewStatusByScoreAction::class)->execute($event->interview->refresh());
     }
 
-    private function generateInterviewReport(Interview $interview): InterviewReport
+    private function generateInterviewReport(Interview $interview): void
     {
-        return app(GenerateInterviewReport::class)
+        app(GenerateInterviewReport::class)
             ->execute($interview);
     }
 }
