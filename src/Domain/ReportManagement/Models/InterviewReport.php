@@ -32,14 +32,24 @@ class InterviewReport extends Report
                 ->where(function (Builder $wheres) {
                     return $wheres
                         ->where('reportable_type', (new Interview())->getMorphClass())
-                        ->whereIn('reportable_id', auth()->user()->interviews()->select('id'))
-                        ->whereHas('reportable.vacancy', function ($query) {
-                            return $query->whereEnded();
-                        });
+                        ->whereIn('reportable_id', auth()->user()->interviews()->select('id'));
                 });
         }));
 
         parent::booted();
+    }
+
+    /**
+     * Scope a query to only include reports of ended vacancies.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithEndedVacancy($query)
+    {
+        return $query->whereHas('reportable.vacancy', function ($query) {
+            return $query->whereEnded();
+        });
     }
 
     protected static function newFactory(): Factory

@@ -10,7 +10,9 @@ class GetInterviewReportController extends Controller
 {
     public function __invoke(Interview $interview)
     {
-        $report = $interview->defaultLastReport()->firstOrFail();
+        $report = $interview->defaultLastReport()
+            ->withEndedVacancy()
+            ->firstOrFail();
 
         return InterviewReportResource::make(
             $report->load('reportable.vacancy.organization')

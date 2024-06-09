@@ -114,6 +114,14 @@ class GenerateInterviewReportTest extends TestCase
     }
 
     /** @test */
+    public function itShouldGeneratesAReportForAFinsishedInterview()
+    {
+        $report = app(GenerateInterviewReport::class)->execute($this->interview);
+
+        $this->assertInstanceOf(Report::class, $report);
+    }
+
+    /** @test */
     public function itShouldThrowAnExceptionIfTheInterviewIsNotFinished()
     {
         $this->expectException(InterviewNotFinishedException::class);
