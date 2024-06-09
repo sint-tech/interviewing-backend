@@ -60,12 +60,20 @@ class SubmitInterviewQuestionAnswerAction
 
     protected function calculateAverageScore(int $question_variant_id, string $answer): int
     {
-        return (int) collect($this->promptResponse($question_variant_id, $answer))->avg('correctness_rate') ?? 0;
+        return (int) collect($this->promptResponse($question_variant_id, $answer))
+            ->map(function ($response) {
+                return is_numeric($response['correctness_rate']) ? (int)$response['correctness_rate'] : 0;
+            })
+            ->avg() ?? 0;
     }
 
     protected function calculateAverageEnglishScore(int $question_variant_id, string $answer): int
     {
-        return (int) collect($this->promptResponse($question_variant_id, $answer))->avg('english_score') ?? 0;
+        return (int) collect($this->promptResponse($question_variant_id, $answer))
+            ->map(function ($response) {
+                return is_numeric($response['english_score']) ? (int)$response['english_score'] : 0;
+            })
+            ->avg() ?? 0;
     }
 
     protected function promptResponse(int $question_variant_id, string $answer): array
