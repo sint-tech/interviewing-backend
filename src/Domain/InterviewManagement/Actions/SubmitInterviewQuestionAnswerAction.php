@@ -89,8 +89,15 @@ class SubmitInterviewQuestionAnswerAction
         $this->rawPromptResponse = $rawPromptResponses->join(', ');
 
         return $this->promptResponses = $rawPromptResponses
-            //todo start by "{" when missing
-            ->map(fn (string $response) => json_decode(str($response)->toString(), true))
+            ->map(function (string $response) {
+                if ($response[0] !== '{') {
+                    $response = '{' . $response;
+                }
+                if ($response[-1] !== '}') {
+                    $response .= '}';
+                }
+                return json_decode($response, true);
+            })
             ->toArray();
     }
 
