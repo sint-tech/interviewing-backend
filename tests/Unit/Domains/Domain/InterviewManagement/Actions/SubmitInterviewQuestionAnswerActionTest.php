@@ -2,9 +2,11 @@
 
 namespace Tests\Unit\Domains\Domain\InterviewManagement\Actions;
 
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Domain\InterviewManagement\Actions\SubmitInterviewQuestionAnswerAction;
+use Domain\QuestionManagement\Models\QuestionVariant;
 
 class SubmitInterviewQuestionAnswerActionTest extends TestCase
 {
@@ -17,7 +19,6 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
         $action->shouldReceive('promptResponse')->andReturn($this->promptResponseFake());
 
         $this->assertEquals(2, $action->calculateAverageScore(1, 'answer'));
-        Mockery::close();
     }
 
     public function testCalculateAverageEnglishScore()
@@ -29,7 +30,6 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
         $action->shouldReceive('promptResponse')->andReturn($this->promptResponseFake());
 
         $this->assertEquals(4, $action->calculateAverageEnglishScore(1, 'answer'));
-        Mockery::close();
     }
 
     public function testPromptResponse()
@@ -37,7 +37,7 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
         $questionVariantId = 1;
         $answer = 'test answer';
 
-        $aiPromptMock = Mockery::mock('Domain\AiPromptMessageManagement\Models\AIPrompt');
+        $aiPromptMock = Mockery::mock(AIPrompt::class);
         $aiPromptMock->shouldReceive('prompt')
             ->with('test question', $answer)
             ->andReturn('{
@@ -49,10 +49,10 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
                 "english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
             }');
 
-        $questionVariantMock = Mockery::mock('Domain\QuestionManagement\Models\QuestionVariant');
+        $questionVariantMock = Mockery::mock(QuestionVariant::class);
         $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
-        $questionVariantMock->aiPrompts = collect([$aiPromptMock]);
-        $questionVariantMock->text = 'test question';
+        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
+        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
 
         $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
             ->makePartial()
@@ -73,7 +73,6 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
             ]
         ];
         $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
-        Mockery::close();
     }
 
     public function testPromptResponseMissingOpeningBrace()
@@ -81,14 +80,15 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
         $questionVariantId = 1;
         $answer = 'test answer';
 
-        $aiPromptMock = Mockery::mock('Domain\AiPromptMessageManagement\Models\AIPrompt');
+        $aiPromptMock = Mockery::mock(AIPrompt::class);
         $aiPromptMock->shouldReceive('prompt')
             ->with('test question', $answer)
             ->andReturn('"is_logical":"false","correctness_rate":"2","is_correct":"false","answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.","english_score":"4","english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."}');
 
-        $questionVariantMock = Mockery::mock('Domain\QuestionManagement\Models\QuestionVariant');
-        $questionVariantMock->aiPrompts = collect([$aiPromptMock]);
-        $questionVariantMock->text = 'test question';
+            $questionVariantMock = Mockery::mock(QuestionVariant::class);
+            $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
+            $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
+            $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
 
         $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
             ->makePartial()
@@ -109,6 +109,11 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
             ]
         ];
         $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
         Mockery::close();
     }
 
