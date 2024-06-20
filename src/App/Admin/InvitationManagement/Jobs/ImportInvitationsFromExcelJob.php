@@ -82,7 +82,7 @@ class ImportInvitationsFromExcelJob implements ShouldQueue
             $row
         );
 
-        if (isset($data['mobile_country_code']) && $data['mobile_country_code'][0] !== '+') {
+        if (isset($data['mobile_country_code']) && ((string) $data['mobile_country_code'])[0] !== '+') {
             $data['mobile_country_code'] = '+' . $data['mobile_country_code'];
         }
 
