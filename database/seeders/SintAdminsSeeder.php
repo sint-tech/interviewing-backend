@@ -14,7 +14,7 @@ class SintAdminsSeeder extends Seeder
         'mohammed.badawy@sint.com',
         'mostafa.gouda@sint.com',
         'mohamed.mokbel@sint.com',
-        'moaz.soliman@sint.com',
+        'muaz.soliman@sint.com',
         'mohamed.ghannam@sint.com',
     ];
 
