@@ -87,8 +87,8 @@ class SubmitInterviewQuestionAnswerAction
         $question_variant = $this->questionVariant($question_variant_id);
 
         $rawPromptResponses = $question_variant->aiPrompts->map(fn (AIPrompt $AIPrompt) => $AIPrompt->prompt($question_variant->text, $answer));
-
         $this->rawPromptResponse = $rawPromptResponses->join(', ');
+        info($this->rawPromptResponse);
 
         return $this->promptResponses = $rawPromptResponses
             ->map(function (string $response) {
