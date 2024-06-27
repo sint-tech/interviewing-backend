@@ -29,19 +29,17 @@ class DevelopmentSeeder extends Seeder
 
         $this->call([
             SintAdminsSeeder::class,
+            SintOrganizationSeeder::class,
+            RegistrationReasonSeeder::class,
+            JobTitleSeeder::class,
+            RecommendationsPromptTemplateSeeder::class,
         ]);
 
-        if (JobTitle::query()->doesntExist()) {
-            JobTitle::factory(10)->create(['availability_status' => 'active']);
-        }
-
-        if (RegistrationReason::query()->doesntExist()) {
-            RegistrationReason::factory(10)->create(['availability_status' => 'active']);
-        }
         Skill::factory(10)->create();
 
         QuestionCluster::factory(10)->for(
-            User::query()->first(), 'creator'
+            User::query()->first(),
+            'creator'
         )
             ->has(
                 Question::factory()
@@ -57,7 +55,7 @@ class DevelopmentSeeder extends Seeder
                             )
                             ->for(
                                 User::query()->first(),
-                                'owner'
+                                'creator'
                             ),
                         'questionVariants'
                     ),
@@ -71,7 +69,7 @@ class DevelopmentSeeder extends Seeder
             )
             ->for(
                 User::query()->first(),
-                'owner'
+                'creator'
             )
             ->create()
             ->each(function (InterviewTemplate $template) {
@@ -95,7 +93,7 @@ class DevelopmentSeeder extends Seeder
             )
             ->for(
                 User::query()->first(),
-                'owner'
+                'creator'
             )->create();
     }
 }

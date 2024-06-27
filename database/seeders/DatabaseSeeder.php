@@ -12,12 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(SintAdminsSeeder::class);
-
-        $this->call(SintOrganizationSeeder::class);
-
-        $this->call(RegistrationReasonSeeder::class);
-
-        $this->call(JobTitleSeeder::class);
+        $this->call([
+            SintAdminsSeeder::class,
+            SintOrganizationSeeder::class,
+            RegistrationReasonSeeder::class,
+            JobTitleSeeder::class,
+            RecommendationsPromptTemplateSeeder::class,
+        ]);
     }
 }

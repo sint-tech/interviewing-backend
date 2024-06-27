@@ -39,6 +39,19 @@ class InterviewReport extends Report
         parent::booted();
     }
 
+    /**
+     * Scope a query to only include reports of ended vacancies.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithEndedVacancy($query)
+    {
+        return $query->whereHas('reportable.vacancy', function ($query) {
+            return $query->whereEnded();
+        });
+    }
+
     protected static function newFactory(): Factory
     {
         return InterviewReportFactory::new();

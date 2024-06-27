@@ -155,7 +155,7 @@ class GenerateInterviewReport
             ->map(fn ($answer) => (array) json_decode($answer->ml_video_semantics)->emotions)
             ->reduce(function ($carry, $emotions) {
                 foreach ($emotions as $emotion => $value) {
-                    $carry[$emotion] = ($carry[$emotion] ?? 0) + (int) $value;
+                    $carry[$emotion] = ($carry[$emotion] ?? 0) + (float) $value;
                 }
 
                 return $carry;

@@ -19,7 +19,7 @@ class ImportInvitationRequest extends FormRequest
                 'application/vnd.ms-excel', 'application/vnd.msexcel',
                 'text/csv', 'text/anytext', 'text/plain', 'text/x-c',
                 'text/comma-separated-values',
-                'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'csv']
+                'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'csv', 'xlsx']
             )],
             'vacancy_id' => ['required', 'integer', Rule::exists(Vacancy::class, 'id')->withoutTrashed()],
             'interview_template_id' => ['nullable',

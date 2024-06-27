@@ -18,7 +18,7 @@ class ImportInvitationRequest extends FormRequest
                 'application/vnd.ms-excel', 'application/vnd.msexcel',
                 'text/csv', 'text/anytext', 'text/plain', 'text/x-c',
                 'text/comma-separated-values',
-                'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'csv']
+                'inode/x-empty', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'csv', 'xlsx']
             )],
             'vacancy_id' => ['required', 'integer', Rule::exists(table_name(Vacancy::class), 'id')->withoutTrashed()],
             'should_be_invited_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
