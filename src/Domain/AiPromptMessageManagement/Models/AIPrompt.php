@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OpenAI\Laravel\Facades\OpenAI;
 use Support\ValueObjects\PromptMessage;
+use Domain\AiPromptMessageManagement\Api\GPT4oAiModel;
 
 /**
  * @property AiModelEnum $model
@@ -60,7 +61,8 @@ class AIPrompt extends Model
         return Attribute::make(get: function () {
 
             $replacers = match ($this->model) {
-                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => config('aimodel.models.gpt-3-5-turbo.system_prompt')]
+                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => config('aimodel.models.gpt-3-5-turbo.system_prompt')],
+                AiModelEnum::Gpt_4o => ['_RESPONSE_JSON_STRUCTURE_' => config('aimodel.models.gpt-4o.system_prompt')],
             };
 
             return PromptMessage::make($this->system, $replacers);
@@ -74,7 +76,8 @@ class AIPrompt extends Model
     {
         return Attribute::make(get: function () {
             $replacers = match ($this->model) {
-                AiModelEnum::Gpt_3_5 => []
+                AiModelEnum::Gpt_3_5 => [],
+                AiModelEnum::Gpt_4o => [],
             };
 
             return PromptMessage::make($this->content, $replacers);
@@ -100,14 +103,32 @@ class AIPrompt extends Model
                         ])->toString(),
                     ],
                 ],
-            ])->choices[0]->message->content
+            ])->choices[0]->message->content,
+            AiModelEnum::Gpt_4o => OpenAI::chat()->create([
+                'model' => $this->model->value,
+                'response_format' => ['type' => 'json_object'],
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $this->system_prompt->toString(),
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $this->content_prompt->replaceMany([
+                            '_QUESTION_TEXT_' => $question,
+                            '_INTERVIEWEE_ANSWER_' => $answer,
+                        ])->toString(),
+                    ],
+                ],
+            ])->choices[0]->message->content,
         };
     }
 
     public function aiModelClientFactory(): AiModelClientInterface
     {
         return match ($this->aiModel->name) {
-            AiModelEnum::Gpt_3_5 => new GPT35AiModel($this)
+            AiModelEnum::Gpt_3_5 => new GPT35AiModel($this),
+            AiModelEnum::Gpt_4o => new GPT4oAiModel($this),
         };
     }
 }
