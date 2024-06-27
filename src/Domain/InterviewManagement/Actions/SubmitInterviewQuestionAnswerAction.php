@@ -18,7 +18,7 @@ class SubmitInterviewQuestionAnswerAction
 
     public function execute(Interview $interview, AnswerDto $answerDto): Answer
     {
-        $this->promptResponse($answerDto->question_variant_id, $answerDto->answer_text);
+        info($this->promptResponse($answerDto->question_variant_id, $answerDto->answer_text));
         $data = $answerDto->toArray() + [
             'question_cluster_id' => QuestionVariant::query()->find($answerDto->question_variant_id)->questionCluster->getKey(),
             'ml_text_semantics' => $this->rawPromptResponse,
@@ -60,7 +60,8 @@ class SubmitInterviewQuestionAnswerAction
 
     protected function calculateAverageScore(int $question_variant_id, string $answer): int
     {
-        return (int) collect($this->promptResponse($question_variant_id, $answer))
+        info($promptResponse = $this->promptResponse($question_variant_id, $answer));
+        return (int) collect($promptResponse)
             ->map(function ($response) {
                 return is_numeric($response['correctness_rate']) ? (int)$response['correctness_rate'] : 0;
             })
@@ -69,7 +70,8 @@ class SubmitInterviewQuestionAnswerAction
 
     protected function calculateAverageEnglishScore(int $question_variant_id, string $answer): int
     {
-        return (int) collect($this->promptResponse($question_variant_id, $answer))
+        info($promptResponse = $this->promptResponse($question_variant_id, $answer));
+        return (int) collect($promptResponse)
             ->map(function ($response) {
                 return is_numeric($response['english_score']) ? (int)$response['english_score'] : 0;
             })
