@@ -88,11 +88,13 @@ class AIPrompt extends Model
     {
         info(
             $this->model->getModelName(),
-            $this->system_prompt->toString(),
-            $this->content_prompt->replaceMany([
-                '_QUESTION_TEXT_' => $question,
-                '_INTERVIEWEE_ANSWER_' => $answer,
-            ])->toString()
+            [
+                'system_prompt' => $this->system_prompt->toString(),
+                'content_prompt' => $this->content_prompt->replaceMany([
+                    '_QUESTION_TEXT_' => $question,
+                    '_INTERVIEWEE_ANSWER_' => $answer,
+                ])->toString()
+            ]
         );
         return match ($this->model) {
             AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
