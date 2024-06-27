@@ -86,6 +86,14 @@ class AIPrompt extends Model
 
     public function prompt(string $question, string $answer): string
     {
+        info(
+            $this->model->getModelName(),
+            $this->system_prompt->toString(),
+            $this->content_prompt->replaceMany([
+                '_QUESTION_TEXT_' => $question,
+                '_INTERVIEWEE_ANSWER_' => $answer,
+            ])->toString()
+        );
         return match ($this->model) {
             AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
                 'model' => $this->model->getModelName(),
