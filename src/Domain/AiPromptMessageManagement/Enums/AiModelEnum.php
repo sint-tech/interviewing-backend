@@ -14,12 +14,4 @@ enum AiModelEnum: int
             self::Gpt_4o->value,
         ];
     }
-
-    public function getModelName(): string
-    {
-        return match ($this) {
-            self::Gpt_3_5 => 'gpt-3.5-turbo',
-            self::Gpt_4o => 'gpt-4o',
-        };
-    }
 }
