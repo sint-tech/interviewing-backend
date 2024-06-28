@@ -18,7 +18,7 @@ class SubmitInterviewQuestionAnswerAction
 
     public function execute(Interview $interview, AnswerDto $answerDto): Answer
     {
-        info($this->promptResponse($answerDto->question_variant_id, $answerDto->answer_text));
+        $this->promptResponse($answerDto->question_variant_id, $answerDto->answer_text);
         $data = $answerDto->toArray() + [
             'question_cluster_id' => QuestionVariant::query()->find($answerDto->question_variant_id)->questionCluster->getKey(),
             'ml_text_semantics' => $this->rawPromptResponse,
