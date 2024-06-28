@@ -27,7 +27,7 @@ use Support\ValueObjects\PromptMessage;
  */
 class AIPrompt extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'ai_prompts';
 
@@ -83,16 +83,6 @@ class AIPrompt extends Model
 
     public function prompt(string $question, string $answer): string
     {
-        info(
-            $this->model->getModelName(),
-            [
-                'system_prompt' => $this->system_prompt->toString(),
-                'content_prompt' => $this->content_prompt->replaceMany([
-                    '_QUESTION_TEXT_' => $question,
-                    '_INTERVIEWEE_ANSWER_' => $answer,
-                ])->toString()
-            ]
-        );
         return match ($this->model) {
             AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
                 'model' => $this->model->value,

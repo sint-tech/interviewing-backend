@@ -60,7 +60,6 @@ class SubmitInterviewQuestionAnswerAction
 
     protected function calculateAverageScore(int $question_variant_id, string $answer): int
     {
-        info($promptResponse = $this->promptResponse($question_variant_id, $answer));
         return (int) collect($promptResponse)
             ->map(function ($response) {
                 return is_numeric($response['correctness_rate']) ? (int)$response['correctness_rate'] : 0;
@@ -70,7 +69,6 @@ class SubmitInterviewQuestionAnswerAction
 
     protected function calculateAverageEnglishScore(int $question_variant_id, string $answer): int
     {
-        info($promptResponse = $this->promptResponse($question_variant_id, $answer));
         return (int) collect($promptResponse)
             ->map(function ($response) {
                 return is_numeric($response['english_score']) ? (int)$response['english_score'] : 0;
@@ -88,7 +86,6 @@ class SubmitInterviewQuestionAnswerAction
 
         $rawPromptResponses = $question_variant->aiPrompts->map(fn (AIPrompt $AIPrompt) => $AIPrompt->prompt($question_variant->text, $answer));
         $this->rawPromptResponse = $rawPromptResponses->join(', ');
-        info($this->rawPromptResponse);
 
         return $this->promptResponses = $rawPromptResponses
             ->map(function (string $response) {
