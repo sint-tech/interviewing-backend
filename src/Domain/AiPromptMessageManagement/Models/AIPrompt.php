@@ -28,7 +28,7 @@ use Domain\AiPromptMessageManagement\Api\GPT4oAiModel;
  */
 class AIPrompt extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory,SoftDeletes;
 
     protected $table = 'ai_prompts';
 
@@ -98,7 +98,7 @@ class AIPrompt extends Model
         );
         return match ($this->model) {
             AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
-                'model' => $this->model->getModelName(),
+                'model' => $this->model->value,
                 'response_format' => ['type' => 'json_object'],
                 'messages' => [
                     [
@@ -115,7 +115,7 @@ class AIPrompt extends Model
                 ],
             ])->choices[0]->message->content,
             AiModelEnum::Gpt_4o => OpenAI::chat()->create([
-                'model' => $this->model->getModelName(),
+                'model' => $this->model->value,
                 'response_format' => ['type' => 'json_object'],
                 'messages' => [
                     [
