@@ -19,9 +19,9 @@ use Domain\Invitation\DataTransferObjects\InvitationDto;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Reader\Exception\ReaderNotOpenedException;
 
-class ImportInvitationsFromExcelJob implements ShouldQueue
+class ImportInvitationsFromExcelJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, SerializesModels;
 
     protected Authenticatable $creator;
 
