@@ -9,8 +9,7 @@ class SkillData extends Data
 {
     public function __construct(
         public readonly string|Optional $name,
-        public readonly string|Optional $description
+        public readonly string|Optional|null $description
     ) {
-
     }
 }
