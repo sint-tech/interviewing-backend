@@ -86,9 +86,8 @@ class SubmitInterviewQuestionAnswerAction
         $question_variant = $this->questionVariant($question_variant_id);
 
         $rawPromptResponses = $question_variant->aiPrompts->map(function (AIPrompt $AIPrompt) use ($question_variant, $answer) {
-            Log::info("Prompting for question variant $question_variant->id and answer is $answer: ", $AIPrompt->toArray());
             $prompt = $AIPrompt->prompt($question_variant->text, $answer);
-            Log::info("Prompting for question variant $question_variant->id and answer is $answer: ", $prompt);
+            Log::info("Prompting for question variant $question_variant->id and answer is $answer: ", [$prompt]);
             return $prompt;
         });
         $this->rawPromptResponse = $rawPromptResponses->join(', ');
