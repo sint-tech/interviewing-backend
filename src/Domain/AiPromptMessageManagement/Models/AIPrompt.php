@@ -103,7 +103,7 @@ class AIPrompt extends Model
                 ],
             ])
         };
-        Log::info('open ai response for question variant ' . $this->questionVariant->id . ' and answer is ' . $answer . ': ', [$response]);
+        Log::info('open ai response for question variant ' . $this->question . ' and answer is ' . $answer . ': ', [$response]);
         return $response->choices[0]->message->content;
     }
 
