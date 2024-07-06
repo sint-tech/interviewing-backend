@@ -92,17 +92,7 @@ class SubmitInterviewQuestionAnswerAction
         });
         $this->rawPromptResponse = $rawPromptResponses->join(', ');
 
-        $this->promptResponses = $rawPromptResponses
-            ->map(function (string $response) {
-                if ($response[0] !== '{') {
-                    $response = '{' . $response;
-                }
-                if ($response[-1] !== '}') {
-                    $response .= '}';
-                }
-                return json_decode($response, true);
-            })
-            ->toArray();
+        $this->promptResponses = $rawPromptResponses->map(fn (string $response) => json_decode(str($response)->toString(), true))->toArray();
 
         return $this->promptResponses;
     }
