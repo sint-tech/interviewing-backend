@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
 use OpenAI\Laravel\Facades\OpenAI;
 use Support\ValueObjects\PromptMessage;
 
@@ -84,7 +83,7 @@ class AIPrompt extends Model
 
     public function prompt(string $question, string $answer): string
     {
-        $response =  match ($this->model) {
+        return match ($this->model) {
             AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
                 'model' => $this->model->value,
                 'response_format' => ['type' => 'json_object'],
@@ -101,10 +100,8 @@ class AIPrompt extends Model
                         ])->toString(),
                     ],
                 ],
-            ])
+            ])->choices[0]->message->content
         };
-        Log::info('open ai response for question variant ' . $this->question . ' and answer is ' . $answer . ': ', [$response]);
-        return $response->choices[0]->message->content;
     }
 
     public function aiModelClientFactory(): AiModelClientInterface
