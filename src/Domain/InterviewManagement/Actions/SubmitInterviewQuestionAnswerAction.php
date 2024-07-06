@@ -9,6 +9,7 @@ use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
 use Domain\InterviewManagement\Models\Answer;
 use Domain\InterviewManagement\Models\Interview;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Illuminate\Support\Facades\Log;
 
 class SubmitInterviewQuestionAnswerAction
 {
@@ -87,7 +88,7 @@ class SubmitInterviewQuestionAnswerAction
         $rawPromptResponses = $question_variant->aiPrompts->map(fn (AIPrompt $AIPrompt) => $AIPrompt->prompt($question_variant->text, $answer));
         $this->rawPromptResponse = $rawPromptResponses->join(', ');
 
-        return $this->promptResponses = $rawPromptResponses
+        $this->promptResponses = $rawPromptResponses
             ->map(function (string $response) {
                 if ($response[0] !== '{') {
                     $response = '{' . $response;
@@ -98,6 +99,10 @@ class SubmitInterviewQuestionAnswerAction
                 return json_decode($response, true);
             })
             ->toArray();
+
+        Log::info("Prompt Responses for question variant $question_variant_id and answer is $answer: ", $this->promptResponses);
+
+        return $this->promptResponses;
     }
 
     protected function questionVariant(int $question_variant_id): QuestionVariant
