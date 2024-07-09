@@ -108,21 +108,7 @@ class SubmitInterviewQuestionAnswerAction
         $cleaned_response = Str::of($response)
             ->replace('\t', '')
             ->replace('\n', '')
-            ->replace("'", '"')
-            ->replace("`", '"')
-            ->trim()
-            ->replaceMatches('/\s+/', ' ');
-
-        $startsWithBrace = $cleaned_response->startsWith('{');
-        $endsWithBrace = $cleaned_response->endsWith('}');
-
-        if (!$startsWithBrace && $endsWithBrace) {
-            $cleaned_response = $cleaned_response->prepend('{');
-        } elseif ($startsWithBrace && !$endsWithBrace) {
-            $cleaned_response = $cleaned_response->append('}');
-        } elseif (!$startsWithBrace && !$endsWithBrace) {
-            $cleaned_response = $cleaned_response->prepend('{')->append('}');
-        }
+            ->trim();
 
         $decoded_response = json_decode($cleaned_response, true);
 

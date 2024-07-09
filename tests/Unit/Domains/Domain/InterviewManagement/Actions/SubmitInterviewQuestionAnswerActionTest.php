@@ -75,42 +75,6 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
         $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
     }
 
-    public function testPromptResponseMissingOpeningBrace()
-    {
-        $questionVariantId = 1;
-        $answer = 'test answer';
-
-        $aiPromptMock = Mockery::mock(AIPrompt::class);
-        $aiPromptMock->shouldReceive('prompt')
-            ->with('test question', $answer)
-            ->andReturn('"is_logical":`false`,"correctness_rate":"2","is_correct":"false","answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.","english_score":"4","english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."}');
-
-        $questionVariantMock = Mockery::mock(QuestionVariant::class);
-        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
-        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
-        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
-
-        $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $action->shouldReceive('questionVariant')
-            ->with($questionVariantId)
-            ->andReturn($questionVariantMock);
-
-        $expectedResult = [
-            [
-                "is_logical" => "false",
-                "correctness_rate" => "2",
-                "is_correct" => "false",
-                "answer_analysis" => "The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.",
-                "english_score" => "4",
-                "english_score_analysis" => "The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
-            ]
-        ];
-        $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
-    }
-
     public function testPromptResponseHandleSpaces()
     {
         $questionVariantId = 1;
@@ -144,6 +108,49 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
                 "answer_analysis" => "The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.",
                 "english_score" => "4",
                 "english_score_analysis" => "The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
+            ]
+        ];
+        $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
+    }
+
+    public function testPromptResponseWithSingleQuoteInside()
+    {
+        $questionVariantId = 1;
+        $answer = 'test answer';
+
+        $aiPromptMock = Mockery::mock(AIPrompt::class);
+        $aiPromptMock->shouldReceive('prompt')
+            ->with('test question', $answer)
+            ->andReturn("{
+                    \"is_logical\":true,
+                    \"correctness_rate\":7,
+                    \"is_correct\":true,
+                    \"answer_analysis\":\"The answer provided by the interviewee is logically correct. They have accurately identified their job role as a Regional Creative Designer and stated that the text 'This is a good JSON' is a valid JSON format. However, it would have been better if the interviewee had provided a more detailed explanation or example to showcase their understanding of JSON.\",
+                    \"english_score\":8,
+                    \"english_score_analysis\":\"The interviewee's answer is clear and easy to understand. They have effectively communicated their job role and their evaluation of the provided JSON text. However, there is room for improvement in terms of providing more detailed explanations to showcase deeper knowledge.\"
+                }");
+
+        $questionVariantMock = Mockery::mock(QuestionVariant::class);
+        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
+        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
+        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
+
+        $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $action->shouldReceive('questionVariant')
+            ->with($questionVariantId)
+            ->andReturn($questionVariantMock);
+
+        $expectedResult = [
+            [
+                "is_logical" => "true",
+                "correctness_rate" => "7",
+                "is_correct" => "true",
+                "answer_analysis" => "The answer provided by the interviewee is logically correct. They have accurately identified their job role as a Regional Creative Designer and stated that the text 'This is a good JSON' is a valid JSON format. However, it would have been better if the interviewee had provided a more detailed explanation or example to showcase their understanding of JSON.",
+                "english_score" => "8",
+                "english_score_analysis" => "The interviewee's answer is clear and easy to understand. They have effectively communicated their job role and their evaluation of the provided JSON text. However, there is room for improvement in terms of providing more detailed explanations to showcase deeper knowledge."
             ]
         ];
         $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
