@@ -2,14 +2,15 @@
 
 namespace Domain\InterviewManagement\Actions;
 
-use Domain\AiPromptMessageManagement\Models\AIPrompt;
-use Domain\InterviewManagement\DataTransferObjects\AnswerDto;
-use Domain\InterviewManagement\Enums\InterviewStatusEnum;
-use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use Domain\InterviewManagement\Models\Answer;
 use Domain\InterviewManagement\Models\Interview;
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Domain\QuestionManagement\Models\QuestionVariant;
-use Illuminate\Support\Facades\Log;
+use Domain\InterviewManagement\Enums\InterviewStatusEnum;
+use Domain\InterviewManagement\DataTransferObjects\AnswerDto;
+use Domain\InterviewManagement\Events\InterviewAllQuestionsAnswered;
 
 class SubmitInterviewQuestionAnswerAction
 {
@@ -91,7 +92,7 @@ class SubmitInterviewQuestionAnswerAction
         });
         $this->rawPromptResponse = $rawPromptResponses->join(', ');
 
-        $this->promptResponses = $rawPromptResponses->map(fn (string $response) => json_decode(str($response)->toString(), true))->toArray();
+        $this->promptResponses = $rawPromptResponses->map(fn (string $response) => $this->cleanAndDecodeResponse($response))->toArray();
 
         return $this->promptResponses;
     }
@@ -100,5 +101,44 @@ class SubmitInterviewQuestionAnswerAction
     {
         return QuestionVariant::query()
             ->findOrFail($question_variant_id);
+    }
+
+    protected function cleanAndDecodeResponse(string $response)
+    {
+        $cleaned_response = Str::of($response)
+            ->replace('\t', '')
+            ->replace('\n', '')
+            ->replace("'", '"')
+            ->replace("`", '"')
+            ->trim()
+            ->replaceMatches('/\s+/', ' ');
+
+        $startsWithBrace = $cleaned_response->startsWith('{');
+        $endsWithBrace = $cleaned_response->endsWith('}');
+
+        if (!$startsWithBrace && $endsWithBrace) {
+            $cleaned_response = $cleaned_response->prepend('{');
+        } elseif ($startsWithBrace && !$endsWithBrace) {
+            $cleaned_response = $cleaned_response->append('}');
+        } elseif (!$startsWithBrace && !$endsWithBrace) {
+            $cleaned_response = $cleaned_response->prepend('{')->append('}');
+        }
+
+        $decoded_response = json_decode($cleaned_response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            Log::error("Error decoding response: $response");
+            return [];
+        }
+
+        $requiredKeys = ['english_score', 'correctness_rate', 'is_logical', 'is_correct', 'answer_analysis', 'english_score_analysis'];
+        foreach ($requiredKeys as $key) {
+            if (!array_key_exists($key, $decoded_response)) {
+                Log::error("Key $key not found in response: $response");
+                return [];
+            }
+        }
+
+        return $decoded_response;
     }
 }

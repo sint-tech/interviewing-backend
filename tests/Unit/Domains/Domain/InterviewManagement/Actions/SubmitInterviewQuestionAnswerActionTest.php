@@ -83,12 +83,50 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
         $aiPromptMock = Mockery::mock(AIPrompt::class);
         $aiPromptMock->shouldReceive('prompt')
             ->with('test question', $answer)
-            ->andReturn('"is_logical":"false","correctness_rate":"2","is_correct":"false","answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.","english_score":"4","english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."}');
+            ->andReturn('"is_logical":`false`,"correctness_rate":"2","is_correct":"false","answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.","english_score":"4","english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."}');
 
-            $questionVariantMock = Mockery::mock(QuestionVariant::class);
-            $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
-            $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
-            $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
+        $questionVariantMock = Mockery::mock(QuestionVariant::class);
+        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
+        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
+        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
+
+        $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $action->shouldReceive('questionVariant')
+            ->with($questionVariantId)
+            ->andReturn($questionVariantMock);
+
+        $expectedResult = [
+            [
+                "is_logical" => "false",
+                "correctness_rate" => "2",
+                "is_correct" => "false",
+                "answer_analysis" => "The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.",
+                "english_score" => "4",
+                "english_score_analysis" => "The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
+            ]
+        ];
+        $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
+    }
+
+    public function testPromptResponseHandleSpaces()
+    {
+        $questionVariantId = 1;
+        $answer = 'test answer';
+
+        $aiPromptMock = Mockery::mock(AIPrompt::class);
+        $aiPromptMock->shouldReceive('prompt')
+            ->with('test question', $answer)
+            ->andReturn('  \t\t\t\t\t
+            {"is_logical":"false","correctness_rate":"2","is_correct":"false","answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.","english_score":"4","english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."}
+            ');
+
+        $questionVariantMock = Mockery::mock(QuestionVariant::class);
+        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
+        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
+        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
 
         $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
             ->makePartial()
