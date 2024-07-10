@@ -113,14 +113,14 @@ class SubmitInterviewQuestionAnswerAction
         $decoded_response = json_decode($cleaned_response, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            Log::error("Error decoding response: $decoded_response");
+            Log::error("Error decoding response", $decoded_response);
             return [];
         }
 
         $requiredKeys = ['english_score', 'correctness_rate', 'is_logical', 'is_correct', 'answer_analysis', 'english_score_analysis'];
         foreach ($requiredKeys as $key) {
             if (!array_key_exists($key, $decoded_response)) {
-                Log::error("Key $key not found in response: $decoded_response");
+                Log::error("Key $key not found in response", $decoded_response);
                 return [];
             }
         }
