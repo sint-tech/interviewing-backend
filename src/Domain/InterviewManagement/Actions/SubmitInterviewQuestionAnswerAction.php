@@ -117,6 +117,18 @@ class SubmitInterviewQuestionAnswerAction
             return [];
         }
 
+        if (array_key_exists('error', $decoded_response)) {
+            Log::error("Error in response", $decoded_response);
+            return [
+                'english_score' => 0,
+                'correctness_rate' => 0,
+                'is_logical' => false,
+                'is_correct' => false,
+                'answer_analysis' => 'No analysis available.',
+                'english_score_analysis' => 'No analysis available.',
+            ];
+        }
+
         $requiredKeys = ['english_score', 'correctness_rate', 'is_logical', 'is_correct', 'answer_analysis', 'english_score_analysis'];
         foreach ($requiredKeys as $key) {
             if (!array_key_exists($key, $decoded_response)) {
