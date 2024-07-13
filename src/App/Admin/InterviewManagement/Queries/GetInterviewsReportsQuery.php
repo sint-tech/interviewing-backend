@@ -32,12 +32,12 @@ class GetInterviewsReportsQuery extends QueryBuilder
     {
         if ($this->request->input('filter.status') === 'accepted') {
             $this->abortFilterVacancyIdRequired();
-
-            $this->subject->whereAccepted(Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'))->open_positions);
+            $this->subject->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'));
         }
 
         if ($this->request->input('filter.status') == 'passed') {
-            $this->subject->orderByAvgScoreDesc()->whereNotIn('id', Interview::query()->whereAccepted()->pluck('id'));
+            $this->abortFilterVacancyIdRequired();
+            $this->subject->wherePassed()->whereNotIn('id', $this->subject->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'))->pluck('id'));
         }
 
         return $this;
@@ -71,8 +71,14 @@ class GetInterviewsReportsQuery extends QueryBuilder
 
     protected function abortFilterVacancyIdRequired(): void
     {
-        $this->request->whenMissing('filter.vacancy_id',
+        $this->request->whenMissing(
+            'filter.vacancy_id',
             fn () => abort(400, 'filter by vacancy_id Must be filled when filter by status = \'accepted\'')
         );
+    }
+
+    private function vacancy(): Vacancy
+    {
+        return Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'));
     }
 }
