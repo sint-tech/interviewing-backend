@@ -37,7 +37,7 @@ class GetInterviewReportQuery extends QueryBuilder
 
         if ($this->request->input('filter.status') == 'passed') {
             $this->abortFilterVacancyIdRequired();
-            $this->subject->wherePassed()->whereNotIn('id', Interview::query()->whereAccepted(Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'))->open_positions)->pluck('id'));
+            $this->subject->wherePassed()->whereNotIn('id', $this->subject->whereAccepted(Vacancy::query()->findOrFail($this->request->input('filter.vacancy_id'))->open_positions)->pluck('id'));
         }
 
         return $this;
@@ -71,7 +71,8 @@ class GetInterviewReportQuery extends QueryBuilder
 
     protected function abortFilterVacancyIdRequired(): void
     {
-        $this->request->whenMissing('filter.vacancy_id',
+        $this->request->whenMissing(
+            'filter.vacancy_id',
             fn () => abort(400, 'filter by vacancy_id Must be filled when filter by status = \'accepted\'')
         );
     }
