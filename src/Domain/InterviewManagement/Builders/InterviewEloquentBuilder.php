@@ -70,7 +70,8 @@ class InterviewEloquentBuilder extends Builder
     {
         $answers_table = (new Answer())->getTable();
 
-        $this->orderBy(Answer::query()
+        $this->orderBy(
+            Answer::query()
                 ->select(DB::raw('AVG(score)'))
                 ->whereColumn(
                     "$answers_table.interview_id",
@@ -92,16 +93,16 @@ class InterviewEloquentBuilder extends Builder
     /**
      * get the top candidates passed the interview
      */
-    public function whereAccepted(int $open_positions = 1): self
+    public function whereAccepted(int $open_positions = 1, int $vacancy_id = null): self
     {
-        $selected = $this->getModel()->newQuery()->whereSelected()->select('id')->get();
+        $selected = $this->getModel()->newQuery()->when(isset($vacancy_id), fn ($q) => $q->where('vacancy_id', $vacancy_id))->whereSelected()->select('id')->get();
         $remaining_positions = $open_positions - $selected->count();
 
         if ($remaining_positions <= 0) {
             return $this->whereIn('id', $selected->pluck('id'));
         }
 
-        $passed = $this->getModel()->newQuery()->wherePassed()->take($remaining_positions)->select('id')->get();
+        $passed = $this->getModel()->newQuery()->wherePassed()->when(isset($vacancy_id), fn ($q) => $q->where('vacancy_id', $vacancy_id))->take($remaining_positions)->select('id')->get();
 
         $accepted = $passed->merge($selected);
 
