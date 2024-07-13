@@ -5,8 +5,10 @@ namespace Domain\InterviewManagement\Builders;
 use Domain\Candidate\Models\Candidate;
 use Domain\InterviewManagement\Enums\InterviewStatusEnum;
 use Domain\InterviewManagement\Models\Answer;
+use Domain\InterviewManagement\Models\Interview;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @mixin Builder
@@ -93,18 +95,22 @@ class InterviewEloquentBuilder extends Builder
     /**
      * get the top candidates passed the interview
      */
-    public function whereAccepted(int $open_positions = 1, int $vacancy_id = null): self
+    public function whereAccepted(int $open_positions = 1, int $vacancy_id): self
     {
-        $selected = $this->getModel()->newQuery()->when(isset($vacancy_id), fn ($q) => $q->where('vacancy_id', $vacancy_id))->whereSelected()->select('id')->get();
+        Log::info('vacancy_id', [$vacancy_id]);
+        $selected = Interview::where('vacancy_id', $vacancy_id)->whereSelected()->select('id')->get();
+        Log::info('selected', $selected);
         $remaining_positions = $open_positions - $selected->count();
 
         if ($remaining_positions <= 0) {
             return $this->whereIn('id', $selected->pluck('id'));
         }
 
-        $passed = $this->getModel()->newQuery()->when(isset($vacancy_id), fn ($q) => $q->where('vacancy_id', $vacancy_id))->wherePassed()->take($remaining_positions)->select('id')->get();
+        $passed = Interview::where('vacancy_id', $vacancy_id)->wherePassed()->take($remaining_positions)->select('id')->get();
+        Log::info('passed', $passed);
 
         $accepted = $passed->merge($selected);
+        Log::info('accepted', $accepted);
 
         return $this->whereIn('id', $accepted->pluck('id'));
     }
