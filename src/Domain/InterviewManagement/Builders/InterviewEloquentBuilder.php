@@ -102,7 +102,7 @@ class InterviewEloquentBuilder extends Builder
             return $this->whereIn('id', $selected->pluck('id'));
         }
 
-        $passed = $this->getModel()->newQuery()->wherePassed()->when(isset($vacancy_id), fn ($q) => $q->where('vacancy_id', $vacancy_id))->take($remaining_positions)->select('id')->get();
+        $passed = $this->getModel()->newQuery()->when(isset($vacancy_id), fn ($q) => $q->where('vacancy_id', $vacancy_id))->wherePassed()->take($remaining_positions)->select('id')->get();
 
         $accepted = $passed->merge($selected);
 
