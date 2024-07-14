@@ -20,27 +20,18 @@ class GetInterviewsReportsQuery extends QueryBuilder
         $this->allowedFilters(
             AllowedFilter::exact('interview_template_id'),
             AllowedFilter::exact('vacancy_id'),
-            AllowedFilter::exact('status'),
+            AllowedFilter::callback('status', function ($query, $value) {
+                $this->abortFilterVacancyIdRequired();
+                if ($value === 'accepted') {
+                    $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'));
+                }
+                if ($value === 'passed') {
+                    $query->wherePassed()->whereNotIn('id', $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'))->pluck('id'));
+                }
+            }),
         );
 
         $this->disallowFilterByMultipleValues();
-
-        $this->handleStatusFilter();
-    }
-
-    protected function handleStatusFilter(): self
-    {
-        if ($this->request->input('filter.status') === 'accepted') {
-            $this->abortFilterVacancyIdRequired();
-            $this->subject->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'));
-        }
-
-        if ($this->request->input('filter.status') == 'passed') {
-            $this->abortFilterVacancyIdRequired();
-            $this->subject->wherePassed()->whereNotIn('id', $this->subject->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'))->pluck('id'));
-        }
-
-        return $this;
     }
 
     private function disallowFilterByMultipleValues(): void
@@ -73,7 +64,7 @@ class GetInterviewsReportsQuery extends QueryBuilder
     {
         $this->request->whenMissing(
             'filter.vacancy_id',
-            fn () => abort(400, 'filter by vacancy_id Must be filled when filter by status = \'accepted\'')
+            fn () => abort(400, 'filter by vacancy_id Must be filled when filter by status')
         );
     }
 
