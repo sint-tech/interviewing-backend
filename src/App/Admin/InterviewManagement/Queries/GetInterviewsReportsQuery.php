@@ -22,12 +22,9 @@ class GetInterviewsReportsQuery extends QueryBuilder
             AllowedFilter::exact('vacancy_id'),
             AllowedFilter::callback('status', function ($query, $value) {
                 $this->abortFilterVacancyIdRequired();
-                if ($value === 'accepted') {
-                    $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'));
-                }
-                if ($value === 'passed') {
-                    $query->wherePassed()->whereNotIn('id', $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'))->pluck('id'));
-                }
+                $query->when($value === 'accepted', fn ($query) => $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id')));
+                $query->when($value === 'passed', fn ($query) => $query->wherePassed()->whereNotIn('id', $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'))->pluck('id')));
+                $query->when($value === 'rejected', fn ($query) => $query->whereRejected());
             }),
         );
 
