@@ -97,9 +97,7 @@ class InterviewEloquentBuilder extends Builder
      */
     public function whereAccepted(int $open_positions = 1, int $vacancy_id): self
     {
-        Log::info('vacancy_id', [$vacancy_id]);
         $selected = Interview::where('vacancy_id', $vacancy_id)->whereSelected()->select('id')->get();
-        Log::info('selected', [$selected]);
         $remaining_positions = $open_positions - $selected->count();
 
         if ($remaining_positions <= 0) {
@@ -107,10 +105,8 @@ class InterviewEloquentBuilder extends Builder
         }
 
         $passed = Interview::where('vacancy_id', $vacancy_id)->wherePassed()->take($remaining_positions)->select('id')->get();
-        Log::info('passed', [$passed]);
 
         $accepted = $passed->merge($selected);
-        Log::info('accepted', [$accepted]);
 
         return $this->whereIn('id', $accepted->pluck('id'));
     }
