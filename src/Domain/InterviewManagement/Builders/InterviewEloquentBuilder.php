@@ -140,4 +140,9 @@ class InterviewEloquentBuilder extends Builder
 
         return $boolean == 'and' ? $this->whereHas('vacancy', $vacancy_builder) : $this->orWhereHas('vacancy', $vacancy_builder);
     }
+
+    public function whereCanceled(): self
+    {
+        return $this->whereStatus(InterviewStatusEnum::Canceled);
+    }
 }

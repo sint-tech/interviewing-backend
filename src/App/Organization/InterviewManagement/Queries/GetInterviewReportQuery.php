@@ -25,6 +25,8 @@ class GetInterviewReportQuery extends QueryBuilder
                 $query->when($value === 'accepted', fn ($query) => $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id')));
                 $query->when($value === 'passed', fn ($query) => $query->wherePassed()->whereNotIn('id', $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'))->pluck('id')));
                 $query->when($value === 'rejected', fn ($query) => $query->whereRejected());
+                $query->when($value === 'selected', fn ($query) => $query->whereSelected());
+                $query->when($value === 'canceled', fn ($query) => $query->whereCanceled());
             }),
         );
 
