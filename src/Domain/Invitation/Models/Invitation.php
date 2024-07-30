@@ -34,7 +34,7 @@ use Support\ValueObjects\URL;
  */
 class Invitation extends Model
 {
-    use HasFactory,HasBatch,SoftDeletes,HasCreator;
+    use HasFactory, HasBatch, SoftDeletes, HasCreator;
 
     protected $fillable = [
         'name',
@@ -50,6 +50,7 @@ class Invitation extends Model
         'used_at',
         'creator_id',
         'creator_type',
+        'is_external',
     ];
 
     protected $casts = [
@@ -70,7 +71,7 @@ class Invitation extends Model
 
     public function sent(): Attribute
     {
-        return Attribute::get(fn () => ! is_null($this->last_invited_at));
+        return Attribute::get(fn () => !is_null($this->last_invited_at));
     }
 
     public function mobileNumber(): Attribute
@@ -120,10 +121,10 @@ class Invitation extends Model
             $builder->whereHas('vacancy');
         })->forCandidate(function (Builder $builder) {
             $builder->where('email', auth()->user()->email)
-                    ->where('should_be_invited_at', '<=', now())
-                    ->whereHas('vacancy', function (Builder $query) {
-                        $query->where('started_at', '<=', now());
-                    });
+                ->where('should_be_invited_at', '<=', now())
+                ->whereHas('vacancy', function (Builder $query) {
+                    $query->where('started_at', '<=', now());
+                });
         });
 
         static::addGlobalScope($authScope);

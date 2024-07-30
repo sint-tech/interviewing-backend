@@ -50,6 +50,8 @@ class InvitationDtoFactory
 
         $request_data['should_be_invited_at'] = Carbon::parse($request->vacancy()->started_at);
 
+        $request_data['is_external'] = true;
+
         return InvitationDto::from($request_data);
     }
 }
