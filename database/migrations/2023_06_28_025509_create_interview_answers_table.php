@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('interview_answers', function (Blueprint $table) {
             $table->id();
-            $table->enum('question_occurrence_reason',
+            $table->enum(
+                'question_occurrence_reason',
                 [
                     'template_question',
                     'additional',
@@ -20,7 +21,7 @@ return new class extends Migration
                 ->default('template_question');
             $table->longText('answer_text')->nullable();
 
-            $table->float('score');
+            $table->float('score')->default(0);
             $table->integer('min_score')->default(0);
             $table->integer('max_score')->default(10);
 

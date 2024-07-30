@@ -19,7 +19,7 @@ class PromptMessage
      */
     public static function make(string $message, array $replacers = []): static
     {
-        return new static($message,$replacers);
+        return new static($message, $replacers);
     }
 
     public static function message(string $message, array $replacers = []): string
@@ -59,7 +59,7 @@ class PromptMessage
         $result = [];
 
         foreach ($replacers as $search => $replaced) {
-            if (! is_string($search) || ! str($search)->startsWith('_') || ! str($search)->endsWith('_')) {
+            if (!is_string($search) || !str($search)->startsWith('_') || !str($search)->endsWith('_')) {
                 throw new \Exception(sprintf("this replacer: %s must be string, starts with '_' and ends with '_'", $search));
             }
             $replaced = $this->castReplacedToString($replaced);

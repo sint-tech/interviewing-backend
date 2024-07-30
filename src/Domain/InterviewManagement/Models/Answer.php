@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Answer extends Pivot
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public $incrementing = true;
 
@@ -37,8 +37,10 @@ class Answer extends Pivot
         'ml_video_semantics',
         'ml_audio_semantics',
         'ml_text_semantics',
-        'raw_response',
+        'raw_prompt_response',
         'raw_prompt_request',
+        'status',
+        'tries',
     ];
 
     protected $casts = [

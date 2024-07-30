@@ -2,23 +2,59 @@
 
 namespace Tests\Unit\Domains\Domain\InterviewManagement\Actions;
 
-use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Mockery;
-use PHPUnit\Framework\TestCase;
-use Domain\InterviewManagement\Actions\SubmitInterviewQuestionAnswerAction;
+use Tests\TestCase;
+use ReflectionClass;
+use OpenAI\Laravel\Facades\OpenAI;
+use Illuminate\Support\Facades\Config;
+use OpenAI\Responses\Chat\CreateResponse;
+use Domain\AiPromptMessageManagement\Models\AIPrompt;
 use Domain\QuestionManagement\Models\QuestionVariant;
+use Domain\AiPromptMessageManagement\Enums\AiModelEnum;
+use Domain\InterviewManagement\Actions\SubmitInterviewQuestionAnswerAction;
 
 class SubmitInterviewQuestionAnswerActionTest extends TestCase
 {
+    protected int $question_variant_id;
+    protected string $answer;
+    protected string $vacancy_name;
+
+    protected function setUp(): void
+    {
+        parent::SetUp();
+
+        $this->question_variant_id = 1;
+        $this->answer = 'test answer';
+        $this->vacancy_name = 'vacancy 1';
+
+        Config::shouldReceive('get')
+            ->with('aimodel.models.gpt-3-5-turbo.system_prompt')
+            ->andReturn(json_encode([
+                'is_logical' => '<true|false>',
+                'correctness_rate' => '<you score for correctness rate evaluation for interviewee answer from 1 to 10>',
+                'is_correct' => '<true|false>',
+                'answer_analysis' => "<your analysis and justification about the interviewee's answer>",
+                'english_score' => '<your score for English language evaluation for interviewee answer from 1 to 10>',
+                'english_score_analysis' => "<your analysis and justification about why interviewee's answer got that english_score>",
+            ]));
+
+        Config::shouldReceive('get')
+            ->with('aimodel.tries', 3)
+            ->andReturn(3);
+    }
+
     public function testCalculateAverageScore()
     {
         $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $action->shouldReceive('promptResponse')->andReturn($this->promptResponseFake());
+        $reflection = new ReflectionClass($action);
+        $property = $reflection->getProperty('promptResponses');
+        $property->setAccessible(true);
+        $property->setValue($action, $this->promptResponseFake());
 
-        $this->assertEquals(2, $action->calculateAverageScore(1, 'answer'));
+        $this->assertEquals(2, $action->calculateAverageScore());
     }
 
     public function testCalculateAverageEnglishScore()
@@ -27,65 +63,39 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $action->shouldReceive('promptResponse')->andReturn($this->promptResponseFake());
+        $reflection = new ReflectionClass($action);
+        $property = $reflection->getProperty('promptResponses');
+        $property->setAccessible(true);
+        $property->setValue($action, $this->promptResponseFake());
 
-        $this->assertEquals(4, $action->calculateAverageEnglishScore(1, 'answer'));
+        $this->assertEquals(4, $action->calculateAverageEnglishScore());
     }
 
     public function testPromptResponse()
     {
-        $questionVariantId = 1;
-        $answer = 'test answer';
+        OpenAI::fake([
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => json_encode([
+                                "is_logical" => "true",
+                                "correctness_rate" => "3",
+                                "is_correct" => "false",
+                                "answer_analysis" => "The interviewee's response partially addresses the question, but there are several inaccuracies and misunderstandings in the explanation provided. It shows some awareness of the topic but lacks precise information.",
+                                "english_score" => "4",
+                                "english_score_analysis" => "The English language used is fluent and the structure of the sentences is clear. Despite the inaccuracies, the response is well-articulated and coherent."
+                            ])
+                        ],
+                    ]
+                ]
+            ]),
+        ]);
 
-        $aiPromptMock = Mockery::mock(AIPrompt::class);
-        $aiPromptMock->shouldReceive('prompt')
-            ->with('test question', $answer)
-            ->andReturn('{
-                "is_logical":"false",
-                "correctness_rate":"2",
-                "is_correct":"false",
-                "answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.",
-                "english_score":"4",
-                "english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
-            }');
-
-        $questionVariantMock = Mockery::mock(QuestionVariant::class);
-        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
-        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
-        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
-
-        $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $action->shouldReceive('questionVariant')
-            ->with($questionVariantId)
-            ->andReturn($questionVariantMock);
-
-        $expectedResult = [
-            [
-                "is_logical" => "false",
-                "correctness_rate" => "2",
-                "is_correct" => "false",
-                "answer_analysis" => "The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.",
-                "english_score" => "4",
-                "english_score_analysis" => "The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
-            ]
-        ];
-        $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
-    }
-
-    public function testPromptResponseHandleSpaces()
-    {
-        $questionVariantId = 1;
-        $answer = 'test answer';
-
-        $aiPromptMock = Mockery::mock(AIPrompt::class);
-        $aiPromptMock->shouldReceive('prompt')
-            ->with('test question', $answer)
-            ->andReturn('  \t\t\t\t\t
-            {"is_logical":"false","correctness_rate":"2","is_correct":"false","answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.","english_score":"4","english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."}
-            ');
+        $aiPromptMock = Mockery::mock(AIPrompt::class)->makePartial();
+        $aiPromptMock->model = AiModelEnum::Gpt_3_5->value;
+        $aiPromptMock->system = "_RESPONSE_JSON_STRUCTURE_ _JOB_TITLE_ JSON";
+        $aiPromptMock->content = "_QUESTION_TEXT_ _INTERVIEWEE_ANSWER_ JSON";
 
         $questionVariantMock = Mockery::mock(QuestionVariant::class);
         $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
@@ -97,63 +107,194 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
             ->shouldAllowMockingProtectedMethods();
 
         $action->shouldReceive('questionVariant')
-            ->with($questionVariantId)
-            ->andReturn($questionVariantMock);
-
-        $expectedResult = [
-            [
-                "is_logical" => "false",
-                "correctness_rate" => "2",
-                "is_correct" => "false",
-                "answer_analysis" => "The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.",
-                "english_score" => "4",
-                "english_score_analysis" => "The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
-            ]
-        ];
-        $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
-    }
-
-    public function testPromptResponseWithSingleQuoteInside()
-    {
-        $questionVariantId = 1;
-        $answer = 'test answer';
-
-        $aiPromptMock = Mockery::mock(AIPrompt::class);
-        $aiPromptMock->shouldReceive('prompt')
-            ->with('test question', $answer)
-            ->andReturn("{
-                    \"is_logical\":true,
-                    \"correctness_rate\":7,
-                    \"is_correct\":true,
-                    \"answer_analysis\":\"The answer provided by the interviewee is logically correct. They have accurately identified their job role as a Regional Creative Designer and stated that the text 'This is a good JSON' is a valid JSON format. However, it would have been better if the interviewee had provided a more detailed explanation or example to showcase their understanding of JSON.\",
-                    \"english_score\":8,
-                    \"english_score_analysis\":\"The interviewee's answer is clear and easy to understand. They have effectively communicated their job role and their evaluation of the provided JSON text. However, there is room for improvement in terms of providing more detailed explanations to showcase deeper knowledge.\"
-                }");
-
-        $questionVariantMock = Mockery::mock(QuestionVariant::class);
-        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
-        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
-        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
-
-        $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $action->shouldReceive('questionVariant')
-            ->with($questionVariantId)
+            ->with($this->question_variant_id)
             ->andReturn($questionVariantMock);
 
         $expectedResult = [
             [
                 "is_logical" => "true",
-                "correctness_rate" => "7",
-                "is_correct" => "true",
-                "answer_analysis" => "The answer provided by the interviewee is logically correct. They have accurately identified their job role as a Regional Creative Designer and stated that the text 'This is a good JSON' is a valid JSON format. However, it would have been better if the interviewee had provided a more detailed explanation or example to showcase their understanding of JSON.",
-                "english_score" => "8",
-                "english_score_analysis" => "The interviewee's answer is clear and easy to understand. They have effectively communicated their job role and their evaluation of the provided JSON text. However, there is room for improvement in terms of providing more detailed explanations to showcase deeper knowledge."
+                "correctness_rate" => "3",
+                "is_correct" => "false",
+                "answer_analysis" => "The interviewee's response partially addresses the question, but there are several inaccuracies and misunderstandings in the explanation provided. It shows some awareness of the topic but lacks precise information.",
+                "english_score" => "4",
+                "english_score_analysis" => "The English language used is fluent and the structure of the sentences is clear. Despite the inaccuracies, the response is well-articulated and coherent.",
             ]
         ];
-        $this->assertEquals($expectedResult, $action->promptResponse($questionVariantId, $answer));
+
+        $this->assertEquals($expectedResult, $action->promptResponse($this->question_variant_id, $this->answer, $this->vacancy_name));
+    }
+
+    public function testPromptResponseHandleSpaces()
+    {
+        OpenAI::fake([
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => '  \t\t\t\t\t {"is_logical":"false","correctness_rate":"2","is_correct":"false","answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.","english_score":"4","english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."}'
+                        ],
+                    ]
+                ]
+            ]),
+        ]);
+
+        $aiPromptMock = Mockery::mock(AIPrompt::class)->makePartial();
+        $aiPromptMock->model = AiModelEnum::Gpt_3_5->value;
+        $aiPromptMock->system = "_RESPONSE_JSON_STRUCTURE_ _JOB_TITLE_ JSON";
+        $aiPromptMock->content = "_QUESTION_TEXT_ _INTERVIEWEE_ANSWER_ JSON";
+
+        $questionVariantMock = Mockery::mock(QuestionVariant::class);
+        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
+        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
+        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
+
+        $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $action->shouldReceive('questionVariant')
+            ->with($this->question_variant_id)
+            ->andReturn($questionVariantMock);
+
+        $expectedResult = [
+            [
+                "is_logical" => "false",
+                "correctness_rate" => "2",
+                "is_correct" => "false",
+                "answer_analysis" => "The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.",
+                "english_score" => "4",
+                "english_score_analysis" => "The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
+            ]
+        ];
+
+        $this->assertEquals($expectedResult, $action->promptResponse($this->question_variant_id, $this->answer, $this->vacancy_name));
+    }
+
+    public function testPromptResponseError()
+    {
+        OpenAI::fake([
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => json_encode([
+                                "error" => "not the response we expected",
+                            ])
+                        ],
+                    ]
+                ]
+            ]),
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => json_encode([
+                                "error" => "not the response we expected",
+                            ])
+                        ],
+                    ]
+                ]
+            ]),
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => json_encode([
+                                "error" => "not the response we expected",
+                            ])
+                        ],
+                    ]
+                ]
+            ]),
+        ]);
+
+        $aiPromptMock = Mockery::mock(AIPrompt::class)->makePartial();
+        $aiPromptMock->model = AiModelEnum::Gpt_3_5->value;
+        $aiPromptMock->system = "_RESPONSE_JSON_STRUCTURE_ _JOB_TITLE_ JSON";
+        $aiPromptMock->content = "_QUESTION_TEXT_ _INTERVIEWEE_ANSWER_ JSON";
+
+        $questionVariantMock = Mockery::mock(QuestionVariant::class);
+        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
+        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
+        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
+
+        $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $action->shouldReceive('questionVariant')
+            ->with($this->question_variant_id)
+            ->andReturn($questionVariantMock);
+
+        $expectedResult = [
+            [
+                "is_logical" => false,
+                "correctness_rate" => 0,
+                "is_correct" => false,
+                "answer_analysis" => "No analysis available.",
+                "english_score" => 0,
+                "english_score_analysis" => "No analysis available.",
+            ]
+        ];
+
+        $this->assertEquals($expectedResult, $action->promptResponse($this->question_variant_id, $this->answer, $this->vacancy_name));
+    }
+
+    public function testPromptResponseRetryAfterWrongResponse()
+    {
+        OpenAI::fake([
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => json_encode([
+                                "error" => "not the response we expected",
+                            ])
+                        ],
+                    ]
+                ]
+            ]),
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => '  \t\t\t\t\t {"is_logical":"false","correctness_rate":"2","is_correct":"false","answer_analysis":"The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.","english_score":"4","english_score_analysis":"The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."}'
+                        ],
+                    ]
+                ]
+            ]),
+        ]);
+
+        $aiPromptMock = Mockery::mock(AIPrompt::class)->makePartial();
+        $aiPromptMock->model = AiModelEnum::Gpt_3_5->value;
+        $aiPromptMock->system = "_RESPONSE_JSON_STRUCTURE_ _JOB_TITLE_ JSON";
+        $aiPromptMock->content = "_QUESTION_TEXT_ _INTERVIEWEE_ANSWER_ JSON";
+
+        $questionVariantMock = Mockery::mock(QuestionVariant::class);
+        $questionVariantMock->shouldReceive('setAttribute')->andReturnNull();
+        $questionVariantMock->shouldReceive('getAttribute')->with('text')->andReturn('test question');
+        $questionVariantMock->shouldReceive('getAttribute')->with('aiPrompts')->andReturn(collect([$aiPromptMock]));
+
+        $action = Mockery::mock(SubmitInterviewQuestionAnswerAction::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $action->shouldReceive('questionVariant')
+            ->with($this->question_variant_id)
+            ->andReturn($questionVariantMock);
+
+        $expectedResult = [
+            [
+                "is_logical" => "false",
+                "correctness_rate" => "2",
+                "is_correct" => "false",
+                "answer_analysis" => "The answer provided by the interviewee is not related to the question asked. It seems like the interviewee misunderstood the question or is not sure how to respond. The response does not address the content of the question at all.",
+                "english_score" => "4",
+                "english_score_analysis" => "The English language used by the interviewee is clear and coherent, however, the response lacks relevance to the question. The response does not demonstrate an understanding of the task at hand."
+            ]
+        ];
+
+        $this->assertEquals($expectedResult, $action->promptResponse($this->question_variant_id, $this->answer, $this->vacancy_name));
     }
 
     public function tearDown(): void
@@ -161,7 +302,6 @@ class SubmitInterviewQuestionAnswerActionTest extends TestCase
         parent::tearDown();
         Mockery::close();
     }
-
 
     private function promptResponseFake()
     {

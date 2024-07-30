@@ -13,9 +13,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
 use OpenAI\Laravel\Facades\OpenAI;
 use Support\ValueObjects\PromptMessage;
+use Domain\AiPromptMessageManagement\Traits\ValidateJsonTrait;
+use Domain\AnswerManagement\Enums\AnswerStatusEnum;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @property AiModelEnum $model
@@ -28,7 +30,7 @@ use Support\ValueObjects\PromptMessage;
  */
 class AIPrompt extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ValidateJsonTrait;
 
     protected $table = 'ai_prompts';
 
@@ -59,9 +61,8 @@ class AIPrompt extends Model
     public function systemPrompt(): Attribute
     {
         return Attribute::make(get: function () {
-
             $replacers = match ($this->model) {
-                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => config('aimodel.models.gpt-3-5-turbo.system_prompt')]
+                AiModelEnum::Gpt_3_5 => ['_RESPONSE_JSON_STRUCTURE_' => Config::get('aimodel.models.gpt-3-5-turbo.system_prompt')]
             };
 
             return PromptMessage::make($this->system, $replacers);
@@ -82,30 +83,87 @@ class AIPrompt extends Model
         });
     }
 
-    public function prompt(string $question, string $answer): string
+    public function prompt(string $question, string $answer, string $job_title): array
     {
-        $response = match ($this->model) {
-            AiModelEnum::Gpt_3_5 => OpenAI::chat()->create([
-                'model' => $this->model->value,
-                'response_format' => ['type' => 'json_object'],
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => $this->system_prompt->toString(),
-                    ],
-                    [
-                        'role' => 'user',
-                        'content' => $this->content_prompt->replaceMany([
-                            '_QUESTION_TEXT_' => $question,
-                            '_INTERVIEWEE_ANSWER_' => $answer,
-                        ])->toString(),
-                    ],
-                ],
-            ])
-        };
+        $request = $this->createRequest($job_title, $question, $answer);
+        $tries = Config::get('aimodel.tries', 3);
+        $max_tries = $tries;
 
-        Log::info("Prompt response for question $question and answer $answer: ", ['response' => $response]);
-        return $response->choices[0]->message->content;
+        while ($tries > 0) {
+            $response = match ($this->model) {
+                AiModelEnum::Gpt_3_5 => OpenAI::chat()->create($request),
+                default => null
+            };
+
+            if ($this->isValidResponse($response->choices[0]->message->content)) {
+                return $this->formatSuccessResponse($response, $request, $max_tries - $tries + 1);
+            }
+
+            $tries--;
+        }
+
+        return $this->formatFailureResponse($response, $request, $max_tries);
+    }
+
+    private function isValidResponse($response)
+    {
+        return $this->validateJson($response, [
+            'english_score', 'correctness_rate', 'is_logical', 'is_correct',
+            'answer_analysis', 'english_score_analysis'
+        ]);
+    }
+
+    private function formatSuccessResponse($response, $request, $attempts)
+    {
+        return [
+            'raw_prompt_request' => $request,
+            'raw_prompt_response' => $response->choices[0]->message->content,
+            'tries' => $attempts,
+            'prompt' => json_decode($this->cleanString($response->choices[0]->message->content), true),
+            'status' => AnswerStatusEnum::Successful->value,
+        ];
+    }
+
+    private function formatFailureResponse($response, $request, $max_tries)
+    {
+        return [
+            'ml_text_semantics' => $response,
+            'raw_prompt_request' => $request,
+            'raw_prompt_response' => $response->choices[0]->message->content,
+            'tries' => $max_tries,
+            'status' => AnswerStatusEnum::Failed->value,
+            'prompt' => [
+                'english_score' => 0,
+                'correctness_rate' => 0,
+                'is_logical' => false,
+                'is_correct' => false,
+                'answer_analysis' => 'No analysis available.',
+                'english_score_analysis' => 'No analysis available.',
+            ],
+        ];
+    }
+
+    private function createRequest($job_title, $question, $answer)
+    {
+        return [
+            'model' => $this->model->value,
+            'response_format' => ['type' => 'json_object'],
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => $this->system_prompt->replaceMany([
+                        '_JOB_TITLE_' => $job_title,
+                    ])->toString(),
+                ],
+                [
+                    'role' => 'user',
+                    'content' => $this->content_prompt->replaceMany([
+                        '_QUESTION_TEXT_' => $question,
+                        '_INTERVIEWEE_ANSWER_' => $answer,
+                    ])->toString(),
+                ],
+            ],
+        ];
     }
 
     public function aiModelClientFactory(): AiModelClientInterface
