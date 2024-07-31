@@ -31,7 +31,7 @@ class InvitationDto extends Data
         public readonly \DateTime|null|Optional $expired_at,
         #[WithCastable(Creator::class, lazy_load_instance: false)]
         public readonly ?Creator $creator,
-        public readonly ?bool $is_external,
+        public readonly ?bool $is_external = false,
     ) {
         if ($this->mobile_country_code && $this->dirty_mobile_number) {
             $mobileStrategy = (new MobileNumberFactory())

@@ -34,6 +34,8 @@ class InvitationDtoFactory
 
         $request_data['expired_at'] = $request->date('expired_at', 'Y-m-d H:i');
 
+        $request_data['is_external'] = false;
+
         return InvitationDto::from($request_data);
     }
 
