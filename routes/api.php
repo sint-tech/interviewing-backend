@@ -14,6 +14,7 @@ use App\Candidate\Invitation\Controllers\MyInvitationsController;
 use App\Candidate\JobTitle\Controllers\JobTitleController;
 use App\Candidate\RegistrationReasons\Controllers\RegistrationReasonsController;
 use Illuminate\Support\Facades\Route;
+use App\Candidate\Invitation\Controllers\ExternalInviteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::middleware('guest:candidate')
         Route::post('/register/{invitation?}', RegisterController::class)->name('.register');
         Route::post('/login', LoginController::class)->name('.login');
         Route::post('/social-login', SocialLoginController::class)->name('.social-login');
+        Route::post('/external-invite', ExternalInviteController::class)->name('.external-invite');
     });
 
 Route::any('/logout', LogoutController::class);

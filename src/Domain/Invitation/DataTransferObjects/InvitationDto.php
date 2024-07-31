@@ -22,8 +22,8 @@ class InvitationDto extends Data
     public function __construct(
         public readonly string $name,
         public readonly string $email,
-        public readonly MobileCountryCodeEnum $mobile_country_code,
-        public readonly int $dirty_mobile_number,
+        public readonly ?MobileCountryCodeEnum $mobile_country_code,
+        public readonly ?int $dirty_mobile_number,
         public readonly int $vacancy_id,
         #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z'])]
         public readonly \DateTime $should_be_invited_at,
@@ -31,13 +31,16 @@ class InvitationDto extends Data
         public readonly \DateTime|null|Optional $expired_at,
         #[WithCastable(Creator::class, lazy_load_instance: false)]
         public readonly ?Creator $creator,
+        public readonly ?bool $is_external = false,
     ) {
-        $mobileStrategy = (new MobileNumberFactory())
-            ->createMobileNumberInstance($this->mobile_country_code);
+        if ($this->mobile_country_code && $this->dirty_mobile_number) {
+            $mobileStrategy = (new MobileNumberFactory())
+                ->createMobileNumberInstance($this->mobile_country_code);
 
-        $this->additional([
-            'mobile_number' => $mobileStrategy->trimToNationalInteger($this->dirty_mobile_number),
-        ]);
+            $this->additional([
+                'mobile_number' => $mobileStrategy->trimToNationalInteger($this->dirty_mobile_number),
+            ]);
+        }
 
         $this->additional([
             'creator_id' => $this->creator->creator_id,
@@ -52,7 +55,7 @@ class InvitationDto extends Data
         return [
             'name' => ['required', 'string', 'min:1'],
             'email' => ['required', 'email'],
-            'mobile_country_code' => ['required', Rule::enum(MobileCountryCodeEnum::class)],
+            'mobile_country_code' => ['nullable', Rule::enum(MobileCountryCodeEnum::class)],
             'vacancy_id' => [
                 'required', 'integer', Rule::exists(Vacancy::class, 'id'),
                 function (string $attribute, mixed $value, \Closure $fail) use ($context) {
