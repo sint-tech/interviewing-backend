@@ -23,10 +23,18 @@ class GetInterviewReportQuery extends QueryBuilder
             AllowedFilter::callback('status', function ($query, $value) {
                 $this->abortFilterVacancyIdRequired();
                 $query->when($value === 'accepted', fn ($query) => $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id')));
-                $query->when($value === 'passed', fn ($query) => $query->wherePassed()->whereNotIn('id', $query->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'))->pluck('id')));
+                $query->when($value === 'passed', function ($query) {
+                    $accepted_ids = Interview::query()
+                        ->whereAccepted($this->vacancy()->open_positions, $this->request->input('filter.vacancy_id'))
+                        ->pluck('id')
+                        ->toArray();
+
+                    return $query->wherePassed()->whereNotIn('id', $accepted_ids);
+                });
                 $query->when($value === 'rejected', fn ($query) => $query->whereRejected());
                 $query->when($value === 'selected', fn ($query) => $query->whereSelected());
                 $query->when($value === 'canceled', fn ($query) => $query->whereCanceled());
+                $query->when($value === 'withdrew', fn ($query) => $query->whereWithdrew());
             }),
         );
 

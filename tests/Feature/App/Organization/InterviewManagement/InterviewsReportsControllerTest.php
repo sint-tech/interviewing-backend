@@ -101,7 +101,7 @@ class InterviewsReportsControllerTest extends TestCase
     /** @test  */
     public function itShouldRetrievePassedInterviewsReports()
     {
-        $passedInterviewsCount = Interview::query()->wherePassed()->whereNotIn('id', Interview::query()->whereAccepted($this->vacancy->open_positions)->pluck('id'))->count();
+        $passedInterviewsCount = Interview::query()->wherePassed()->whereNotIn('id', Interview::query()->whereAccepted($this->vacancy->open_positions, $this->vacancy->getKey())->pluck('id'))->count();
 
         $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => 'passed', 'filter[vacancy_id]' => $this->vacancy->getKey()]));
 
@@ -126,7 +126,7 @@ class InterviewsReportsControllerTest extends TestCase
     {
         $cancelledInterviewsCount = Interview::query()->whereStatus(InterviewStatusEnum::Canceled)->count();
 
-        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => InterviewStatusEnum::Canceled->value]));
+        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => InterviewStatusEnum::Canceled->value, 'filter[vacancy_id]' => $this->vacancy->getKey()]));
 
         $response->assertSuccessful();
 
@@ -138,7 +138,7 @@ class InterviewsReportsControllerTest extends TestCase
     {
         $rejectedInterviewsCount = Interview::query()->whereStatus(InterviewStatusEnum::Rejected)->count();
 
-        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => InterviewStatusEnum::Rejected->value]));
+        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => InterviewStatusEnum::Rejected->value, 'filter[vacancy_id]' => $this->vacancy->getKey()]));
 
         $response->assertSuccessful();
 
@@ -150,7 +150,7 @@ class InterviewsReportsControllerTest extends TestCase
     {
         $withdrewInterviewsCount = Interview::query()->whereStatus(InterviewStatusEnum::Withdrew)->count();
 
-        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => InterviewStatusEnum::Withdrew->value]));
+        $response = $this->get(route('organization.interviews.reports.index', ['filter[status]' => InterviewStatusEnum::Withdrew->value, 'filter[vacancy_id]' => $this->vacancy->getKey()]));
 
         $response->assertSuccessful();
 
@@ -170,7 +170,7 @@ class InterviewsReportsControllerTest extends TestCase
             'status' => InterviewStatusEnum::Selected->value,
         ])->assertSuccessful();
 
-        $acceptedInterviewsAfterChange = Interview::query()->whereAccepted($openPositions)->get();
+        $acceptedInterviewsAfterChange = Interview::query()->whereAccepted($openPositions, $this->vacancy->getKey())->get();
 
         $this->assertTrue($acceptedInterviewsAfterChange->contains($rejectedInterview));
 
