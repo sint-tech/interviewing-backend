@@ -22,6 +22,7 @@ class VacancyResource extends JsonResource
             'is_public' => $this->is_public,
             'started_at' => $this->started_at?->format('Y-m-d H:i'),
             'ended_at' => $this->ended_at?->format('Y-m-d H:i'),
+            'created_at' => $this->created_at->format('Y-m-d H:i'),
             'description' => $this->description,
             'organization' => OrganizationResource::make($this->organization),
             'question_clusters' => QuestionClusterResource::collection($this->interviewTemplate->questionClusters),
