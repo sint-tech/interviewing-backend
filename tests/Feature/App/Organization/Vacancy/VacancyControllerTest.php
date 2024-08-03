@@ -245,6 +245,7 @@ class VacancyControllerTest extends TestCase
             ])->getKey(),
             'open_positions' => 5,
             'max_reconnection_tries' => 1,
+            'is_public' => false,
         ];
     }
 }

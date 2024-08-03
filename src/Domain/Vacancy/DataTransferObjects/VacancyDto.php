@@ -27,13 +27,14 @@ class VacancyDto extends Data
         public readonly ?\DateTime $started_at,
         #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i', 'Y-m-d\TH:i:s.u\Z'])]
         public readonly ?\DateTime $ended_at,
+        public readonly bool $is_public = false,
+        public readonly ?string $slug,
 
         public readonly int $max_reconnection_tries,
         public readonly int $open_positions,
         #[WithCastable(Creator::class, lazy_load_instance: true)]
         public Optional|Creator $creator,
     ) {
-
     }
 
     public static function rules(ValidationContext $context): array
@@ -45,8 +46,9 @@ class VacancyDto extends Data
             'ended_at' => ['nullable', 'date_format:Y-m-d H:m', 'after:started_at'],
             'max_reconnection_tries' => ['required', 'min:0', 'max:5'],
             'open_positions' => ['required', 'integer', 'min:1'],
-            'organization_id' => ['nullable', 'int', Rule::exists(table_name(Organization::class, 'id'))->withoutTrashed()],
-            'interview_template_id' => ['required', 'int', Rule::exists(table_name(InterviewTemplate::class, 'id'))->withoutTrashed()],
+            'organization_id' => ['nullable', 'int', Rule::exists(table_name(Organization::class), 'id')->withoutTrashed()],
+            'interview_template_id' => ['required', 'int', Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed()],
+            'is_public' => ['required', 'boolean'],
         ];
     }
 }

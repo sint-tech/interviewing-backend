@@ -20,6 +20,7 @@ class VacancyUpdateRequest extends FormRequest
             'organization_id' => ['nullable', Rule::exists(table_name(Organization::class), 'id')->withoutTrashed()],
             'open_positions' => ['filled', 'integer', 'min:1'],
             'interview_template_id' => ['filled', 'int', Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed()],
+            'is_public' => ['filled', 'boolean'],
         ];
     }
 }

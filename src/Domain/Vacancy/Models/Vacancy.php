@@ -20,6 +20,7 @@ use Support\Traits\Model\HasCreator;
 use Support\Traits\Model\HasOwner;
 use Support\Traits\Model\PreventDeleteWithRelations;
 use DateTimeInterface;
+use Illuminate\Support\Str;
 
 /**
  * @property bool $is_ended
@@ -41,6 +42,8 @@ class Vacancy extends Model
         'max_reconnection_tries',
         'open_positions',
         'organization_id',
+        'is_public',
+        'slug',
     ];
 
     protected $table = 'vacancies';
@@ -116,5 +119,20 @@ class Vacancy extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function generateSlug(): string
+    {
+        $slug = Str::slug($this->title);
+
+        $original_slug = $slug;
+        $counter = 1;
+
+        while (self::where('slug', $slug)->exists()) {
+            $slug = "$original_slug-$counter";
+            $counter++;
+        }
+
+        return $slug;
     }
 }

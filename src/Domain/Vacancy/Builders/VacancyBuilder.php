@@ -30,4 +30,14 @@ class VacancyBuilder extends Builder
         return $this->where('started_at', '<=', now())
             ->where('ended_at', '>=', now());
     }
+
+    public function whereSlugLike(?string $slug): self
+    {
+        return $this->where('slug', 'like', "%$slug%");
+    }
+
+    public function wherePublic(): self
+    {
+        return $this->where('is_public', true);
+    }
 }

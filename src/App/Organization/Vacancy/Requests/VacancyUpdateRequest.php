@@ -20,6 +20,7 @@ class VacancyUpdateRequest extends FormRequest
             'started_at' => ['nullable', 'date_format:Y-m-d H:i', 'after:now'],
             'ended_at' => ['nullable', 'date_format:Y-m-d H:i', 'after:started_at'],
             'interview_template_id' => ['filled', 'int', Rule::exists(table_name(InterviewTemplate::class), 'id')->withoutTrashed()],
+            'is_public' => ['filled', 'boolean'],
         ];
     }
 
