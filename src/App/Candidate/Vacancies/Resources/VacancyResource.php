@@ -19,6 +19,7 @@ class VacancyResource extends JsonResource
             'id' => $this->id,
             'slug' => $this->slug,
             'title' => $this->title,
+            'is_public' => $this->is_public,
             'started_at' => $this->started_at?->format('Y-m-d H:i'),
             'ended_at' => $this->ended_at?->format('Y-m-d H:i'),
             'description' => $this->description,
