@@ -1,5 +1,6 @@
 <?php
 
+use App\Candidate\Vacancies\Controllers\VacancyController;
 use App\Candidate\Auth\Controllers\LoginController;
 use App\Candidate\Auth\Controllers\LogoutController;
 use App\Candidate\Auth\Controllers\RegisterController;
@@ -36,6 +37,7 @@ Route::middleware('guest:candidate')
         Route::post('/login', LoginController::class)->name('.login');
         Route::post('/social-login', SocialLoginController::class)->name('.social-login');
         Route::post('/external-invite', ExternalInviteController::class)->name('.external-invite');
+        Route::apiResource('vacancies', VacancyController::class)->only(['index', 'show']);
     });
 
 Route::any('/logout', LogoutController::class);

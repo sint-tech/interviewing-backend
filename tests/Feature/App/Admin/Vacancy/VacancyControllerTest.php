@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class VacancyControllerTest extends TestCase
 {
-    use RefreshDatabase,WithFaker;
+    use RefreshDatabase, WithFaker;
 
     const INDEX_ROUTE_NAME = 'admin.vacancies.index';
 
@@ -154,6 +154,7 @@ class VacancyControllerTest extends TestCase
             'organization_id' => Organization::factory()->createOne()->getKey(),
             'open_positions' => $this->faker->numberBetween(1, 10),
             'interview_template_id' => InterviewTemplate::factory()->for($this->sintUser, 'creator')->createOne()->getKey(),
+            'is_public' => $this->faker->boolean(),
         ];
     }
 }

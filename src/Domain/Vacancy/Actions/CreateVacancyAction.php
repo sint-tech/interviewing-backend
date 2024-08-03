@@ -17,10 +17,15 @@ class CreateVacancyAction
 
         $vacancy = new Vacancy(
             $vacancyDto->except('creator')->toArray() +
-            [
-                'creator_id' => $vacancyDto->creator->creator_id,
-                'creator_type' => (new $vacancyDto->creator->creator_type())->getMorphClass(),
-            ]);
+                [
+                    'creator_id' => $vacancyDto->creator->creator_id,
+                    'creator_type' => (new $vacancyDto->creator->creator_type())->getMorphClass(),
+                ]
+        );
+
+        if ($vacancyDto->is_public) {
+            $vacancy->slug = $vacancy->generateSlug();
+        }
 
         $vacancy->save();
 

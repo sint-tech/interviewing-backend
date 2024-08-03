@@ -16,6 +16,7 @@ class VacancyResource extends JsonResource
         return [
             'id' => $this->resource->getKey(),
             'title' => $this->resource->title,
+            'slug' => $this->resource->slug,
             'description' => $this->resource->description,
             'max_reconnection_tries' => $this->resource->max_reconnection_tries,
             'open_positions' => $this->resource->open_positions,
@@ -25,7 +26,8 @@ class VacancyResource extends JsonResource
             'last_updated_at' => $this->resource->updated_at->format('Y-m-d H:i'),
             'interview_template_id' => $this->resource->interview_template_id,
             'interview_template' => InterviewTemplateResource::make($this->whenLoaded('interviewTemplate')),
-            'deleted_at' => $this->when(! is_null($this->deleted_at), $this->resource->deleted_at?->format('Y-m-d H:m')),
+            'is_public' => $this->resource->is_public,
+            'deleted_at' => $this->when(!is_null($this->deleted_at), $this->resource->deleted_at?->format('Y-m-d H:m')),
         ];
     }
 }

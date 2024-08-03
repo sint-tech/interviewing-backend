@@ -15,6 +15,11 @@ class UpdateVacancyAction
             $vacancy->invitations()->where('should_be_invited_at', '<', $vacancy->started_at)->update(['should_be_invited_at' => $vacancy->started_at]);
         }
 
+        if ($vacancy->is_public && empty($vacancy->slug)) {
+            $vacancy->slug = $vacancy->generateSlug();
+            $vacancy->save();
+        }
+
         return $vacancy->refresh();
     }
 }
