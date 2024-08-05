@@ -76,7 +76,7 @@ class Invitation extends Model
 
     public function mobileNumber(): Attribute
     {
-        return Attribute::get(fn () => new MobileNumber($this->mobile_country_code, $this->attributes['mobile_number']));
+        return Attribute::get(fn () => $this->mobile_country_code ? new MobileNumber($this->mobile_country_code, $this->attributes['mobile_number']) : null);
     }
 
     public function isExpired(): Attribute
