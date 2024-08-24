@@ -18,7 +18,7 @@ if [ "$role" = "app" ]; then
     php artisan key:generate
     php artisan optimize:clear
     php artisan optimize
-    php artisan serve --port=$PORT --host=0.0.0.0 --env=.env
+    php artisan serve --port=8080 --host=0.0.0.0 --env=.env
 elif [ "$role" = "queue" ]; then
     echo "Running the queue"
     php /var/www/artisan queue:work --verbose --tries=3 --timeout=90
