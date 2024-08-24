@@ -14,4 +14,6 @@ COPY . .
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+RUN chmod +x docker/entrypoint.sh
+
 ENTRYPOINT [ "docker/entrypoint.sh" ]
