@@ -14,6 +14,4 @@ COPY . .
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-ENV PORT=8080
-
 ENTRYPOINT [ "docker/entrypoint.sh" ]
