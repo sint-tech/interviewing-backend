@@ -26,6 +26,8 @@ services:
             - 8080:8080
         depends_on:
             - redis
+        command: >
+            sh -c "php artisan migrate --force"
     queue:
         build:
             context: .
